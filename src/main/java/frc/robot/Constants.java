@@ -419,7 +419,7 @@ public final class Constants {
 
     public enum ElevatorPosition {
       HOME(0), // TODO: SET WITH ACTUAL VALUES
-      L1(0.7648), // TODO: SET WITH ACTUAL VALUES
+      L1(1.1), // TODO: SET WITH ACTUAL VALUES
       L2(8.23663),// TODO: SET WITH ACTUAL VALUES
       L3(20.43877), // TODO: SET WITH ACTUAL VALUES
       L4(39.53888), // TODO: SET WITH ACTUAL VALUES

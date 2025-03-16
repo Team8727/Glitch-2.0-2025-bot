@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.Constants.kSwerve;
 import frc.robot.Constants.kSwerve.kModule;
-import frc.robot.Constants.kSwerve.kModule.kSteer;
 import frc.robot.utilities.MAXSwerve;
 import frc.robot.utilities.NetworkTableLogger;
 

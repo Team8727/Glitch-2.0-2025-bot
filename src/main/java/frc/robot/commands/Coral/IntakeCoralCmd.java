@@ -48,8 +48,8 @@ public class IntakeCoralCmd extends Command {
   @Override
   public void execute() {
     if (m_coral.getBackCoralSensor() && sensedCoral == false) {
-      m_coral.setIntakeSpeedDuty(.1);
-      m_coral.setOuttakeSpeedDuty(.1);
+      m_coral.setIntakeSpeedDuty(.13);
+      m_coral.setOuttakeSpeedDuty(.11);
       sensedCoral = true;
     } 
 
