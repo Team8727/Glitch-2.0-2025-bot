@@ -70,33 +70,33 @@ public class Autos extends SubsystemBase {
       GetScorePose(new Rotation2d(Math.toRadians(180)), 0, false), // left score location
       0), // distance to side
 
-    C_D("C-D", 
+    C_D("C-D",
       new Translation2d(4.07, 3.3), // side point
       GetScorePose(new Rotation2d(Math.toRadians(-120)), 0, true), // right score location
       GetScorePose(new Rotation2d(Math.toRadians(-120)), 0, false), // left score location
       0),  // distance to side
 
-    E_F("E-F", 
-      new Translation2d(4.9, 3.3), 
+    E_F("E-F",
+      new Translation2d(4.9, 3.3),
       GetScorePose(new Rotation2d(Math.toRadians(-60)), 0, true), // right score location
       GetScorePose(new Rotation2d(Math.toRadians(-60)), 0, false), // left score location
       0),  // Zone E-F
 
-    G_H("G-H", 
-      new Translation2d(5.35, 4.02), 
+    G_H("G-H",
+      new Translation2d(5.35, 4.02),
       GetScorePose(new Rotation2d(Math.toRadians(0)), 0, true), // right score location
       GetScorePose(new Rotation2d(Math.toRadians(0)), 0, false), // left score location
       0),  // Zone G-H
 
-    I_J("I-J", 
-      new Translation2d(4.9, 4.75), 
+    I_J("I-J",
+      new Translation2d(4.9, 4.75),
       GetScorePose(new Rotation2d(Math.toRadians(60)), 0, true), // right score location
       GetScorePose(new Rotation2d(Math.toRadians(60)), 0, false), // left score location
       0),  // Zone I-J
 
-    K_L("K-L", 
-      new Translation2d(4.07, 4.75), 
-      GetScorePose(new Rotation2d(Math.toRadians(120)), 0, true), // right score location 
+    K_L("K-L",
+      new Translation2d(4.07, 4.75),
+      GetScorePose(new Rotation2d(Math.toRadians(120)), 0, true), // right score location
       GetScorePose(new Rotation2d(Math.toRadians(120)), 0, false), // left score location
       0);  // Zone K-L
 
@@ -313,7 +313,7 @@ public class Autos extends SubsystemBase {
   }
 
   /**
-   * Calculates the scoring pose based on the given rotation, distance from the reef, 
+   * Calculates the scoring pose based on the given rotation, distance from the reef,
    * and whether the scoring is to the right or left side.
    *
    * @param rotation The rotation of the robot in radians.
@@ -327,19 +327,19 @@ public class Autos extends SubsystemBase {
     if (!right) {
       verticalOffset = -verticalOffset; // flip the offset for the left side
     }
-    Pose2d baseScoreLocation = 
+    Pose2d baseScoreLocation =
       new Pose2d(
         reef.plus(
           new Translation2d(
             0.67 + kSwerve.width + distanceFromReef,
-            verticalOffset)), 
+            verticalOffset)),
         new Rotation2d(Math.toRadians(180)));
       return baseScoreLocation.rotateAround(reef, rotation);
   }
 
   /**
    * Finds the closest ReefScorePoints location to the robot's current position.
-   * This method calculates the distance from the robot to each defined ReefScorePoints 
+   * This method calculates the distance from the robot to each defined ReefScorePoints
    * and determines which point has the minimum distance.
    *
    * @return The ReefScorePoints enum value representing the closest reef side
