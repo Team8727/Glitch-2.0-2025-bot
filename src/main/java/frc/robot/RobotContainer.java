@@ -76,7 +76,8 @@ public class RobotContainer {
       m_ledSubsytem,
       m_elevatorSpeedControl,
       m_AlgaeRemoverPivot,
-      m_AlgaeRemoverRollers),
+      m_AlgaeRemoverRollers,
+      m_Autos),
     new Driver2DefaultBindings(
       m_SwerveSubsystem,
       m_AlgaeIntakePivot,

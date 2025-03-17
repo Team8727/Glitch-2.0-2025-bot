@@ -291,11 +291,13 @@ public final class Constants {
 
     public static final AprilTagFieldLayout aprilTagFieldLayout =
     AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark);
+
+    public static final Translation2d fieldCenter = new Translation2d(8.770, 4.026); // meters
     // x   y     z
-    // 4   7     22
-    // -4  7     22
-    // -4  6.625 19.5
-    //  4  6.625 19.5
+    // 8   7     22
+    // -8  7     22
+    // -8  6.625 19.5
+    //  8  6.625 19.5
     public static final Transform3d camera1Position = // Right Rear
       new Transform3d(
         new Translation3d(Units.inchesToMeters(7), Units.inchesToMeters(8), Units.inchesToMeters(22)), 
@@ -318,10 +320,9 @@ public final class Constants {
     public static final Matrix<N3, N1> visionStdDevs =
         MatBuilder.fill(Nat.N3(), Nat.N1(), 0.03, 0.03, 0.25);
     public static final double visionScalingFactor =
-        2.3; // scaling factor applied to the visionStdDevs per meter bigger means trust less at a
-    // distance
+        2.3; // scaling factor applied to the visionStdDevs per meter bigger means trust less at distance
+        
   }
-
   public static class kAlgaeRemover {
     public static class kPivot {
       public static int removerPivotMotorCANID =12; // TODO: not set yet because remover is not built yet

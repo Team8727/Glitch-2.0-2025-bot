@@ -13,6 +13,7 @@ import frc.robot.commands.Coral.ReindexCoralCmd;
 import frc.robot.commands.Coral.RejectCoralCmd;
 import frc.robot.commands.Coral.IntakeCoralCmd;
 import frc.robot.commands.DriveCommands.SwerveJoystickCmd;
+import frc.robot.subsystems.Autos;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakePivot;
@@ -35,6 +36,7 @@ public class Driver1DefaultBindings implements ControllerBindings {
     private final boolean m_elevatorSpeedControl;
     private final AlgaeRemoverPivot m_AlgaeRemoverPivot;
     private final AlgaeRemoverRollers m_AlgaeRemoverRollers;
+    private final Autos m_autos;
 
     public Driver1DefaultBindings(
         SwerveSubsystem swerveSubsystem,
@@ -45,7 +47,8 @@ public class Driver1DefaultBindings implements ControllerBindings {
         LEDSubsystem ledSubsystem,
         boolean elevatorSpeedControl,
         AlgaeRemoverPivot algaeRemoverPivot,
-        AlgaeRemoverRollers algaeRemoverRollers) {
+        AlgaeRemoverRollers algaeRemoverRollers,
+        Autos autos) {
         m_SwerveSubsystem = swerveSubsystem;
         m_AlgaeIntakePivot = AlgaeIntakePivot;
         m_AlgaeIntakeRollers = AlgaeIntakeRollers;
@@ -55,6 +58,7 @@ public class Driver1DefaultBindings implements ControllerBindings {
         m_elevatorSpeedControl = elevatorSpeedControl;
         m_AlgaeRemoverPivot = algaeRemoverPivot;
         m_AlgaeRemoverRollers = algaeRemoverRollers;
+        m_autos = autos;
     }
 
     @Override
@@ -84,6 +88,10 @@ public class Driver1DefaultBindings implements ControllerBindings {
     // reject coral
     controller.povLeft().onTrue(new RejectCoralCmd(m_coral));
 
+    // auto align
+    controller.leftBumper().onTrue(m_autos.alignToClosestSide(true)); // Align to closest side when POV right is pressed
+    controller.rightBumper().onTrue(m_autos.alignToClosestSide(false)); // Align to closest side when POV left is pressed
+
     //              Elevator Commands
     // elevator L1
     controller.x().onTrue(new SetElevatorHeightCmd(ElevatorPosition.L1, m_elevator, m_coral, m_ledSubsytem));
@@ -97,11 +105,11 @@ public class Driver1DefaultBindings implements ControllerBindings {
     // zero elevator
     controller.rightTrigger().and(controller.rightBumper()).onTrue(new ZeroElevator(m_elevator));
     
-    //                Algae Commands
-    // Intake algae
-    controller.rightTrigger().whileTrue(new IntakeAlgaeCmd(m_AlgaeIntakePivot, m_AlgaeIntakeRollers, m_ledSubsytem));
-    // deploy algae
-    controller.rightBumper().onTrue(new ScoreAlgaeCmd(m_AlgaeIntakePivot, m_AlgaeIntakeRollers, m_ledSubsytem));
+    // //                Algae Commands
+    // // Intake algae
+    // controller.rightTrigger().whileTrue(new IntakeAlgaeCmd(m_AlgaeIntakePivot, m_AlgaeIntakeRollers, m_ledSubsytem));
+    // // deploy algae
+    // controller.rightBumper().onTrue(new ScoreAlgaeCmd(m_AlgaeIntakePivot, m_AlgaeIntakeRollers, m_ledSubsytem));
 
     // Remove Algae A2 
     controller.povUp().whileTrue(new RemoveAlgaeCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers, ElevatorPosition.A3, m_elevator, m_ledSubsytem));
