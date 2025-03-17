@@ -30,8 +30,8 @@ public class weirdAlgaeShootCmd extends SequentialCommandGroup {
       new ParallelCommandGroup(
         new InstantCommand(() -> algaeRemoverPivot.setPositionTrapazoidal(RemoverPositions.Fling)), // TODO: set positions
         new InstantCommand(() -> algaeRemoverRollers.setRemoverRollerSpeed(.2)), // TODO: set speed
-        new InstantCommand(() -> coral.setOuttakeSpeedDuty(-.5)))
-          .withDeadline(new WaitCommand(.5)),
+        new InstantCommand(() -> coral.setOuttakeSpeedDuty(-.5))),
+      new WaitCommand(.5),
       new InstantCommand(() -> elevator.isHoming = false) // Stop homing after the command is done
       );
   }
