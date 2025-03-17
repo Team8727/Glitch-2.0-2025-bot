@@ -78,7 +78,7 @@ public class SwerveJoystickCmd extends Command {
     if (m_fieldOrientedFunction.get()) {
       chassisSpeeds =
           ChassisSpeeds.fromFieldRelativeSpeeds(
-              xSpeed, ySpeed, turningSpeed, m_SwerveSubsystem.getRotation2d());
+              xSpeed, ySpeed, turningSpeed, m_SwerveSubsystem.getHeading());
     } else {
       chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
     }
@@ -87,13 +87,10 @@ public class SwerveJoystickCmd extends Command {
       double adjustedAngle = m_SwerveSubsystem.navX.getAngle() + ((turningSpeed * 360) / (2 * Math.PI)) * 0.02;
       m_SwerveSubsystem.navX.setAngleAdjustment(adjustedAngle);
     }
-    
-    // Set the swerve module states
-    SwerveModuleState[] moduleStates = kSwerve.kinematics.toSwerveModuleStates(chassisSpeeds);
-    // System.out.println("setting module states");
 
-    // output to swerve modules
-    m_SwerveSubsystem.setModuleStates(moduleStates);
+    // Set the swerve module states
+    m_SwerveSubsystem.setChassisSpeeds(chassisSpeeds);
+    
     m_logger.logChassisSpeeds("chassisspeeds", chassisSpeeds);
   }
 

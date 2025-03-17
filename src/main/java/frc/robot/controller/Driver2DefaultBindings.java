@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.Coral.ReindexCoralCmd;
 import frc.robot.commands.Coral.RejectCoralCmd;
 import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.PoseEstimatior;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakePivot;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakeRollers;
@@ -18,6 +19,7 @@ import frc.robot.subsystems.Elevator.Coral.Coral;
  */
 public class Driver2DefaultBindings implements ControllerBindings {
     private final SwerveSubsystem m_SwerveSubsystem;
+    private final PoseEstimatior m_poseEstimator;
     private final AlgaeIntakePivot m_AlgaeIntakePivot;
     private final AlgaeIntakeRollers m_AlgaeIntakeRollers;
     private final Coral m_coral;
@@ -29,6 +31,7 @@ public class Driver2DefaultBindings implements ControllerBindings {
 
     public Driver2DefaultBindings(
         SwerveSubsystem swerveSubsystem,
+        PoseEstimatior poseEstimator,
         AlgaeIntakePivot AlgaeIntakePivot,
         AlgaeIntakeRollers AlgaeIntakeRollers,
         Coral coral,
@@ -38,6 +41,7 @@ public class Driver2DefaultBindings implements ControllerBindings {
         AlgaeRemoverPivot algaeRemoverPivot,
         AlgaeRemoverRollers algaeRemoverRollers) {
         m_SwerveSubsystem = swerveSubsystem;
+        m_poseEstimator = poseEstimator;
         m_AlgaeIntakePivot = AlgaeIntakePivot;
         m_AlgaeIntakeRollers = AlgaeIntakeRollers;
         m_coral = coral;
@@ -52,7 +56,7 @@ public class Driver2DefaultBindings implements ControllerBindings {
     public void bind(CommandXboxController controller) {
         //              Drive Commands
         // Zero heading
-        controller.start().onTrue(new InstantCommand(() -> m_SwerveSubsystem.zeroHeading()));
+        controller.start().onTrue(new InstantCommand(() -> m_poseEstimator.zeroHeading()));
 
         //               Coral Commands
         // intake coral

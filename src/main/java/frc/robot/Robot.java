@@ -79,33 +79,7 @@ public class Robot extends TimedRobot {
           //         new TrajectoryConfig(10, 5))); //TODO: get this from pathplanner somehow
           // });
           logger.logChassisSpeeds("speeds", chassisSpeeds);
-          if (DriverStation.getAlliance().get() == Alliance.Red) {
-            SwerveModuleState[] moduleStates = kSwerve.autoKinematics.toSwerveModuleStates(
-              ChassisSpeeds.fromRobotRelativeSpeeds(
-              new ChassisSpeeds(
-                chassisSpeeds.vxMetersPerSecond, 
-                chassisSpeeds.vyMetersPerSecond, 
-                chassisSpeeds.omegaRadiansPerSecond), 
-              m_SwerveSubsystem.getRotation2d()));
-            logger.logSwerveModuleState("states", moduleStates);
-            m_SwerveSubsystem.setModuleStates(moduleStates);
-          } else {
-            // Set the swerve module states
-            SwerveModuleState[] moduleStates = kSwerve.autoKinematics.toSwerveModuleStates(
-              ChassisSpeeds.fromRobotRelativeSpeeds(
-              new ChassisSpeeds(
-                chassisSpeeds.vxMetersPerSecond, 
-                chassisSpeeds.vyMetersPerSecond, 
-                chassisSpeeds.omegaRadiansPerSecond), 
-              m_SwerveSubsystem.getRotation2d()));
-            logger.logSwerveModuleState("states", moduleStates);
-            m_SwerveSubsystem.setModuleStates(moduleStates);      
-          }
-          // if (Robot.isSimulation()) { 
-          //   double adjustedAngle = m_SwerveSubsystem.navX.getAngle() + ((chassisSpeeds.omegaRadiansPerSecond * 360) / (2 * Math.PI)) * 0.02;
-          //   m_SwerveSubsystem.navX.setAngleAdjustment(adjustedAngle);
-          // }
-      
+          m_SwerveSubsystem.setChassisSpeeds(chassisSpeeds);
         },
         kSwerve.Auton.pathFollowController, 
         kConfigs.robotConfig,
@@ -128,6 +102,7 @@ public class Robot extends TimedRobot {
     m_robotContainer =
         new RobotContainer(
             m_SwerveSubsystem,
+            m_PoseEstimatior,
             m_AlgaeIntakePivot,
             m_AlgaeIntakeRollers,
             m_AlgaeRemoverPivot,

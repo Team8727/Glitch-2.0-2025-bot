@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.Constants.kSwerve;
 import frc.robot.Constants.kVision;
 import frc.robot.utilities.NetworkTableLogger;
 
@@ -56,7 +57,14 @@ public class PoseEstimatior extends SubsystemBase {
   public PoseEstimatior(SwerveSubsystem swerveSubsystem) {
     // subsystem setups
     m_SwerveSubsystem = swerveSubsystem;
-    m_SwervePoseEstimator = swerveSubsystem.swervePoseEstimator;
+    m_SwervePoseEstimator =     
+      new SwerveDrivePoseEstimator(
+        kSwerve.kinematics, 
+        m_SwerveSubsystem.getHeading(), 
+        m_SwerveSubsystem.getModulePositions(), 
+        new Pose2d()
+      );
+
     if (Robot.isSimulation()) {
       visionSim = new VisionSystemSim("main");
       cameraProp = new SimCameraProperties();
@@ -164,6 +172,11 @@ public class PoseEstimatior extends SubsystemBase {
     return PoseEstimator.update(cameraResult);
   }
 
+  public void zeroHeading() {
+    m_SwerveSubsystem.zeroHeading();
+    m_SwervePoseEstimator.resetRotation(new Rotation2d());
+  }
+
   private void addVisionMeasurement(PhotonCamera camera, PhotonPoseEstimator poseEstimator) {
     try {
       // camera 4 pose estimation
@@ -221,8 +234,8 @@ public class PoseEstimatior extends SubsystemBase {
     // if (Robot.isReal()) {
       m_SwervePoseEstimator.updateWithTime(
         Timer.getFPGATimestamp(), 
-        m_SwerveSubsystem.getRotation2d(), 
-        m_SwerveSubsystem.modulePositions);
+        m_SwerveSubsystem.getHeading(), 
+        m_SwerveSubsystem.getModulePositions());
     // } else {
     //   m_SwervePoseEstimator.updateWithTime(
     //     Timer.getFPGATimestamp(), 
