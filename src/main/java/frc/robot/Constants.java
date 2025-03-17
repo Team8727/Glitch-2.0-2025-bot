@@ -321,13 +321,14 @@ public final class Constants {
         MatBuilder.fill(Nat.N3(), Nat.N1(), 0.03, 0.03, 0.25);
     public static final double visionScalingFactor =
         2.3; // scaling factor applied to the visionStdDevs per meter bigger means trust less at distance
-        
+
   }
   public static class kAlgaeRemover {
     public static class kPivot {
       public static int removerPivotMotorCANID =12; // TODO: not set yet because remover is not built yet
 
       public enum RemoverPositions {
+        Fling(100),
         RaisedL2(80), // TODO: SET WITH ACTUAL VALUES
         RaisedL3(50), // TODO: SET WITH ACTUAL VALUES
         Stowed(18); // TODO: SET WITH ACTUAL VALUES
