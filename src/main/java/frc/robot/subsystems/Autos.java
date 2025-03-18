@@ -148,6 +148,7 @@ public class Autos extends SubsystemBase {
     autoChooser.addOption("Path ML_L4_I", "ML_L4_I()");
     autoChooser.addOption("Path MR_L4_F", "MR_L4_F()");
     autoChooser.addOption("Min", "Min()");
+    autoChooser.addOption("MultiPathTest", "MultiPathTest()");
   }
 
   public void selectAuto() {
@@ -163,6 +164,8 @@ public class Autos extends SubsystemBase {
       ML_L4_I().schedule();
     } else if (autoChooser.getSelected() == "Min()") {
       Min().schedule();
+    } else if(autoChooser.getSelected() == "MultiPathTest()") {
+      MultiPathTest().schedule();
     } else {
       System.out.println("somting is very wrong if you see this");
     }
@@ -296,6 +299,15 @@ public class Autos extends SubsystemBase {
     return new SequentialCommandGroup(
       new InstantCommand(() -> setStartPose(paths.get("Min"))),
       alignToPath(paths.get("Min"))
+    );
+  }
+
+  private Command MultiPathTest() {
+    return new SequentialCommandGroup(
+      new InstantCommand(() -> setStartPose(paths.get("L-I"))),
+      followPath(paths.get("L-I")),
+      followPath(paths.get("I-CPR")),
+      followPath(paths.get("CPR-J")) 
     );
   }
 
