@@ -83,15 +83,14 @@ public class SwerveJoystickCmd extends Command {
       chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
     }
 
-    if (Robot.isSimulation()) { 
-      double adjustedAngle = m_SwerveSubsystem.navX.getAngle() + ((turningSpeed * 360) / (2 * Math.PI)) * 0.02;
-      m_SwerveSubsystem.navX.setAngleAdjustment(adjustedAngle);
-    }
-
     // Set the swerve module states
     m_SwerveSubsystem.setChassisSpeeds(chassisSpeeds);
-    
     m_logger.logChassisSpeeds("chassisspeeds", chassisSpeeds);
+
+    // Update the sim rotation
+    if (Robot.isSimulation()) {
+      m_SwerveSubsystem.applySimHeading();
+    }
   }
 
   @Override

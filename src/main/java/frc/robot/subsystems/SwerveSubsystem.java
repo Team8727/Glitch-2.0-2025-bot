@@ -9,6 +9,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.Constants.kSwerve;
@@ -25,7 +26,28 @@ public class SwerveSubsystem extends SubsystemBase {
   // Gyro
   public final AHRS navX = new AHRS(AHRS.NavXComType.kMXP_SPI);
   // Simulated Gyro
-  public double simRotation = 0;
+  private class SimGyro {
+    private double nextHeading = 0;
+    private double currentHeading = 0;
+
+    public void reset() {
+      setNextHeading(0);
+      applyNextHeading();
+    }
+
+    public void setNextHeading(double heading) {
+      nextHeading = heading;
+    }
+
+    public void applyNextHeading() {
+      currentHeading = nextHeading;
+    }
+
+    public double getCurrentHeading() {
+      return currentHeading;
+    }
+  }
+  private SimGyro simGyro = new SimGyro();
 
   // Network Table Logger
   private final NetworkTableLogger networkTableLogger = new NetworkTableLogger(this.getName().toString());
@@ -97,6 +119,7 @@ public class SwerveSubsystem extends SubsystemBase {
   public void zeroHeading() {
     navX.reset();
     // navX.setAngleAdjustment(0);
+    simGyro.reset();
   }
 
   /**
@@ -108,8 +131,24 @@ public class SwerveSubsystem extends SubsystemBase {
     if (Robot.isReal()) {
       return navX.getRotation2d();
     } else {
-      return new Rotation2d(simRotation);
+      return new Rotation2d(simGyro.getCurrentHeading());
     }
+  }
+
+  /**
+   * Reset the simulated heading of the robot
+   * @param headingRadians The heading in radians
+   */
+  public void setNextSimHeading(double headingRadians) {
+    simGyro.setNextHeading(headingRadians);
+    networkTableLogger.logDouble("Next Sim Heading", Math.toDegrees(simGyro.nextHeading));
+  }
+
+  /**
+   * Update the simulated heading of the robot
+   */
+  public void applySimHeading() {
+    simGyro.applyNextHeading();
   }
 
   @Override
@@ -126,7 +165,7 @@ public class SwerveSubsystem extends SubsystemBase {
     setModuleStates(kSwerve.kinematics.toSwerveModuleStates(robotRelativeSpeeds));
 
     if (Robot.isSimulation()) {
-      simRotation += robotRelativeSpeeds.omegaRadiansPerSecond * 0.02;
+      setNextSimHeading(simGyro.nextHeading + robotRelativeSpeeds.omegaRadiansPerSecond * 0.02);
     }
   }
 
