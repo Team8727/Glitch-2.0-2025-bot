@@ -89,8 +89,8 @@ public class Driver1DefaultBindings implements ControllerBindings {
     controller.povLeft().onTrue(new RejectCoralCmd(m_coral));
 
     // auto align
-    controller.leftBumper().onTrue(m_autos.alignToClosestSide(true)); // Align to closest side when POV right is pressed
-    controller.rightBumper().onTrue(m_autos.alignToClosestSide(false)); // Align to closest side when POV left is pressed
+    controller.leftBumper().onTrue(new InstantCommand(() -> m_autos.alignToClosestSide(true))); // Align to closest side when POV right is pressed
+    controller.rightBumper().onTrue(new InstantCommand(() -> m_autos.alignToClosestSide(false))); // Align to closest side when POV left is pressed
 
     //              Elevator Commands
     // elevator L1

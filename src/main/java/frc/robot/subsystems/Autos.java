@@ -10,7 +10,6 @@ import java.util.LinkedHashMap;
 import org.json.simple.parser.ParseException;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 
@@ -43,42 +42,43 @@ public class Autos extends SubsystemBase {
   private final PoseEstimatior m_PoseEstimatior;
   private final SendableChooser<String> autoChooser = new SendableChooser<>();
   private final NetworkTableLogger logger = new NetworkTableLogger(this.getName().toString());
+  private final Pose2d[] scoreLocations = new Pose2d[12]; // Array to hold score locations for logging
 
   public enum ReefScorePoints {
     A_B("A-B",
       new Translation2d(3.65, 4.02), // side point
-      new Pose2d(), // right score location
-      new Pose2d(), // left score location
+      GetScorePose(new Rotation2d(Math.toRadians(180)), 0, true), // right score location
+      GetScorePose(new Rotation2d(Math.toRadians(180)), 0, false), // left score location
       0), // distance to side
 
     C_D("C-D", 
       new Translation2d(4.07, 3.3), // side point
-      new Pose2d(), // right score location
-      new Pose2d(), // left score location
+      GetScorePose(new Rotation2d(Math.toRadians(-120)), 0, true), // right score location
+      GetScorePose(new Rotation2d(Math.toRadians(-120)), 0, false), // left score location
       0),  // distance to side
 
     E_F("E-F", 
       new Translation2d(4.9, 3.3), 
-      new Pose2d(), 
-      new Pose2d(),
+      GetScorePose(new Rotation2d(Math.toRadians(-60)), 0, true), // right score location
+      GetScorePose(new Rotation2d(Math.toRadians(-60)), 0, false), // left score location
       0),  // Zone E-F
 
     G_H("G-H", 
       new Translation2d(5.35, 4.02), 
-      new Pose2d(), 
-      new Pose2d(), 
+      GetScorePose(new Rotation2d(Math.toRadians(0)), 0, true), // right score location
+      GetScorePose(new Rotation2d(Math.toRadians(0)), 0, false), // left score location
       0),  // Zone G-H
 
     I_J("I-J", 
       new Translation2d(4.9, 4.75), 
-      new Pose2d(4.977, 5.208, new Rotation2d(Math.toRadians(-120))), 
-      new Pose2d(), 
+      GetScorePose(new Rotation2d(Math.toRadians(60)), 0, true), // right score location
+      GetScorePose(new Rotation2d(Math.toRadians(60)), 0, false), // left score location
       0),  // Zone I-J
 
     K_L("K-L", 
       new Translation2d(4.07, 4.75), 
-      new Pose2d(), 
-      new Pose2d(), 
+      GetScorePose(new Rotation2d(Math.toRadians(120)), 0, true), // right score location 
+      GetScorePose(new Rotation2d(Math.toRadians(120)), 0, false), // left score location
       0);  // Zone K-L
 
     private final String zone;
@@ -128,22 +128,8 @@ public class Autos extends SubsystemBase {
     m_PoseEstimatior = poseEstimatior;
 
     loadPaths();
-
-    PathPlannerAuto setelevatorheight = new PathPlannerAuto(new SetElevatorHeightCmd(ElevatorPosition.L4, elevatorSubsystem, coralSubsystem, ledSubsystem));
-
-    // // Load a full Choreo trajectory as a PathPlannerPath
-    // PathPlannerPath exampleChoreoTraj = PathPlannerPath.fromChoreoTrajectory("Example Choreo Traj");
-    // // Load a split Choreo trajectory as a PathPlannerPath, using the split point with index 1
-    // PathPlannerPath exampleChoreoTrajSplit = PathPlannerPath.fromChoreoTrajectory("Example Choreo Traj", 1);
-
-    /* Add paths to the hashmap using this format:
-      paths.put("<Name>", PathPlannerPath.fromPathFile("<path file name>"));
-      ex:
-      paths.put("Crazy auto", swerve.followPathWithEventsCommand(paths.get("crazy_auto")));
-    */
-    
-    //paths.put("EXAMPLE", PathPlannerPath.fromChoreoTrajectory("EXAMPLE"));
-  }
+    // logScoreLocations();
+    }
 
   private void loadPaths() {
     loadPath("ML-I");
@@ -200,12 +186,7 @@ public class Autos extends SubsystemBase {
             kSwerve.Auton.maxOnTheFlyVel,
             kSwerve.Auton.maxOnTheFlyAcc,
             kSwerve.Auton.maxAngVel,
-            kSwerve.Auton.maxAngAccel))
-              .andThen(
-                run(() -> m_ledSubsytem.setPatternForDuration(
-                    m_ledSubsytem.rainbow, 
-                    2)))
-                    ;
+            kSwerve.Auton.maxAngAccel));
   }
 
   public Command alignToPath(PathPlannerPath goal) {
@@ -223,6 +204,32 @@ public class Autos extends SubsystemBase {
   }
 
   /**
+   * Calculates the scoring pose based on the given rotation, distance from the reef, 
+   * and whether the scoring is to the right or left side.
+   *
+   * @param rotation The rotation of the robot in radians.
+   * @param distanceFromReef The distance from the reef to the scoring location.
+   * @param right A boolean indicating whether to calculate for the right (true) or left (false) side.
+   * @return A Pose2d representing the calculated scoring location.
+   */
+  private static Pose2d GetScorePose(Rotation2d rotation, double distanceFromReef, boolean right) {
+    Translation2d reef = new Translation2d(4.4958, 4.026);
+    double verticalOffset = 0.165; // offset from the reef to the scoring location
+    if (!right) {
+      verticalOffset = -verticalOffset; // flip the offset for the left side
+    }
+    Pose2d baseScoreLocation = 
+      new Pose2d(
+        reef.plus(
+          new Translation2d(
+            0.7 + kSwerve.width + distanceFromReef,
+            verticalOffset)), 
+        new Rotation2d(Math.toRadians(180)));
+    Pose2d scoreLocation = baseScoreLocation.rotateAround(reef, rotation);
+    return scoreLocation;
+  }
+
+  /**
    * Finds the closest ReefScorePoints location to the robot's current position.
    * This method calculates the distance from the robot to each defined ReefScorePoints 
    * and determines which point has the minimum distance.
@@ -236,14 +243,23 @@ public class Autos extends SubsystemBase {
 
         // Update distances and find minimum in a single pass
     ReefScorePoints closest = points[0];
-    closest.setDistance(robotPose.getTranslation().getDistance(closest.getPoint()));
-    
+    if (!Robot.isRedAlliance()) {
+      closest.setDistance(robotPose.getTranslation().getDistance(closest.getPoint()));
+    } else {
+      closest.setDistance(robotPose.getTranslation().getDistance(closest.getPoint().rotateAround(kVision.fieldCenter, new Rotation2d(Math.toRadians(180)))));
+    }
+
     for (int i = 1; i < points.length; i++) {
-        double distance = robotPose.getTranslation().getDistance(points[i].getPoint());
-        points[i].setDistance(distance);
-        if (distance < closest.getDistance()) {
-            closest = points[i];
-        }
+      double distance;
+      if (!Robot.isRedAlliance()) {
+        distance = robotPose.getTranslation().getDistance(points[i].getPoint());
+      } else {
+        distance = robotPose.getTranslation().getDistance(points[i].getPoint().rotateAround(kVision.fieldCenter, new Rotation2d(Math.toRadians(180))));
+      }
+      points[i].setDistance(distance);
+      if (distance < closest.getDistance()) {
+          closest = points[i];
+      }
     }
     return closest;
   }
@@ -256,13 +272,13 @@ public class Autos extends SubsystemBase {
    * @param right A boolean indicating whether to align to the right (true) or left (false) pose.
    * @return A Command that aligns the robot to the specified side of the closest ReefScorePoints.
    */
-  public Command alignToClosestSide(boolean right) {
+  public void alignToClosestSide(boolean right) {
     ReefScorePoints closest = findClosestSide();
     Pose2d goalPose = right ? closest.getRightPose() : closest.getLeftPose();
     if (Robot.isRedAlliance()) {
       goalPose = goalPose.rotateAround(kVision.fieldCenter, new Rotation2d(Math.toRadians(180)));
     }
-    return align(goalPose);
+    align(goalPose).schedule();
   }
   
   private void setStartPose(PathPlannerPath path) {
