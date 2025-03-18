@@ -39,6 +39,10 @@ public class SetElevatorHeightCmd extends Command {
     } else {
       System.out.println("hey driver, are you trying to kill the elevator or something? please move the coral out of the way");
     }
+
+    if (m_scoreLevel != ElevatorPosition.L1) {
+      m_ledSubsystem.setPattern(m_ledSubsystem.elevatorProgress);
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -53,6 +57,8 @@ public class SetElevatorHeightCmd extends Command {
   public void end(boolean interrupted) {
     System.out.println("SetElevatorHeightCmd ended");
     endCmd = false; // reset the endCmd flag when the command ends
+
+    m_ledSubsystem.resetToDefaultPattern();
   }
 
   // Returns true when the command should end.
