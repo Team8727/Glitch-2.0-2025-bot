@@ -110,7 +110,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * @return the chassis speeds
    */
   public ChassisSpeeds getChassisSpeeds() {
-    return kSwerve.kinematics.toChassisSpeeds(cachedModuleStates);
+    return kSwerve.kinematics.toChassisSpeeds(getModuleStates());
   }
 
   /**
