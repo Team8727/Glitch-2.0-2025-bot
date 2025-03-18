@@ -22,9 +22,14 @@ public class Controller {
     }
 
     private int getPort() {
-        final int mainPort = 0;
-        final int assistPort = 1;
-        return m_operator == Operator.MAIN ? mainPort : assistPort;
+        switch (m_operator) {
+            case MAIN:
+                return 0;
+            case ASSIST:
+                return 1;
+            default:
+                throw new IllegalStateException("Unknown operator: " + m_operator);
+        }
     }
 
     private void initController() {
