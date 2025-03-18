@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 
+import frc.robot.commands.Coral.IntakeCoralCmd;
 import org.json.simple.parser.ParseException;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -291,7 +292,11 @@ public class Autos extends SubsystemBase {
     } else {
       startPose = path.getStartingHolonomicPose().orElse(path.getStartingDifferentialPose());
     }
-    m_PoseEstimatior.resetPoseToPose2d(startPose);
+    if (Robot.isReal()) {
+      m_PoseEstimatior.resetPoseToPose2d(startPose);
+    } else {
+      m_PoseEstimatior.resetPoseToPose2d(new Pose2d(startPose.getTranslation(), startPose.getRotation().plus(m_PoseEstimatior.get2dPose().getRotation())));
+    }
   }
 
   
