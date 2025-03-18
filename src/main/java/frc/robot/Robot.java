@@ -237,9 +237,6 @@ public class Robot extends TimedRobot {
   /** This function is called once when the robot is first started up. */
   @Override
   public void simulationInit() {
-    SimDeviceSim navXSim = new SimDeviceSim("navX-Sensor", m_SwerveSubsystem.navX.getPort());
-    SimDouble yaw = navXSim.getDouble("Yaw");
-    
   }
 
   /** This function is called periodically whilst in simulation. */

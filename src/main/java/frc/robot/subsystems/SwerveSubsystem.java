@@ -21,7 +21,7 @@ public class SwerveSubsystem extends SubsystemBase {
   private final SwerveModuleState[] cachedModuleStates = new SwerveModuleState[kSwerve.kNumModules];
 
   // Gyro
-  public final AHRS navX = new AHRS(AHRS.NavXComType.kMXP_SPI);
+  private final AHRS navX = new AHRS(AHRS.NavXComType.kMXP_SPI);
   // Simulated Gyro
   private class SimGyro {
     private double nextHeading = 0;
