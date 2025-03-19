@@ -151,17 +151,17 @@ public class Autos extends SubsystemBase {
   }
 
   public void selectAuto() {
-    if (autoChooser.getSelected() == "M_L4_H()") {
+    if (autoChooser.getSelected().equals("M_L4_H()")) {
       M_L4_H().schedule();
-    } else if (autoChooser.getSelected() == "L_L4_I()") {
+    } else if (autoChooser.getSelected().equals("L_L4_I()")) {
       L_L4_I().schedule();
-    } else if (autoChooser.getSelected() == "R_L4_F()") {
+    } else if (autoChooser.getSelected().equals("R_L4_F()")) {
       R_L4_F().schedule();
-    } else if (autoChooser.getSelected() == "MR_L4_F()") {
+    } else if (autoChooser.getSelected().equals("MR_L4_F()")) {
       MR_L4_F().schedule();
-    } else if (autoChooser.getSelected() == "ML_L4_I()") {
+    } else if (autoChooser.getSelected().equals("ML_L4_I()")) {
       ML_L4_I().schedule();
-    } else if (autoChooser.getSelected() == "Min()") {
+    } else if (autoChooser.getSelected().equals("Min()")) {
       Min().schedule();
     } else {
       System.out.println("somting is very wrong if you see this");
