@@ -224,8 +224,7 @@ public class Autos extends SubsystemBase {
             0.7 + kSwerve.width + distanceFromReef,
             verticalOffset)), 
         new Rotation2d(Math.toRadians(180)));
-    Pose2d scoreLocation = baseScoreLocation.rotateAround(reef, rotation);
-    return scoreLocation;
+      return baseScoreLocation.rotateAround(reef, rotation);
   }
 
   /**
