@@ -37,8 +37,8 @@ public class RobotContainer {
   private final LEDSubsystem m_ledSubsytem;
   private final Autos m_Autos;
   private boolean m_elevatorSpeedControl;
-  private final Controller m_mainController = new Controller();
-  private final Controller m_assistController = new Controller();
+  private final Controller m_mainController = new Controller(Controller.Operator.MAIN);
+  private final Controller m_assistController = new Controller(Controller.Operator.ASSIST);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(
       SwerveSubsystem swerveSubsystem,
@@ -71,29 +71,33 @@ public class RobotContainer {
 
   public void teleopInit() {
     m_mainController.applyBindings(
-    new Driver1DefaultBindings(
-      m_SwerveSubsystem,
-      m_PoseEstimator,
-      m_AlgaeIntakePivot,
-      m_AlgaeIntakeRollers,
-      m_coral,
-      m_elevator,
-      m_ledSubsytem,
-      m_elevatorSpeedControl,
-      m_AlgaeRemoverPivot,
-      m_AlgaeRemoverRollers,
-      m_Autos),
-    new Driver2DefaultBindings(
-      m_SwerveSubsystem,
-      m_PoseEstimator,
-      m_AlgaeIntakePivot,
-      m_AlgaeIntakeRollers,
-      m_coral,
-      m_elevator,
-      m_ledSubsytem,
-      m_elevatorSpeedControl,
-      m_AlgaeRemoverPivot,
-      m_AlgaeRemoverRollers));
+      new Driver1DefaultBindings(
+        m_SwerveSubsystem,
+        m_AlgaeIntakePivot,
+        m_AlgaeIntakeRollers,
+        m_coral,
+        m_elevator,
+        m_ledSubsytem,
+        m_elevatorSpeedControl,
+        m_AlgaeRemoverPivot,
+        m_AlgaeRemoverRollers,
+        m_Autos
+      )
+    );
+    
+    m_assistController.applyBindings(
+      new Driver2DefaultBindings(
+        m_SwerveSubsystem,
+        m_AlgaeIntakePivot,
+        m_AlgaeIntakeRollers,
+        m_coral,
+        m_elevator,
+        m_ledSubsytem,
+        m_elevatorSpeedControl,
+        m_AlgaeRemoverPivot,
+        m_AlgaeRemoverRollers
+      )
+    );
   }
 
   public void autonomousInit() {
