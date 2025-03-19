@@ -38,7 +38,7 @@ public class Autos extends SubsystemBase {
   private final LEDSubsystem m_ledSubsystem;
   private final Coral m_coral;
   private final Elevator m_elevator;
-  private final LinkedHashMap<String, PathPlannerPath> paths = new LinkedHashMap<String, PathPlannerPath>();
+  private final LinkedHashMap<String, PathPlannerPath> paths = new LinkedHashMap<>();
   private final PoseEstimatior m_PoseEstimatior;
   private final SendableChooser<String> autoChooser = new SendableChooser<>();
   private final NetworkTableLogger logger = new NetworkTableLogger(this.getName());
