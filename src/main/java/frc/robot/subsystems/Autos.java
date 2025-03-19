@@ -127,7 +127,6 @@ public class Autos extends SubsystemBase {
     m_PoseEstimatior = poseEstimatior;
 
     loadPaths();
-    // logScoreLocations();
     }
 
   private void loadPaths() {
@@ -138,6 +137,14 @@ public class Autos extends SubsystemBase {
     loadPath("L-I");
     loadPath("R-F");
     loadPath("M-H test");
+  }
+
+  private void loadPath(String pathName) {
+    try {
+      paths.put(pathName, PathPlannerPath.fromPathFile(pathName));
+    } catch (IOException | ParseException e) {
+      e.printStackTrace();
+    }
   }
 
   public void setupAutoChooser() {
@@ -166,16 +173,9 @@ public class Autos extends SubsystemBase {
       System.out.println("something is very wrong if you see this");
     }
   }
+
   public SendableChooser<String> getAutoChooser() {
     return autoChooser;
-  }
-
-  private void loadPath(String pathName) {
-    try {
-    paths.put(pathName, PathPlannerPath.fromPathFile(pathName));
-    } catch (IOException | ParseException e) {
-      e.printStackTrace();
-    }
   }
 
   public Command align(Pose2d goal) {
@@ -200,6 +200,22 @@ public class Autos extends SubsystemBase {
 
   public Command followPath(PathPlannerPath path) {
     return AutoBuilder.followPath(path);
+  }
+
+  /**
+   * Aligns the robot to the closest ReefScorePoints side, either to the left or right.
+   * The method first determines the closest ReefScorePoints location and then
+   * aligns the robot to either the left or right pose of that location.
+   *
+   * @param right A boolean indicating whether to align to the right (true) or left (false) pose.
+   */
+  public void alignToClosestSide(boolean right) {
+    ReefScorePoints closest = findClosestSide();
+    Pose2d goalPose = right ? closest.getRightPose() : closest.getLeftPose();
+    if (Robot.isRedAlliance()) {
+      goalPose = goalPose.rotateAround(kVision.fieldCenter, new Rotation2d(Math.toRadians(180)));
+    }
+    align(goalPose).schedule();
   }
 
   /**
@@ -261,22 +277,6 @@ public class Autos extends SubsystemBase {
     }
     return closest;
   }
-
-  /**
-   * Aligns the robot to the closest ReefScorePoints side, either to the left or right.
-   * The method first determines the closest ReefScorePoints location and then
-   * aligns the robot to either the left or right pose of that location.
-   *
-   * @param right A boolean indicating whether to align to the right (true) or left (false) pose.
-   */
-  public void alignToClosestSide(boolean right) {
-    ReefScorePoints closest = findClosestSide();
-    Pose2d goalPose = right ? closest.getRightPose() : closest.getLeftPose();
-    if (Robot.isRedAlliance()) {
-      goalPose = goalPose.rotateAround(kVision.fieldCenter, new Rotation2d(Math.toRadians(180)));
-    }
-    align(goalPose).schedule();
-  }
   
   private void setStartPose(PathPlannerPath path) {
     Pose2d startPose;
@@ -288,7 +288,6 @@ public class Autos extends SubsystemBase {
     m_PoseEstimatior.resetPoseToPose2d(startPose);
   }
 
-  
   private Command Min() {
     return new SequentialCommandGroup(
       new InstantCommand(() -> setStartPose(paths.get("Min"))),
