@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.Constants.kSwerve;
 import frc.robot.Constants.kVision;
 import frc.robot.utilities.NetworkTableLogger;
 
@@ -49,18 +50,25 @@ public class PoseEstimatior extends SubsystemBase {
   private SimCameraProperties cameraProp;
 
   // Field2d for logging the robot's 2d position on the field to the dashboard like AdvantageScope, Elastic or Glass.
-  private Field2d simField2d;
+  private Field2d visionDebugField;
   public Field2d field2d = new Field2d();
 
   /** Creates a new PoseEstimation. */
   public PoseEstimatior(SwerveSubsystem swerveSubsystem) {
     // subsystem setups
     m_SwerveSubsystem = swerveSubsystem;
-    m_SwervePoseEstimator = swerveSubsystem.swervePoseEstimator;
+    m_SwervePoseEstimator =     
+      new SwerveDrivePoseEstimator(
+        kSwerve.kinematics, 
+        m_SwerveSubsystem.getHeading(), 
+        m_SwerveSubsystem.getModulePositions(), 
+        new Pose2d()
+      );
+
     if (Robot.isSimulation()) {
       visionSim = new VisionSystemSim("main");
       cameraProp = new SimCameraProperties();
-      simField2d = visionSim.getDebugField();
+      visionDebugField = visionSim.getDebugField();
       
       visionSim.addAprilTags(kVision.aprilTagFieldLayout);
       // A 640 x 480 camera with a 100 degree diagonal FOV.
@@ -140,20 +148,31 @@ public class PoseEstimatior extends SubsystemBase {
     // m_SwerveSubsystem.navX.setAngleAdjustment(pose2d.getRotation().getDegrees());
     m_SwervePoseEstimator.resetPose(pose2d);
     // System.out.println(m_SwervePoseEstimator.getEstimatedPosition().getRotation().getDegrees());
+    
+    if (Robot.isSimulation()) {
+      m_SwerveSubsystem.setNextSimHeading(pose2d.getRotation().getRadians());
+      m_SwerveSubsystem.applySimHeading();
+    }
   }
 
   public void resetStartPose() {
-    m_SwervePoseEstimator.resetPose(getStartPose2d());
+    resetPoseToPose2d(getStartPose2d());
   }
 
   public void resetToEmptyPose() {
-    Pose2d pose2d = new Pose2d();
-    m_SwervePoseEstimator.resetPose(pose2d);
+    resetPoseToPose2d(new Pose2d());
   }
 
   // Get 2d pose: from the poseEstimator
   public Pose2d get2dPose() {
-    return (m_SwervePoseEstimator.getEstimatedPosition());
+    if (Robot.isSimulation()) {
+      Pose2d pose = new Pose2d(
+        m_SwervePoseEstimator.getEstimatedPosition().getTranslation(), 
+        m_SwerveSubsystem.getHeading());
+      return pose;
+    }
+
+    return m_SwervePoseEstimator.getEstimatedPosition();
   }
 
   Optional<EstimatedRobotPose> getEstimatedGlobalPose(
@@ -162,6 +181,11 @@ public class PoseEstimatior extends SubsystemBase {
       PhotonPoseEstimator PoseEstimator) {
     PoseEstimator.setReferencePose(prevEstimatedRobotPose);
     return PoseEstimator.update(cameraResult);
+  }
+
+  public void zeroHeading() {
+    m_SwerveSubsystem.zeroHeading();
+    m_SwervePoseEstimator.resetRotation(new Rotation2d());
   }
 
   private void addVisionMeasurement(PhotonCamera camera, PhotonPoseEstimator poseEstimator) {
@@ -203,7 +227,9 @@ public class PoseEstimatior extends SubsystemBase {
     networkTableLogger.logPose3d("cam front", visionSim.getCameraPose(cameraSimFront).orElse(new Pose3d()));
     networkTableLogger.logPose3d("cam back up", visionSim.getCameraPose(cameraSimBackUp).orElse(new Pose3d()));
     m_SwervePoseEstimator.addVisionMeasurement(visionSim.getRobotPose().toPose2d(), RobotController.getFPGATime());
-    networkTableLogger.logField2d("simField", simField2d);
+    networkTableLogger.logField2d("Vision Debug Field", visionDebugField);
+
+    m_SwerveSubsystem.applySimHeading();
   }
 
   @Override
@@ -221,8 +247,8 @@ public class PoseEstimatior extends SubsystemBase {
     // if (Robot.isReal()) {
       m_SwervePoseEstimator.updateWithTime(
         Timer.getFPGATimestamp(), 
-        m_SwerveSubsystem.getRotation2d(), 
-        m_SwerveSubsystem.modulePositions);
+        m_SwerveSubsystem.getHeading(), 
+        m_SwerveSubsystem.getModulePositions());
     // } else {
     //   m_SwervePoseEstimator.updateWithTime(
     //     Timer.getFPGATimestamp(), 
