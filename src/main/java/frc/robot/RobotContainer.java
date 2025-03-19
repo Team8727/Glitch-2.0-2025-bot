@@ -73,6 +73,7 @@ public class RobotContainer {
     m_mainController.applyBindings(
       new Driver1DefaultBindings(
         m_SwerveSubsystem,
+        m_PoseEstimator,
         m_AlgaeIntakePivot,
         m_AlgaeIntakeRollers,
         m_coral,
@@ -88,6 +89,7 @@ public class RobotContainer {
     m_assistController.applyBindings(
       new Driver2DefaultBindings(
         m_SwerveSubsystem,
+        m_PoseEstimator,
         m_AlgaeIntakePivot,
         m_AlgaeIntakeRollers,
         m_coral,
