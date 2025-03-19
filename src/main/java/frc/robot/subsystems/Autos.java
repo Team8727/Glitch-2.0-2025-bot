@@ -164,7 +164,7 @@ public class Autos extends SubsystemBase {
     } else if (autoChooser.getSelected().equals("Min()")) {
       Min().schedule();
     } else {
-      System.out.println("somting is very wrong if you see this");
+      System.out.println("something is very wrong if you see this");
     }
   }
   public SendableChooser<String> getAutoChooser() {
