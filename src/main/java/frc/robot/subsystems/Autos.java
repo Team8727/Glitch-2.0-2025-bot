@@ -360,15 +360,4 @@ public class Autos extends SubsystemBase {
       // new DeployCoralCmd(m_coral, m_ledSubsytem, m_elevator)
     );
   }
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
-
-  public Command getAutonomousCommand() { // TODO: This is where our autonomous commands will be run, check to see if it works
-    // An example command will be run in autonomous
-    return 
-    null;
-  }
 }
