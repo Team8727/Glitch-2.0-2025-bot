@@ -136,19 +136,24 @@ public final class Constants {
 
     // Swerve uses ccw+ angular quanities and a coordinate plane with 0,0 at the robot's center
     // , forward is +x, and a module order based on the quadrant system (front left is first)
-    public static SwerveDriveKinematics kinematics =
+    // BL        FL
+    //       C
+    // BR        FR
+    // NOTE: Make sure ModuleLocation and the order of the modules in the kinematics match
+    public enum ModuleLocation {
+      FRONT_LEFT,
+      FRONT_RIGHT,
+      BACK_LEFT,
+      BACK_RIGHT
+    }
+    public static final int kNumModules = kSwerve.ModuleLocation.values().length;
+
+    public static final SwerveDriveKinematics kinematics =
         new SwerveDriveKinematics(
             new Translation2d(length / 2, width / 2), // front left
             new Translation2d(length / 2, -width / 2), // front right
             new Translation2d(-length / 2, width / 2), // back left
             new Translation2d(-length / 2, -width / 2)); // back right
-
-    public static SwerveDriveKinematics autoKinematics =
-      new SwerveDriveKinematics(
-          new Translation2d(length / 2, width / 2), // front left
-          new Translation2d(length / 2, -width / 2), // front right
-          new Translation2d(-length / 2, width / 2), // back left
-          new Translation2d(-length / 2, -width / 2)); // back right
 
     // Module angular offsets (rad)
     public static class Offsets {

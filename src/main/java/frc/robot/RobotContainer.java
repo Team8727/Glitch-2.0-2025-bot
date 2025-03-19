@@ -9,6 +9,7 @@ import frc.robot.controller.Driver1DefaultBindings;
 import frc.robot.controller.Driver2DefaultBindings;
 import frc.robot.subsystems.Autos;
 import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.PoseEstimatior;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakePivot;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakeRollers;
@@ -26,6 +27,7 @@ import frc.robot.subsystems.Elevator.Coral.Coral;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem m_SwerveSubsystem;
+  private final PoseEstimatior m_PoseEstimator;
   private final AlgaeIntakePivot m_AlgaeIntakePivot;
   private final AlgaeIntakeRollers m_AlgaeIntakeRollers;
   private final AlgaeRemoverPivot m_AlgaeRemoverPivot;
@@ -40,6 +42,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(
       SwerveSubsystem swerveSubsystem,
+      PoseEstimatior poseEstimator,
       AlgaeIntakePivot AlgaeIntakePivot,
       AlgaeIntakeRollers AlgaeIntakeRollers,
       AlgaeRemoverPivot AlgaeRemoverPivot,
@@ -51,6 +54,7 @@ public class RobotContainer {
       boolean elevatorSpeedControl
       ) {
     m_SwerveSubsystem = swerveSubsystem;
+    m_PoseEstimator = poseEstimator;
     m_AlgaeIntakePivot = AlgaeIntakePivot;
     m_AlgaeIntakeRollers = AlgaeIntakeRollers;
     m_AlgaeRemoverPivot = AlgaeRemoverPivot;
@@ -69,6 +73,7 @@ public class RobotContainer {
     m_mainController.applyBindings(
     new Driver1DefaultBindings(
       m_SwerveSubsystem,
+      m_PoseEstimator,
       m_AlgaeIntakePivot,
       m_AlgaeIntakeRollers,
       m_coral,
@@ -80,6 +85,7 @@ public class RobotContainer {
       m_Autos),
     new Driver2DefaultBindings(
       m_SwerveSubsystem,
+      m_PoseEstimator,
       m_AlgaeIntakePivot,
       m_AlgaeIntakeRollers,
       m_coral,

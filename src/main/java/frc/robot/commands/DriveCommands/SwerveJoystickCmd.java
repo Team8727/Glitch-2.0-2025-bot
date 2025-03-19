@@ -2,7 +2,6 @@ package frc.robot.commands.DriveCommands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.Constants.kElevator;
@@ -78,23 +77,19 @@ public class SwerveJoystickCmd extends Command {
     if (m_fieldOrientedFunction.get()) {
       chassisSpeeds =
           ChassisSpeeds.fromFieldRelativeSpeeds(
-              xSpeed, ySpeed, turningSpeed, m_SwerveSubsystem.getRotation2d());
+              xSpeed, ySpeed, turningSpeed, m_SwerveSubsystem.getHeading());
     } else {
       chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
     }
 
-    if (Robot.isSimulation()) { 
-      double adjustedAngle = m_SwerveSubsystem.navX.getAngle() + ((turningSpeed * 360) / (2 * Math.PI)) * 0.02;
-      m_SwerveSubsystem.navX.setAngleAdjustment(adjustedAngle);
-    }
-    
     // Set the swerve module states
-    SwerveModuleState[] moduleStates = kSwerve.kinematics.toSwerveModuleStates(chassisSpeeds);
-    // System.out.println("setting module states");
-
-    // output to swerve modules
-    m_SwerveSubsystem.setModuleStates(moduleStates);
+    m_SwerveSubsystem.setChassisSpeeds(chassisSpeeds);
     m_logger.logChassisSpeeds("chassisspeeds", chassisSpeeds);
+
+    // Update the sim rotation
+    if (Robot.isSimulation()) {
+      m_SwerveSubsystem.applySimHeading();
+    }
   }
 
   @Override
