@@ -269,7 +269,6 @@ public class Autos extends SubsystemBase {
    * aligns the robot to either the left or right pose of that location.
    *
    * @param right A boolean indicating whether to align to the right (true) or left (false) pose.
-   * @return A Command that aligns the robot to the specified side of the closest ReefScorePoints.
    */
   public void alignToClosestSide(boolean right) {
     ReefScorePoints closest = findClosestSide();
