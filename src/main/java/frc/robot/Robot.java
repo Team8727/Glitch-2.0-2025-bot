@@ -180,7 +180,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     CommandScheduler.getInstance().cancelAll();
-    
+
     // m_ledSubsystem.setPattern(LEDPatterns.green);
 
     m_ledSubsystem.fireAnimation(LEDPatterns.darkGreen, true);
