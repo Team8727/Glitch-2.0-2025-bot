@@ -41,8 +41,8 @@ public class Autos extends SubsystemBase {
   private final LinkedHashMap<String, PathPlannerPath> paths = new LinkedHashMap<String, PathPlannerPath>();
   private final PoseEstimatior m_PoseEstimatior;
   private final SendableChooser<String> autoChooser = new SendableChooser<>();
-  private final NetworkTableLogger logger = new NetworkTableLogger(this.getName().toString());
   private final Pose2d[] scoreLocations = new Pose2d[12]; // Array to hold score locations for logging
+  private final NetworkTableLogger logger = new NetworkTableLogger(this.getName());
 
   public enum ReefScorePoints {
     A_B("A-B",
