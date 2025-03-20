@@ -36,7 +36,6 @@ public class RobotContainer {
   private final Elevator m_elevator;
   private final LEDSubsystem m_ledSubsytem;
   private final Autos m_Autos;
-  private boolean m_elevatorSpeedControl;
   private final Controller m_mainController = new Controller(Controller.Operator.MAIN);
   private final Controller m_assistController = new Controller(Controller.Operator.ASSIST);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -50,8 +49,7 @@ public class RobotContainer {
       Coral coral,
       Elevator elevator,
       LEDSubsystem ledSubsystem,
-      Autos autos,
-      boolean elevatorSpeedControl
+      Autos autos
       ) {
     m_SwerveSubsystem = swerveSubsystem;
     m_PoseEstimator = poseEstimator;
@@ -63,7 +61,6 @@ public class RobotContainer {
     m_elevator = elevator;
     m_ledSubsytem = ledSubsystem;
     m_Autos = autos;
-    m_elevatorSpeedControl = elevatorSpeedControl;
 
     m_Autos.setupAutoChooser();
 
@@ -79,7 +76,6 @@ public class RobotContainer {
         m_coral,
         m_elevator,
         m_ledSubsytem,
-        m_elevatorSpeedControl,
         m_AlgaeRemoverPivot,
         m_AlgaeRemoverRollers,
         m_Autos
@@ -95,7 +91,6 @@ public class RobotContainer {
         m_coral,
         m_elevator,
         m_ledSubsytem,
-        m_elevatorSpeedControl,
         m_AlgaeRemoverPivot,
         m_AlgaeRemoverRollers
       )

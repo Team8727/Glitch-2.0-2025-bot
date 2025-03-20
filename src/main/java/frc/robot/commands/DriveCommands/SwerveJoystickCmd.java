@@ -17,26 +17,20 @@ public class SwerveJoystickCmd extends Command {
 
   private final SwerveSubsystem m_SwerveSubsystem;
   private final Elevator m_Elevator;
-  private final Supplier<Double> m_xSpdFunction, m_ySpdFunction, m_turningSpdFunction;
-  private final Supplier<Boolean> m_fieldOrientedFunction;
-  private final Supplier<Boolean> m_scaleSpeedToElevHeight;
+  private final Supplier<Double> m_ySpdFunction, m_xSpdFunction, m_turningSpdFunction;
   private final NetworkTableLogger m_logger = new NetworkTableLogger(this.getName().toString());
 
   public SwerveJoystickCmd(
       SwerveSubsystem swerveSubsystem,
       Elevator elevator,
-      Supplier<Double> xSpdFunction,
       Supplier<Double> ySpdFunction,
-      Supplier<Double> turningSpdFunction,
-      Supplier<Boolean> fieldOrientedFunction,
-      Supplier<Boolean> scaleSpeedToElevHeight) {
+      Supplier<Double> xSpdFunction,
+      Supplier<Double> turningSpdFunction) {
     m_SwerveSubsystem = swerveSubsystem;
     m_Elevator = elevator;
-    m_xSpdFunction = xSpdFunction;
     m_ySpdFunction = ySpdFunction;
+    m_xSpdFunction = xSpdFunction;
     m_turningSpdFunction = turningSpdFunction;
-    m_fieldOrientedFunction = fieldOrientedFunction;
-    m_scaleSpeedToElevHeight = scaleSpeedToElevHeight;
     addRequirements(swerveSubsystem);
   }
 
@@ -46,8 +40,8 @@ public class SwerveJoystickCmd extends Command {
   @Override
   public void execute() {
     // get joystick values
-    double xSpeed = m_xSpdFunction.get();
-    double ySpeed = m_ySpdFunction.get();
+    double xSpeed = -m_ySpdFunction.get();
+    double ySpeed = -m_xSpdFunction.get();
     double turningSpeed = m_turningSpdFunction.get();
 
     // apply deadband
@@ -55,36 +49,25 @@ public class SwerveJoystickCmd extends Command {
     ySpeed = MathUtil.applyDeadband(ySpeed, kOI.translationDeadzone);
     turningSpeed = MathUtil.applyDeadband(turningSpeed, kOI.rotationDeadzone);
 
-    if (m_scaleSpeedToElevHeight.get()) { // Scaling to elevator height
 
-      // get elevator height for anti-tipping
-      double elevatorHeight = m_Elevator.getElevatorHeight();
-      xSpeed = -(xSpeed * kSwerve.maxTransSpeed
-       * ((kElevator.ElevatorPosition.L4.getOutputRotations() - (elevatorHeight - 4)) / kElevator.ElevatorPosition.L4.getOutputRotations())); // * kSwerve.DriveSpeedScaling.minDriveSpeed; // Scaling to elevator height
-      ySpeed = -(ySpeed * kSwerve.maxTransSpeed
-       * ((kElevator.ElevatorPosition.L4.getOutputRotations() - (elevatorHeight - 4)) / kElevator.ElevatorPosition.L4.getOutputRotations())); // * kSwerve.DriveSpeedScaling.minDriveSpeed; // Scaling to elevator height
-      turningSpeed = -(turningSpeed * kSwerve.maxAngSpeed
-       * ((kElevator.ElevatorPosition.L4.getOutputRotations() - (elevatorHeight - 4)) / kElevator.ElevatorPosition.L4.getOutputRotations())); // * kSwerve.DriveSpeedScaling.minDriveSpeed; // Scaling to elevator height
-    
-    } else {
-      xSpeed *= kSwerve.maxTransSpeed;
-      ySpeed *= kSwerve.maxTransSpeed;
-      turningSpeed *= kSwerve.maxAngSpeed;
-    }
+    // get elevator height for anti-tipping
+    double elevatorHeight = m_Elevator.getElevatorHeight();
+    double driveSpeedConversionFactor = (kElevator.ElevatorPosition.L4.getOutputRotations() - (elevatorHeight - 4)) / kElevator.ElevatorPosition.L4.getOutputRotations();
+    xSpeed = -(xSpeed * kSwerve.maxTransSpeed
+     * driveSpeedConversionFactor); // * kSwerve.DriveSpeedScaling.minDriveSpeed; // Scaling to elevator height
+    ySpeed = -(ySpeed * kSwerve.maxTransSpeed
+     * driveSpeedConversionFactor); // * kSwerve.DriveSpeedScaling.minDriveSpeed; // Scaling to elevator height
+    turningSpeed = -(turningSpeed * kSwerve.maxAngSpeed
+     * driveSpeedConversionFactor); // * kSwerve.DriveSpeedScaling.minDriveSpeed; // Scaling to elevator height
 
     // set chassis speed
-    ChassisSpeeds chassisSpeeds;
-    if (m_fieldOrientedFunction.get()) {
-      chassisSpeeds =
-          ChassisSpeeds.fromFieldRelativeSpeeds(
-              xSpeed, ySpeed, turningSpeed, m_SwerveSubsystem.getHeading());
-    } else {
-      chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
-    }
+    ChassisSpeeds chassisSpeeds =
+      ChassisSpeeds.fromFieldRelativeSpeeds(
+        xSpeed, ySpeed, turningSpeed, m_SwerveSubsystem.getHeading());
 
     // Set the swerve module states
     m_SwerveSubsystem.setChassisSpeeds(chassisSpeeds);
-    m_logger.logChassisSpeeds("chassisspeeds", chassisSpeeds);
+    m_logger.logChassisSpeeds("chassis speeds", chassisSpeeds);
 
     // Update the sim rotation
     if (Robot.isSimulation()) {

@@ -54,8 +54,6 @@ public class Robot extends TimedRobot {
   private final AlgaeIntakeRollers m_AlgaeIntakeRollers = new AlgaeIntakeRollers();
   private final Autos m_Autos = new Autos(m_ledSubsytem, m_coral, m_elevator, m_PoseEstimatior);
 
-  private boolean m_elevatorSpeedControl = true;
-
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -107,8 +105,7 @@ public class Robot extends TimedRobot {
             m_coral,
             m_elevator,
             m_ledSubsytem,
-            m_Autos,
-            m_elevatorSpeedControl
+            m_Autos
             );
     
     // Load autos into chooser and use SmartDashboard to publish

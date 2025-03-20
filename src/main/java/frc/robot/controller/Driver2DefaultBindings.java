@@ -25,7 +25,6 @@ public class Driver2DefaultBindings implements ControllerBindings {
     private final Coral m_coral;
     private final Elevator m_elevator;
     private final LEDSubsystem m_ledSubsytem;
-    private final boolean m_elevatorSpeedControl;
     private final AlgaeRemoverPivot m_AlgaeRemoverPivot;
     private final AlgaeRemoverRollers m_AlgaeRemoverRollers;
 
@@ -37,7 +36,6 @@ public class Driver2DefaultBindings implements ControllerBindings {
         Coral coral,
         Elevator elevator,
         LEDSubsystem ledSubsystem,
-        boolean elevatorSpeedControl,
         AlgaeRemoverPivot algaeRemoverPivot,
         AlgaeRemoverRollers algaeRemoverRollers) {
         m_SwerveSubsystem = swerveSubsystem;
@@ -47,7 +45,6 @@ public class Driver2DefaultBindings implements ControllerBindings {
         m_coral = coral;
         m_elevator = elevator;
         m_ledSubsytem = ledSubsystem;
-        m_elevatorSpeedControl = elevatorSpeedControl;
         m_AlgaeRemoverPivot = algaeRemoverPivot;
         m_AlgaeRemoverRollers = algaeRemoverRollers;
     }
