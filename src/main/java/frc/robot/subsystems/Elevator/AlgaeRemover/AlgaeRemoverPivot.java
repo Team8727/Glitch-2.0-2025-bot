@@ -57,7 +57,7 @@ public class AlgaeRemoverPivot extends SubsystemBase {
 
     config = new SparkMaxConfig();
     config // TODO: config everything
-        .smartCurrentLimit(40) 
+        .smartCurrentLimit(60)
         .idleMode(IdleMode.kBrake)
         .inverted(true)
         .closedLoop
