@@ -333,9 +333,9 @@ public final class Constants {
       public static int removerPivotMotorCANID =12; // TODO: not set yet because remover is not built yet
 
       public enum RemoverPositions {
-        Fling(100),
+        Fling(110),
+        Grab(70),
         RaisedL2(80), // TODO: SET WITH ACTUAL VALUES
-        RaisedL3(50), // TODO: SET WITH ACTUAL VALUES
         Stowed(18); // TODO: SET WITH ACTUAL VALUES
       
         private final double degrees;
