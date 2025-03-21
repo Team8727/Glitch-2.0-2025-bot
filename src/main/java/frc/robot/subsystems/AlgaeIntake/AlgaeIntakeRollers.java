@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems.AlgaeIntake;
 
+import static frc.robot.utilities.SparkConfigurator.getSparkMax;
+
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -20,8 +22,6 @@ import frc.robot.utilities.NetworkTableLogger;
 import frc.robot.utilities.SparkConfigurator.LogData;
 
 import java.util.Set;
-
-import static frc.robot.utilities.SparkConfigurator.getSparkMax;
 
 public class AlgaeIntakeRollers extends SubsystemBase {
   private final SparkMax intakeRollerMotor;
@@ -65,8 +65,8 @@ public class AlgaeIntakeRollers extends SubsystemBase {
     // Configuring Motor With Config
     intakeRollerMotor.configure(
       config,
-        ResetMode.kNoResetSafeParameters, 
-        PersistMode.kNoPersistParameters);
+      ResetMode.kNoResetSafeParameters,
+      PersistMode.kNoPersistParameters);
 
 // -=-=-=-=- Instantiate Intake Sensor -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-|Contructor|
 

@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems.Elevator.AlgaeRemover;
 
+import static frc.robot.utilities.SparkConfigurator.getSparkMax;
+
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -17,8 +19,6 @@ import frc.robot.Constants.kAlgaeRemover;
 import frc.robot.utilities.SparkConfigurator.LogData;
 
 import java.util.Set;
-
-import static frc.robot.utilities.SparkConfigurator.getSparkMax;
 
 public class AlgaeRemoverRollers extends SubsystemBase {
   private final SparkMax removerRollerMotor;
@@ -47,8 +47,8 @@ public class AlgaeRemoverRollers extends SubsystemBase {
 
     removerRollerMotor.configure(
       config,
-        ResetMode.kNoResetSafeParameters,
-        PersistMode.kNoPersistParameters);
+      ResetMode.kNoResetSafeParameters,
+      PersistMode.kNoPersistParameters);
 
     removerRollerPID = removerRollerMotor.getClosedLoopController();
   }

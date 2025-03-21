@@ -24,7 +24,6 @@ import frc.robot.utilities.SparkConfigurator.LogData;
 
 import java.util.Set;
 
-import static edu.wpi.first.units.Units.Volt;
 import static frc.robot.utilities.SparkConfigurator.getSparkMax;
 
 public class AlgaeIntakePivot extends SubsystemBase {
@@ -82,8 +81,8 @@ public class AlgaeIntakePivot extends SubsystemBase {
     // Configuring Motor With Config
     intakePivotMotor.configure(
       config,
-        ResetMode.kNoResetSafeParameters,
-        PersistMode.kNoPersistParameters);
+      ResetMode.kNoResetSafeParameters,
+      PersistMode.kNoPersistParameters);
 
   // -=-=-=-=- PID controller for the motor for convenience -=-=-=-=-=-=-=-=|Constructor|
 
