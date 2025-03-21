@@ -31,8 +31,8 @@ public class weirdAlgaeIntakeCmd extends Command {
     m_elevator = elevator;
     m_ledSubsystem = ledSubsystem;
     m_coral = coral;
+
     addRequirements(algaeRemoverPivot, algaeRemoverRollers, elevator); // Add the required subsystems here
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
