@@ -9,6 +9,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import frc.robot.Constants;
 
 import java.util.Set;
@@ -181,7 +182,7 @@ public class SparkConfigurator {
     // NEW 2025 CREATION OF SPARKMAX, CANSPARKMAX was removed
     SparkMax spark = new SparkMax(id, motorType);
     SparkMaxConfig config = new SparkMaxConfig();
-    // spark.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters); 
+    // spark.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     // TODO: this line might need to be removed. It wasn't there
     // TODO: i think it needs to be removed too
 
