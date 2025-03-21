@@ -20,16 +20,9 @@ public class ZeroElevator extends Command {
 
   /** Creates a new SetEvevatorHeightCmd. */
   public ZeroElevator(Elevator elevator) {
-
     m_elevator = elevator;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(elevator);
-
-    // this.beforeStarting(() -> {
-    //   m_coral.elevatorUp = true;
-    //   new IntakeCoralCmd(m_coral, m_elevator, m_ledSubsystem);
-    // }, m_coral);
-
   }
 
   // Called when the command is initially scheduled.
@@ -41,9 +34,9 @@ public class ZeroElevator extends Command {
       new InstantCommand(() -> m_elevator.setDutyCycle(-0.1)),
       new WaitCommand(0.3),
       new WaitUntilCommand(() -> m_elevator.getCurrentDrawAmps() > 35),
-      new InstantCommand(() -> m_elevator.resetElevatorEncoders()),
+      new InstantCommand(m_elevator::resetElevatorEncoders),
       new InstantCommand(() -> m_elevator.isHoming = false),
-      new RunCommand(() -> this.cancel())).schedule();
+      new RunCommand(this::cancel)).schedule();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

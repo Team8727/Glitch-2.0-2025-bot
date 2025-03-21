@@ -69,8 +69,7 @@ public class MAXSwerve {
         .encoder
         .positionConversionFactor(kModule.drivingEncoderPositionFactor)
         .velocityConversionFactor(kModule.drivingEncoderVelocityFactor);
-    // steerConfig.closedLoop                 somethings wrong here but im too dumb to figure out
-    // what
+    // steerConfig.closedLoop        something's wrong here but im too dumb to figure out what
     //   .feedbackSensor(driveEncoder);
     driveConfig
         .closedLoop
@@ -93,8 +92,7 @@ public class MAXSwerve {
         .inverted(kModule.invertSteerEncoder)
         .positionConversionFactor(kModule.steeringEncoderPositionFactor)
         .velocityConversionFactor(kModule.steeringEncoderVelocityFactor);
-    // steerConfig.closedLoop                 somethings wrong here but im too dumb to figure out
-    // what
+    // steerConfig.closedLoop      something's wrong here but im too dumb to figure out what
     //   .feedbackSensor(driveEncoder);
     steerConfig
         .closedLoop
@@ -161,33 +159,32 @@ public class MAXSwerve {
 
   // Set the module's target state
   public void setTargetState(
-      SwerveModuleState desiredState, boolean closedLoopDrive, boolean optimizeHeading) {
+      SwerveModuleState state, boolean closedLoopDrive, boolean optimizeHeading) {
     // Optimize the state to prevent having to make a rotation of more than 90 degrees
-    SwerveModuleState optimizedState = desiredState;
-    if (optimizeHeading) {
-      optimizedState.optimize(getCorrectedSteer());
+      if (optimizeHeading) {
+      state.optimize(getCorrectedSteer());
     }
 
     // Scale
-    optimizedState.speedMetersPerSecond *= Math.cos(Math.abs(getHeadingError().getRadians()));
+    state.speedMetersPerSecond *= Math.cos(Math.abs(getHeadingError().getRadians()));
 
     // Set the built-in PID for closed loop, or just give a regular voltage for open loop
     if (closedLoopDrive) {
       drivePID.setReference(
-          optimizedState.speedMetersPerSecond,
+          state.speedMetersPerSecond,
           ControlType.kVelocity,
           ClosedLoopSlot.kSlot0,
-          driveFF.calculate(optimizedState.speedMetersPerSecond));
+          driveFF.calculate(state.speedMetersPerSecond));
     } else {
-      driveNEO.setVoltage(driveFF.calculate(optimizedState.speedMetersPerSecond));
+      driveNEO.setVoltage(driveFF.calculate(state.speedMetersPerSecond));
     }
 
     steerPID.setReference(
-        optimizedState.angle.minus(new Rotation2d(chassisOffset)).getRadians(),
+        state.angle.minus(new Rotation2d(chassisOffset)).getRadians(),
         ControlType.kPosition);
 
     // Record the target state
-    targetState = optimizedState;
+    targetState = state;
     // Forward euler on the position in sim
     if (RobotBase.isSimulation()) simDrivePosition += targetState.speedMetersPerSecond * 0.02;
   }
@@ -227,14 +224,16 @@ public class MAXSwerve {
       driveNEO.configure(
           driveconfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
     } else {
-      SparkMaxConfig driveconfig = new SparkMaxConfig();
-      driveconfig.idleMode(IdleMode.kCoast);
+      SparkMaxConfig driveConfig = new SparkMaxConfig();
+      driveConfig.idleMode(IdleMode.kCoast);
       driveNEO.configure(
-          driveconfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+          driveConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
     }
   }
 
-  // Get the output voltages
+  /**
+   * Get the output voltages
+   */
   public double[] getVoltages() {
     return new double[] {
       driveNEO.getAppliedOutput() * driveNEO.getBusVoltage(),

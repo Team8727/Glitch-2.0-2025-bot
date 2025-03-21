@@ -36,35 +36,26 @@ public class AlgaeRemoverRollers extends SubsystemBase {
                 LogData.POSITION,
                 LogData.VELOCITY,
                 LogData.VOLTAGE,
-                LogData.CURRENT)); // TODO: logging everything for now
+                LogData.CURRENT));
 
     config = new SparkMaxConfig();
     config
-        .smartCurrentLimit(25) // TODO: figure out what this should be
+        .smartCurrentLimit(25)
         .idleMode(IdleMode.kCoast)
         .inverted(false)
         .closedLoop
-        .velocityFF(0) // TODO: tune
-        .pidf(0, 0, 0, 0)
-        .maxMotion
-        .maxAcceleration(0)
-        .maxAcceleration(0)
-        .allowedClosedLoopError(0);
+        .pidf(0, 0, 0, 0);
 
     removerRollerMotor.configure(
         config,
         ResetMode.kNoResetSafeParameters,
-        PersistMode.kNoPersistParameters); // TODO: Might need to be resetsafe and presistsafe, but nothing is set yet, so I said no
+        PersistMode.kNoPersistParameters);
 
     removerRollerPID = removerRollerMotor.getClosedLoopController();
   }
 
   public void setRemoverRollerSpeed(double speed) {
     removerRollerPID.setReference(speed, ControlType.kDutyCycle);
-  }
-
-  public void spinnnnnnn() {
-    setRemoverRollerSpeed(1000);
   }
 
   @Override

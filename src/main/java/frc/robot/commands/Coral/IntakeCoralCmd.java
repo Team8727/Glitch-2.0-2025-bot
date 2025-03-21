@@ -21,8 +21,8 @@ public class IntakeCoralCmd extends Command {
     m_coral = coral;
     m_elevator = elevator;
     m_ledSubsystem = ledSubsystem;
+
     addRequirements(coral, elevator);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -47,13 +47,13 @@ public class IntakeCoralCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_coral.getBackCoralSensor() && sensedCoral == false) {
+    if (m_coral.getBackCoralSensor() && !sensedCoral) {
       m_coral.setIntakeSpeedDuty(.13);
       m_coral.setOuttakeSpeedDuty(.11);
       sensedCoral = true;
     } 
 
-    if (!m_coral.getBackCoralSensor() && sensedCoral == true) {
+    if (!m_coral.getBackCoralSensor() && sensedCoral) {
       m_coral.setIntakeSpeedDuty(0);
       m_coral.holdPosition();
       sensedCoral = false;

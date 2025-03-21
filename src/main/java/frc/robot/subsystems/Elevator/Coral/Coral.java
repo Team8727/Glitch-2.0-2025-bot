@@ -29,7 +29,7 @@ public class Coral extends SubsystemBase {
   private final SparkLimitSwitch backCoralSensor;
   public boolean elevatorUp = false;
 
-  private NetworkTableLogger logger = new NetworkTableLogger(this.getSubsystem().toString());
+  private final NetworkTableLogger logger = new NetworkTableLogger(this.getSubsystem());
 
   /** Creates a new Coral. */
   public Coral() {
@@ -45,17 +45,13 @@ public class Coral extends SubsystemBase {
                 LogData.VOLTAGE,
                 LogData.CURRENT));
     backConfig = new SparkMaxConfig();
-    backConfig // TODO: tune configs
+    backConfig
         .smartCurrentLimit(40)
         .idleMode(IdleMode.kBrake)
         .inverted(true)
         .closedLoop
         .velocityFF(0)
         .pid(0.5, 0, 0);
-        // .maxMotion
-        // .maxAcceleration(0)          // Disabling max motion for these rollers (no need to be very precise). 
-        // .maxAcceleration(0)
-        // .allowedClosedLoopError(0);
 
     backMotor.configure(
       backConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
@@ -73,17 +69,13 @@ public class Coral extends SubsystemBase {
                 LogData.CURRENT));
 
     frontConfig = new SparkMaxConfig();
-    frontConfig// TODO: tune configs
+    frontConfig
         .smartCurrentLimit(40) 
         .idleMode(IdleMode.kBrake)
         .inverted(true)
         .closedLoop
         .velocityFF(0) 
         .pid(0.5, 0, 0);
-        // .maxMotion
-        // .maxAcceleration(0)          // Disabling max motion for these rollers (no need to be very precise). 
-        // .maxAcceleration(0)
-        // .allowedClosedLoopError(0);
 
     frontMotor.configure(
         frontConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);

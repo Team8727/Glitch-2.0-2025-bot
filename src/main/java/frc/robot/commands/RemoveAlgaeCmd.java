@@ -28,8 +28,8 @@ public class RemoveAlgaeCmd extends Command {
     m_setPos = setPos;
     m_elevator = elevator;
     m_ledSubsystem = ledSubsystem;
+
     addRequirements(algaeRemoverPivot, algaeRemoverRollers, elevator); // Add the required subsystems here
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -37,9 +37,9 @@ public class RemoveAlgaeCmd extends Command {
   public void initialize() {
     if (m_elevator.getElevatorSetPosition() == ElevatorPosition.A2 || m_elevator.getElevatorSetPosition() == ElevatorPosition.A3) {
       System.out.println("test");
-      m_pivot.setPositionTrapazoidal(RemoverPositions.RaisedL2); // TODO: set positions
-      m_rollers.setRemoverRollerSpeed(.7); // TODO: set speed
-      m_ledSubsystem.combinePatternsForDuration(m_ledSubsystem.blue, m_ledSubsystem.ace, 2);
+      m_pivot.setPositionTrapazoidal(RemoverPositions.RaisedL2);
+      m_rollers.setRemoverRollerSpeed(.7);
+      m_ledSubsystem.combinePatternsForDuration(LEDSubsystem.blue, LEDSubsystem.ace, 2);
     } else {
       m_elevator.setElevatorHeightMotionProfile(m_setPos);
       this.cancel();

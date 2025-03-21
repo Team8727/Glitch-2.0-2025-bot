@@ -29,7 +29,7 @@ public class AlgaeIntakeRollers extends SubsystemBase {
   private final DigitalInput algaeCheck;
   private final SparkClosedLoopController rollerPID;
   public boolean isMoving = false;
-  private NetworkTableLogger logger = new NetworkTableLogger(this.getSubsystem().toString());
+  private final NetworkTableLogger logger = new NetworkTableLogger(this.getSubsystem());
 
 
   /** Creates a new AlgaeIntakeRollers. */
@@ -52,19 +52,17 @@ public class AlgaeIntakeRollers extends SubsystemBase {
 // -=-=-=-=-=- pivotMotor config, PID config, and maxMotion constraints config -=-=-=-|Contructor|
 
     // Setting the output range, PID, and maxMotion constraints for the motor
-    config = new SparkMaxConfig(); // TODO: figure out all values (figure out how to do maxvel and
-    // maxaccel) (pid is tuned through Rev Hardware Client for onboard PID
-    // on motor controller)
+    config = new SparkMaxConfig();
 
     config
       // Motor Config
-      .smartCurrentLimit(30) // TODO: figure out what this should be
+      .smartCurrentLimit(30)
       .idleMode(IdleMode.kBrake)
       .inverted(true)
 
       // PID Control
       .closedLoop
-        .outputRange(-1, 1) // TODO: currently set to full range
+        .outputRange(-1, 1)
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
         // MaxMotion Control for more precise position control
         // .maxMotion
@@ -108,30 +106,19 @@ public class AlgaeIntakeRollers extends SubsystemBase {
   }
 
 // -=-=-=-=-=-=-=-= Logging =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-|Subsystem|
-  
-boolean m_shouldLog = false;
-  NetworkTableLogger periodicLogger = new NetworkTableLogger(this.getSubsystem().toString());
-
-  /**
-   * Whether to log values (like encoder data)
-   */
-  public void shouldLogValues(boolean shouldLog) {
-    m_shouldLog = shouldLog;
-  }
-
   /**
    * Used in subsystem periodic to log and update values
    */
-  public void startLogging() { // Only for calling in the periodic of this subsystem
-    periodicLogger.logDouble("Motor Current", intakeRollerMotor.getOutputCurrent());
-    periodicLogger.logBoolean("Intake Sensor (boolean)", algaeCheck.get());
+  public void logValues() {
+    logger.logDouble("Motor Current", intakeRollerMotor.getOutputCurrent());
+    logger.logBoolean("Intake Sensor (boolean)", algaeCheck.get());
     // Add other relevant values
   }
 // -=-=-=-=-=-=-=-=- Commands -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-|Subsystem|
 
   private void holdAlgae() {
-    if (isMoving == false) {
-      if (getAlgaeCheck() == true) {
+    if (!isMoving) {
+      if (getAlgaeCheck()) {
         setRollerSpeedDuty(.5);
       } else {
       stopRollers();
@@ -146,9 +133,7 @@ boolean m_shouldLog = false;
     holdAlgae();
     logger.logBoolean("Algae Sensor", getAlgaeCheck());
     // This method will be called once per scheduler run
-    if (m_shouldLog) {
-      startLogging();
-    }
+    logValues();
   }
 }
 

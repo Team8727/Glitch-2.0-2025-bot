@@ -20,8 +20,8 @@ import frc.robot.subsystems.LEDSubsystem;
 public class weirdAlgaeShootCmd extends SequentialCommandGroup {
   /** Creates a new removeAlgae. */
   public weirdAlgaeShootCmd(AlgaeRemoverPivot algaeRemoverPivot, AlgaeRemoverRollers algaeRemoverRollers, ElevatorPosition setPos, Elevator elevator, LEDSubsystem ledSubsystem, Coral coral) {
+
     addRequirements(algaeRemoverPivot, algaeRemoverRollers, elevator); // Add the required subsystems here
-    // Use addRequirements() here to declare subsystem dependencies.
 
     addCommands(
       new SetElevatorHeightCmd(ElevatorPosition.L3, elevator, coral, ledSubsystem),

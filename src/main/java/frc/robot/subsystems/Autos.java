@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 
-import frc.robot.commands.Coral.IntakeCoralCmd;
 import org.json.simple.parser.ParseException;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -171,7 +170,7 @@ public class Autos extends SubsystemBase {
       ML_L4_I().schedule();
     } else if (autoChooser.getSelected().equals("Min()")) {
       Min().schedule();
-    } else if(autoChooser.getSelected() == "MultiPathTest()") {
+    } else if(autoChooser.getSelected().equals("MultiPathTest()")) {
       MultiPathTest().schedule();
     } else {
       System.out.println("something is very wrong if you see this");
@@ -281,10 +280,16 @@ public class Autos extends SubsystemBase {
     }
     return closest;
   }
-  
+
+  /**
+   * Sets the starting pose of the robot based on the given path.
+   * The method checks the alliance color and sets the pose accordingly.
+   *
+   * @param path The PathPlannerPath object representing the path to set the starting pose for.
+   */
   private void setStartPose(PathPlannerPath path) {
     Pose2d startPose;
-    if (DriverStation.getAlliance().get() ==  Alliance.Red) {
+    if (DriverStation.getAlliance().orElse(Alliance.Blue) ==  Alliance.Red) {
       startPose = path.flipPath().getStartingHolonomicPose().orElse(path.getStartingDifferentialPose());
     } else {
       startPose = path.getStartingHolonomicPose().orElse(path.getStartingDifferentialPose());
@@ -296,6 +301,7 @@ public class Autos extends SubsystemBase {
     }
   }
 
+  // Commands for different paths
   private Command Min() {
     return new SequentialCommandGroup(
       new InstantCommand(() -> setStartPose(paths.get("Min"))),

@@ -150,7 +150,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    m_ledSubsytem.setPattern(m_ledSubsytem.purple);
+    m_ledSubsytem.setPattern(LEDSubsystem.purple);
   }
 
   @Override
@@ -161,7 +161,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     CommandScheduler.getInstance().cancelAll();
     m_robotContainer.autonomousInit();
-    m_ledSubsytem.setPattern(m_ledSubsytem.rainbow);
+    m_ledSubsytem.setPattern(LEDSubsystem.rainbow);
 
     m_Autos.selectAuto(); // TODO: Only enable this if you want the robot to do stuff during autonomous
 
@@ -171,17 +171,16 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {}
 
+  /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
     CommandScheduler.getInstance().cancelAll();
-    m_ledSubsytem.setPattern(m_ledSubsytem.green);
-    // m_ledSubsytem.setPattern(m_ledSubsytem.elevatorProgress);
+    m_ledSubsytem.setPattern(LEDSubsystem.green);
+
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    
-    // m_robotContainer.getAutonomousCommand().cancel();
 
     m_robotContainer.teleopInit();
 }
@@ -194,37 +193,6 @@ public class Robot extends TimedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
-
-  // -=-=-=-=-=-=-=- SysIdRoutines for the AlgaeIntakePivot -=-=-=-=-=-=-=-=-
-  
-  /* TODO: Run these SysIdRoutines for the AlgaeIntakePivot using the button triggers and then 
-     follow these instructions starting with "SysId Usage" step 3: 
-     https://docs.advantagescope.org/more-features/urcl 
-  */
-
-    // // Quasistatic SysIdRoutines
-    // m_driverController.povUp()
-    // .and(m_driverController.leftTrigger())
-    //   .onTrue(m_AlgaeIntakePivot.sysIdRoutine_quasistatic_fwd())
-    //   .onFalse(m_AlgaeIntakePivot.stopSysIdRoutine());
-
-    // m_driverController.povDown()
-    // .and(m_driverController.leftTrigger())
-    //   .onTrue(m_AlgaeIntakePivot.sysIdRoutine_quasistatic_rev())
-    //   .onFalse(m_AlgaeIntakePivot.stopSysIdRoutine());
-
-    // // Dynamic SysIdRoutines
-    // m_driverController.y()
-    // .and(m_driverController.leftTrigger())
-    //   .onTrue(m_AlgaeIntakePivot.sysIdRoutine_dynamic_fwd())
-    //   .onFalse(m_AlgaeIntakePivot.stopSysIdRoutine());
-
-    // m_driverController.a()
-    // .and(m_driverController.leftTrigger())
-    //   .onTrue(m_AlgaeIntakePivot.sysIdRoutine_dynamic_fwd())
-    //   .onFalse(m_AlgaeIntakePivot.stopSysIdRoutine());
-
-  // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
   }
 
   /** This function is called periodically during test mode. */

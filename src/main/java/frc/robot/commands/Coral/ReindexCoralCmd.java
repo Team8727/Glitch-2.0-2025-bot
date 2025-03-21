@@ -20,8 +20,8 @@ public class ReindexCoralCmd extends Command {
     m_coral = coral;
     m_Elevator = elevator;
     m_LedSubsystem = ledSubsystem;
+
     addRequirements(coral, elevator);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -48,9 +48,6 @@ public class ReindexCoralCmd extends Command {
       this.cancel();
       Thread.currentThread().interrupt();
     }).start();
-
-    // m_coral.setIntakeSpeedDuty(-.1);
-    // CustomCommands.waitCommand(.1, () -> m_coral.setIntakeSpeedDuty(.1));
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -24,6 +24,7 @@ public class DeployCoralCmd extends Command {
     m_coral = coral;
     m_ledSubsytem = ledSubsystem;
     m_elevatorPosition = elevator.getElevatorSetPosition();
+
     addRequirements(coral, elevator);
   }
 
@@ -44,8 +45,6 @@ public class DeployCoralCmd extends Command {
       m_coral.elevatorUp = false;
       isFinished = true;
       this.cancel();
-
-      // m_coral.setOutakePos(m_coral.frontMotor.getEncoder().getPosition()+1);
     }
   }
 

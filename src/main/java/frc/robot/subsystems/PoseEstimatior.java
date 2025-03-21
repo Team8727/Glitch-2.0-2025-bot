@@ -37,10 +37,10 @@ public class PoseEstimatior extends SubsystemBase {
 
   private VisionSystemSim visionSim;
 
-  private PhotonCamera camera1 = new PhotonCamera("backRight");
-  private PhotonCamera camera2 = new PhotonCamera("backLeft");
-  private PhotonCamera camera3 = new PhotonCamera("front");
-  private PhotonCamera camera4 = new PhotonCamera("backUp");
+  private final PhotonCamera camera1 = new PhotonCamera("backRight");
+  private final PhotonCamera camera2 = new PhotonCamera("backLeft");
+  private final PhotonCamera camera3 = new PhotonCamera("front");
+  private final PhotonCamera camera4 = new PhotonCamera("backUp");
 
   private PhotonCameraSim cameraSimBackRight;
   private PhotonCameraSim cameraSimBackLeft;
@@ -166,10 +166,9 @@ public class PoseEstimatior extends SubsystemBase {
   // Get 2d pose: from the poseEstimator
   public Pose2d get2dPose() {
     if (Robot.isSimulation()) {
-      Pose2d pose = new Pose2d(
-        m_SwervePoseEstimator.getEstimatedPosition().getTranslation(), 
-        m_SwerveSubsystem.getHeading());
-      return pose;
+        return new Pose2d(
+          m_SwervePoseEstimator.getEstimatedPosition().getTranslation(),
+          m_SwerveSubsystem.getHeading());
     }
 
     return m_SwervePoseEstimator.getEstimatedPosition();
@@ -215,7 +214,7 @@ public class PoseEstimatior extends SubsystemBase {
               cameraPose.get().estimatedPose.toPose2d(), cameraLatestRes.getTimestampSeconds());
         }
       }
-    } catch (Exception e) {
+    } catch (Exception ignored) {
     }
   }
 
@@ -244,24 +243,15 @@ public class PoseEstimatior extends SubsystemBase {
     // addVisionMeasurement(camera4, PoseEstimator4);
 
     // gyro update
-    // if (Robot.isReal()) {
-      m_SwervePoseEstimator.updateWithTime(
-        Timer.getFPGATimestamp(), 
-        m_SwerveSubsystem.getHeading(), 
-        m_SwerveSubsystem.getModulePositions());
-    // } else {
-    //   m_SwervePoseEstimator.updateWithTime(
-    //     Timer.getFPGATimestamp(), 
-    //     m_SwerveSubsystem.getRotation2d(), 
-    //     m_SwerveSubsystem.modulePositions);
-    // }
+    m_SwervePoseEstimator.updateWithTime(
+      Timer.getFPGATimestamp(),
+      m_SwerveSubsystem.getHeading(),
+      m_SwerveSubsystem.getModulePositions());
+
     // Update Field2d with pose to display the robot's visual position on the field to the dashboard
     field2d.setRobotPose(get2dPose());
 
-    // field.setRobotPose(m_swervePoseEstimator.getEstimatedPosition().toPose2d());// 2d pose
-
     // Log the robot's 2d position on the field to the dashboard using the NetworkTableLogger
-    // Utility
     networkTableLogger.logField2d("Field2d", field2d);
     networkTableLogger.logPose2d("Robot 2d Pose", get2dPose());
   }

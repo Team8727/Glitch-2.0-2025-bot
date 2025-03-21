@@ -35,7 +35,7 @@ public class AlgaeRemoverPivot extends SubsystemBase {
     new TrapezoidProfile.Constraints(50, 50)); // TODO: May need to adjust these values later
   private TrapezoidProfile.State m_goal = new TrapezoidProfile.State(0,0);
   private TrapezoidProfile.State m_setpoint = new TrapezoidProfile.State(0,0);
-  private NetworkTableLogger logger = new NetworkTableLogger(this.getSubsystem().toString());
+  private final NetworkTableLogger logger = new NetworkTableLogger(this.getSubsystem());
 
   private final ArmFeedforward pivotFeedforward =  new ArmFeedforward(0, 0.13, 0.56);
 
@@ -56,7 +56,7 @@ public class AlgaeRemoverPivot extends SubsystemBase {
                 LogData.CURRENT));
 
     config = new SparkMaxConfig();
-    config // TODO: config everything
+    config
         .smartCurrentLimit(60)
         .idleMode(IdleMode.kBrake)
         .inverted(true)
@@ -64,11 +64,8 @@ public class AlgaeRemoverPivot extends SubsystemBase {
           .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
           .positionWrappingEnabled(false)
           .outputRange(-1, 1) 
-          .pid(1.4, 0, 2); 
-        // .maxMotion
-        //   .maxAcceleration(0)
-        //   .maxVelocity(0)
-        //   .allowedClosedLoopError(0);
+          .pid(1.4, 0, 2);
+
     removerPivotMotor.configure(
         config,
         ResetMode.kNoResetSafeParameters,
@@ -86,7 +83,7 @@ public class AlgaeRemoverPivot extends SubsystemBase {
     removerPivotPID.setReference(degrees, ControlType.kPosition);
   }
 
-  private void setMotorFFandPIDPosition(double removerPosition, double velocitySetpoint) {
+  private void setMotorFFAndPIDPosition(double removerPosition) {
     removerPivotPID.setReference(
       removerPosition,
       ControlType.kPosition,
@@ -101,9 +98,6 @@ public class AlgaeRemoverPivot extends SubsystemBase {
     m_goal = new TrapezoidProfile.State(rotation, 0);
   }
 
-  // private double calculateVoltage(double goal) {
-  //   return voltage
-  // }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -111,6 +105,6 @@ public class AlgaeRemoverPivot extends SubsystemBase {
 
     m_setpoint = m_profile.calculate(kDt, m_setpoint, m_goal);
 
-    setMotorFFandPIDPosition(m_setpoint.position, m_setpoint.velocity);
+    setMotorFFAndPIDPosition(m_setpoint.position);
   }
 }

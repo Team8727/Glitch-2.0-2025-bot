@@ -30,8 +30,8 @@ public class weirdAlgaeIntakeCmd extends Command {
     m_elevator = elevator;
     m_ledSubsystem = ledSubsystem;
     m_coral = coral;
+
     addRequirements(algaeRemoverPivot, algaeRemoverRollers, elevator); // Add the required subsystems here
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -42,7 +42,7 @@ public class weirdAlgaeIntakeCmd extends Command {
       m_pivot.setPositionTrapazoidal(RemoverPositions.RaisedL2); // TODO: set positions
       m_rollers.setRemoverRollerSpeed(.5); // TODO: set speed
       m_coral.setOuttakeSpeedDuty(-.5);
-      m_ledSubsystem.combinePatternsForDuration(m_ledSubsystem.blue, m_ledSubsystem.ace, 2);
+      m_ledSubsystem.combinePatternsForDuration(LEDSubsystem.blue, LEDSubsystem.ace, 2);
     } else {
       m_elevator.setElevatorHeightMotionProfile(m_setPos);
       this.cancel();

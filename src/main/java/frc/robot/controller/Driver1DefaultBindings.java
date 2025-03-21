@@ -27,50 +27,50 @@ import frc.robot.subsystems.Elevator.Coral.Coral;
  * Default teleop controller bindings for the robot.
  */
 public class Driver1DefaultBindings implements ControllerBindings {
-    private final SwerveSubsystem m_SwerveSubsystem;
-    private final PoseEstimatior m_poseEstimator;
-    private final AlgaeIntakePivot m_AlgaeIntakePivot;
-    private final AlgaeIntakeRollers m_AlgaeIntakeRollers;
-    private final Coral m_coral;
-    private final Elevator m_elevator;
-    private final LEDSubsystem m_ledSubsytem;
-    private final AlgaeRemoverPivot m_AlgaeRemoverPivot;
-    private final AlgaeRemoverRollers m_AlgaeRemoverRollers;
-    private final Autos m_autos;
+  private final SwerveSubsystem m_SwerveSubsystem;
+  private final PoseEstimatior m_poseEstimator;
+  private final AlgaeIntakePivot m_AlgaeIntakePivot;
+  private final AlgaeIntakeRollers m_AlgaeIntakeRollers;
+  private final Coral m_coral;
+  private final Elevator m_elevator;
+  private final LEDSubsystem m_ledSubsytem;
+  private final AlgaeRemoverPivot m_AlgaeRemoverPivot;
+  private final AlgaeRemoverRollers m_AlgaeRemoverRollers;
+  private final Autos m_autos;
 
-    public Driver1DefaultBindings(
-        SwerveSubsystem swerveSubsystem,
-        PoseEstimatior poseEstimator,
-        AlgaeIntakePivot AlgaeIntakePivot,
-        AlgaeIntakeRollers AlgaeIntakeRollers,
-        Coral coral,
-        Elevator elevator,
-        LEDSubsystem ledSubsystem,
-        AlgaeRemoverPivot algaeRemoverPivot,
-        AlgaeRemoverRollers algaeRemoverRollers,
-        Autos autos) {
-        m_SwerveSubsystem = swerveSubsystem;
-        m_poseEstimator = poseEstimator;
-        m_AlgaeIntakePivot = AlgaeIntakePivot;
-        m_AlgaeIntakeRollers = AlgaeIntakeRollers;
-        m_coral = coral;
-        m_elevator = elevator;
-        m_ledSubsytem = ledSubsystem;
-        m_AlgaeRemoverPivot = algaeRemoverPivot;
-        m_AlgaeRemoverRollers = algaeRemoverRollers;
-        m_autos = autos;
-    }
+  public Driver1DefaultBindings(
+      SwerveSubsystem swerveSubsystem,
+      PoseEstimatior poseEstimator,
+      AlgaeIntakePivot AlgaeIntakePivot,
+      AlgaeIntakeRollers AlgaeIntakeRollers,
+      Coral coral,
+      Elevator elevator,
+      LEDSubsystem ledSubsystem,
+      AlgaeRemoverPivot algaeRemoverPivot,
+      AlgaeRemoverRollers algaeRemoverRollers,
+      Autos autos) {
+    m_SwerveSubsystem = swerveSubsystem;
+    m_poseEstimator = poseEstimator;
+    m_AlgaeIntakePivot = AlgaeIntakePivot;
+    m_AlgaeIntakeRollers = AlgaeIntakeRollers;
+    m_coral = coral;
+    m_elevator = elevator;
+    m_ledSubsytem = ledSubsystem;
+    m_AlgaeRemoverPivot = algaeRemoverPivot;
+    m_AlgaeRemoverRollers = algaeRemoverRollers;
+    m_autos = autos;
+  }
 
-    @Override
-    public void bind(CommandXboxController controller) {
-        m_SwerveSubsystem.setDefaultCommand(
-            new SwerveJoystickCmd(
-                m_SwerveSubsystem,
-                m_elevator,
-                    controller::getLeftY,
-                    controller::getLeftX,
-                    controller::getRightX));
-    
+  @Override
+  public void bind(CommandXboxController controller) {
+    m_SwerveSubsystem.setDefaultCommand(
+      new SwerveJoystickCmd(
+        m_SwerveSubsystem,
+        m_elevator,
+        controller::getLeftY,
+        controller::getLeftX,
+        controller::getRightX));
+
     //              Drive Commands
     // Zero heading
     controller.start().onTrue(new InstantCommand(m_poseEstimator::zeroHeading));
@@ -102,22 +102,22 @@ public class Driver1DefaultBindings implements ControllerBindings {
 
     // zero elevator
     controller.rightTrigger().and(controller.rightBumper()).onTrue(new ZeroElevator(m_elevator));
-    
+
     // //                Algae Commands
     // // Intake algae
     // controller.rightTrigger().whileTrue(new IntakeAlgaeCmd(m_AlgaeIntakePivot, m_AlgaeIntakeRollers, m_ledSubsytem));
     // // deploy algae
     // controller.rightBumper().onTrue(new ScoreAlgaeCmd(m_AlgaeIntakePivot, m_AlgaeIntakeRollers, m_ledSubsytem));
 
-    // Remove Algae A2 
+    // Remove Algae A2
     controller.povDown().whileTrue(new weirdAlgaeIntakeCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers, ElevatorPosition.A3, m_elevator, m_ledSubsytem, m_coral));
     // Remove Algae A2
-    controller.povUp().whileTrue(new weirdAlgaeShootCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers, m_elevator, m_ledSubsytem, m_coral));
-    }
+    controller.povUp().whileTrue(new weirdAlgaeShootCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers, ElevatorPosition.A3 ,m_elevator, m_ledSubsytem, m_coral));
+  }
 
-    @Override
-    public void unbind(CommandXboxController controller) {
-        m_SwerveSubsystem.removeDefaultCommand();
-    }
-    
+  @Override
+  public void unbind(CommandXboxController controller) {
+    m_SwerveSubsystem.removeDefaultCommand();
+}
+
 }

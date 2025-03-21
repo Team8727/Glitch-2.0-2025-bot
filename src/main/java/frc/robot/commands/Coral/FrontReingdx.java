@@ -14,8 +14,8 @@ public class FrontReingdx extends Command {
   /** Creates a new FrontReingdx. */
   public FrontReingdx(Coral coral) {
     m_Coral = coral;
+
     addRequirements(coral);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
