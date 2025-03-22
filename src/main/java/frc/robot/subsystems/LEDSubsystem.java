@@ -163,9 +163,9 @@ public class LEDSubsystem extends SubsystemBase {
     // LED setup and port configuration
     lightStrip = new AddressableLED(5); // Correct PWM port
     stripBuffer = new AddressableLEDBuffer(36); // Correct LED count
-    leftSide = new Section(stripBuffer, 0, 14);
-    rightSide = new Section(stripBuffer, 36, 20);
-    secretBuffer = new Section(stripBuffer, 15, 19);
+    leftSide = new Section(stripBuffer, 0, 13);
+    rightSide = new Section(stripBuffer, 35, 20);
+    secretBuffer = new Section(stripBuffer, 14, 19);
 
     lightStrip.setLength(stripBuffer.getLength());
 
