@@ -11,12 +11,10 @@ import org.littletonrobotics.urcl.URCL;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathfindingCommand;
 
-import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -24,7 +22,7 @@ import frc.robot.Constants.kConfigs;
 import frc.robot.Constants.kSwerve;
 import frc.robot.subsystems.Autos;
 import frc.robot.subsystems.LEDSubsystem;
-import frc.robot.subsystems.PoseEstimatior;
+import frc.robot.subsystems.PoseEstimator;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakePivot;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakeRollers;
@@ -43,7 +41,7 @@ public class Robot extends TimedRobot {
 
   private final RobotContainer m_robotContainer;
   private final SwerveSubsystem m_SwerveSubsystem = new SwerveSubsystem();
-  private final PoseEstimatior m_PoseEstimatior = new PoseEstimatior(m_SwerveSubsystem);
+  private final PoseEstimator m_PoseEstimator = new PoseEstimator(m_SwerveSubsystem);
   private final Elevator m_elevator = new Elevator();
   private final LEDSubsystem m_ledSubsytem = new LEDSubsystem(m_elevator);
   private final NetworkTableLogger logger = new NetworkTableLogger("SHOW UPPPP");
@@ -52,7 +50,7 @@ public class Robot extends TimedRobot {
   private final Coral m_coral = new Coral();
   private final AlgaeIntakePivot m_AlgaeIntakePivot = new AlgaeIntakePivot();
   private final AlgaeIntakeRollers m_AlgaeIntakeRollers = new AlgaeIntakeRollers();
-  private final Autos m_Autos = new Autos(m_ledSubsytem, m_coral, m_elevator, m_PoseEstimatior);
+  private final Autos m_Autos = new Autos(m_ledSubsytem, m_coral, m_elevator, m_PoseEstimator);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -61,8 +59,8 @@ public class Robot extends TimedRobot {
   public Robot() {
 
     AutoBuilder.configure(
-        m_PoseEstimatior::get2dPose,
-        m_PoseEstimatior::resetPoseToPose2d,
+        m_PoseEstimator::get2dPose,
+        m_PoseEstimator::resetPoseToPose2d,
         m_SwerveSubsystem::getChassisSpeeds,
         (chassisSpeeds, driveff) -> { // drive command
           System.out.println("aligning");
@@ -90,14 +88,14 @@ public class Robot extends TimedRobot {
           return false;
         },
         m_SwerveSubsystem,
-        m_PoseEstimatior);
+      m_PoseEstimator);
 
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer =
         new RobotContainer(
             m_SwerveSubsystem,
-            m_PoseEstimatior,
+          m_PoseEstimator,
             m_AlgaeIntakePivot,
             m_AlgaeIntakeRollers,
             m_AlgaeRemoverPivot,

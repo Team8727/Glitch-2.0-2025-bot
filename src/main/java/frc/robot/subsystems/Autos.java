@@ -39,7 +39,7 @@ public class Autos extends SubsystemBase {
   private final Coral m_coral;
   private final Elevator m_elevator;
   private final LinkedHashMap<String, PathPlannerPath> paths = new LinkedHashMap<>();
-  private final PoseEstimatior m_PoseEstimatior;
+  private final PoseEstimator m_PoseEstimator;
   private final SendableChooser<String> autoChooser = new SendableChooser<>();
   private final NetworkTableLogger logger = new NetworkTableLogger(this.getName());
 
@@ -120,11 +120,11 @@ public class Autos extends SubsystemBase {
   }
 
   /** Creates a new Autos. */
-  public Autos(LEDSubsystem ledSubsystem, Coral coralSubsystem, Elevator elevatorSubsystem, PoseEstimatior poseEstimatior) {
+  public Autos(LEDSubsystem ledSubsystem, Coral coralSubsystem, Elevator elevatorSubsystem, PoseEstimator poseEstimator) {
     m_ledSubsystem = ledSubsystem;
     m_coral = coralSubsystem;
     m_elevator = elevatorSubsystem;
-    m_PoseEstimatior = poseEstimatior;
+    m_PoseEstimator = poseEstimator;
 
     loadPaths();
     }
@@ -255,7 +255,7 @@ public class Autos extends SubsystemBase {
    *         to the robot's current location, with its distance value updated.
    */
   private ReefScorePoints findClosestSide() {
-    Pose2d robotPose = m_PoseEstimatior.get2dPose();
+    Pose2d robotPose = m_PoseEstimator.get2dPose();
     ReefScorePoints[] points = ReefScorePoints.values();
 
         // Update distances and find minimum in a single pass
@@ -295,9 +295,9 @@ public class Autos extends SubsystemBase {
       startPose = path.getStartingHolonomicPose().orElse(path.getStartingDifferentialPose());
     }
     if (Robot.isReal()) {
-      m_PoseEstimatior.resetPoseToPose2d(startPose);
+      m_PoseEstimator.resetPoseToPose2d(startPose);
     } else {
-      m_PoseEstimatior.resetPoseToPose2d(new Pose2d(startPose.getTranslation(), startPose.getRotation().plus(m_PoseEstimatior.get2dPose().getRotation())));
+      m_PoseEstimator.resetPoseToPose2d(new Pose2d(startPose.getTranslation(), startPose.getRotation().plus(m_PoseEstimator.get2dPose().getRotation())));
     }
   }
 

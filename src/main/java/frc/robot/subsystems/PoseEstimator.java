@@ -30,7 +30,7 @@ import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
-public class PoseEstimatior extends SubsystemBase {
+public class PoseEstimator extends SubsystemBase {
   final SwerveSubsystem m_SwerveSubsystem;
   final SwerveDrivePoseEstimator m_SwervePoseEstimator;
   final NetworkTableLogger networkTableLogger = new NetworkTableLogger(this.getName().toString());
@@ -53,8 +53,12 @@ public class PoseEstimatior extends SubsystemBase {
   private Field2d visionDebugField;
   public Field2d field2d = new Field2d();
 
-  /** Creates a new PoseEstimation. */
-  public PoseEstimatior(SwerveSubsystem swerveSubsystem) {
+  /**
+   * Creates a new PoseEstimator.
+   *
+   * @param swerveSubsystem The swerve subsystem used for odometry and heading information.
+   */
+  public PoseEstimator(SwerveSubsystem swerveSubsystem) {
     // subsystem setups
     m_SwerveSubsystem = swerveSubsystem;
     m_SwervePoseEstimator =     
@@ -65,6 +69,7 @@ public class PoseEstimatior extends SubsystemBase {
         new Pose2d()
       );
 
+    // setup camera simulation
     if (Robot.isSimulation()) {
       visionSim = new VisionSystemSim("main");
       cameraProp = new SimCameraProperties();
@@ -122,7 +127,12 @@ public class PoseEstimatior extends SubsystemBase {
           PoseStrategy.CLOSEST_TO_REFERENCE_POSE,
           kVision.camera4Position);
 
-  // get starting pos with cam1
+
+  /**
+   * Gets the starting pose of the robot.
+   *
+   * @return The starting pose of the robot as a Pose2d object.
+   */
   public Pose2d getStartPose2d() {
     // vars
     Pose3d pose3d = new Pose3d();
@@ -144,6 +154,11 @@ public class PoseEstimatior extends SubsystemBase {
     return pose3d.toPose2d();
   }
 
+  /**
+   * Resets the robot's pose to the specified Pose2d.
+   *
+   * @param pose2d The new pose to reset to.
+   */
   public void resetPoseToPose2d(Pose2d pose2d) {
     // m_SwerveSubsystem.navX.setAngleAdjustment(pose2d.getRotation().getDegrees());
     m_SwervePoseEstimator.resetPose(pose2d);
@@ -155,15 +170,25 @@ public class PoseEstimatior extends SubsystemBase {
     }
   }
 
+  /**
+   * Resets the robot's pose to the starting pose.
+   */
   public void resetStartPose() {
     resetPoseToPose2d(getStartPose2d());
   }
 
+  /**
+   * Resets the robot's pose to the empty pose.
+   */
   public void resetToEmptyPose() {
     resetPoseToPose2d(new Pose2d());
   }
 
-  // Get 2d pose: from the poseEstimator
+  /**
+   * Gets the current 2D pose of the robot.
+   *
+   * @return The current 2D pose of the robot as a Pose2d object.
+   */
   public Pose2d get2dPose() {
     if (Robot.isSimulation()) {
         return new Pose2d(
@@ -174,7 +199,15 @@ public class PoseEstimatior extends SubsystemBase {
     return m_SwervePoseEstimator.getEstimatedPosition();
   }
 
-  Optional<EstimatedRobotPose> getEstimatedGlobalPose(
+  /**
+   * Gets the estimated global pose of the robot.
+   *
+   * @param prevEstimatedRobotPose The previous estimated pose of the robot.
+   * @param cameraResult The result from the camera pipeline.
+   * @param PoseEstimator The pose estimator to use.
+   * @return An Optional containing the estimated robot pose.
+   */
+  private Optional<EstimatedRobotPose> getEstimatedGlobalPose(
       Pose2d prevEstimatedRobotPose,
       PhotonPipelineResult cameraResult,
       PhotonPoseEstimator PoseEstimator) {
@@ -182,11 +215,20 @@ public class PoseEstimatior extends SubsystemBase {
     return PoseEstimator.update(cameraResult);
   }
 
+  /**
+   * Zeros the robot's heading.
+   */
   public void zeroHeading() {
     m_SwerveSubsystem.zeroHeading();
     m_SwervePoseEstimator.resetRotation(new Rotation2d());
   }
 
+  /**
+   * Adds a vision measurement to the pose estimator.
+   *
+   * @param camera The camera to use for the vision measurement.
+   * @param poseEstimator The pose estimator to use.
+   */
   private void addVisionMeasurement(PhotonCamera camera, PhotonPoseEstimator poseEstimator) {
     try {
       // camera 4 pose estimation
@@ -218,6 +260,9 @@ public class PoseEstimatior extends SubsystemBase {
     }
   }
 
+  /**
+   * Called periodically in simulation.
+   */
   @Override
   public void simulationPeriodic() {
     visionSim.update(m_SwervePoseEstimator.getEstimatedPosition());
@@ -231,6 +276,9 @@ public class PoseEstimatior extends SubsystemBase {
     m_SwerveSubsystem.applySimHeading();
   }
 
+  /**
+   * Always called periodically.
+   */
   @Override
   public void periodic() {
     // // camera 1 pose estimation

@@ -2,11 +2,8 @@ package frc.robot.controller;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.kElevator.ElevatorPosition;
 import frc.robot.commands.*;
-import frc.robot.commands.AlgaeIntake.IntakeAlgaeCmd;
-import frc.robot.commands.AlgaeIntake.ScoreAlgaeCmd;
 import frc.robot.commands.Coral.DeployCoralCmd;
 import frc.robot.commands.Coral.ReindexCoralCmd;
 import frc.robot.commands.Coral.RejectCoralCmd;
@@ -14,7 +11,7 @@ import frc.robot.commands.Coral.IntakeCoralCmd;
 import frc.robot.commands.DriveCommands.SwerveJoystickCmd;
 import frc.robot.subsystems.Autos;
 import frc.robot.subsystems.LEDSubsystem;
-import frc.robot.subsystems.PoseEstimatior;
+import frc.robot.subsystems.PoseEstimator;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakePivot;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakeRollers;
@@ -28,7 +25,7 @@ import frc.robot.subsystems.Elevator.Coral.Coral;
  */
 public class Driver1DefaultBindings implements ControllerBindings {
   private final SwerveSubsystem m_SwerveSubsystem;
-  private final PoseEstimatior m_poseEstimator;
+  private final PoseEstimator m_poseEstimator;
   private final AlgaeIntakePivot m_AlgaeIntakePivot;
   private final AlgaeIntakeRollers m_AlgaeIntakeRollers;
   private final Coral m_coral;
@@ -40,7 +37,7 @@ public class Driver1DefaultBindings implements ControllerBindings {
 
   public Driver1DefaultBindings(
       SwerveSubsystem swerveSubsystem,
-      PoseEstimatior poseEstimator,
+      PoseEstimator poseEstimator,
       AlgaeIntakePivot AlgaeIntakePivot,
       AlgaeIntakeRollers AlgaeIntakeRollers,
       Coral coral,
