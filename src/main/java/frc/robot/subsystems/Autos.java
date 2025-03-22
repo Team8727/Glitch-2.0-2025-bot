@@ -43,6 +43,10 @@ public class Autos extends SubsystemBase {
   private final SendableChooser<String> autoChooser = new SendableChooser<>();
   private final NetworkTableLogger logger = new NetworkTableLogger(this.getName());
 
+  /**
+   * Enum representing the scoring points on the reef.
+   * Each enum value contains the zone name, point, right and left poses, and distance to side.
+   */
   public enum ReefScorePoints {
     A_B("A-B",
       new Translation2d(3.65, 4.02), // side point
@@ -129,6 +133,9 @@ public class Autos extends SubsystemBase {
     loadPaths();
     }
 
+  /**
+   * Loads the paths from the specified path files.
+   */
   private void loadPaths() {
     loadPath("ML-I");
     loadPath("I-CPR");
@@ -139,6 +146,11 @@ public class Autos extends SubsystemBase {
     loadPath("M-H test");
   }
 
+  /**
+   * Loads a specific path from the given path name.
+   *
+   * @param pathName The name of the path file to load.
+   */
   private void loadPath(String pathName) {
     try {
       paths.put(pathName, PathPlannerPath.fromPathFile(pathName));
@@ -147,6 +159,9 @@ public class Autos extends SubsystemBase {
     }
   }
 
+  /**
+   * Sets up the auto chooser with different autonomous options.
+   */
   public void setupAutoChooser() {
     autoChooser.setDefaultOption("Path M-L4-H", "M_L4_H()");
     autoChooser.addOption("Path L-L4-I", "L_L4_I()");
@@ -157,6 +172,9 @@ public class Autos extends SubsystemBase {
     autoChooser.addOption("MultiPathTest", "MultiPathTest()");
   }
 
+  /**
+   * runs the autonomous command based on the selected option in the auto chooser.
+   */
   public void selectAuto() {
     if (autoChooser.getSelected().equals("M_L4_H()")) {
       M_L4_H().schedule();
@@ -177,10 +195,21 @@ public class Autos extends SubsystemBase {
     }
   }
 
+  /**
+   * Returns the auto chooser.
+   *
+   * @return The SendableChooser object for selecting autonomous commands.
+   */
   public SendableChooser<String> getAutoChooser() {
     return autoChooser;
   }
 
+  /**
+   * Aligns the robot to a specified goal pose.
+   *
+   * @param goal The target pose to align to.
+   * @return A command that aligns the robot to the specified pose.
+   */
   public Command align(Pose2d goal) {
     return AutoBuilder.pathfindToPose(
         goal,
@@ -191,6 +220,12 @@ public class Autos extends SubsystemBase {
             kSwerve.Auton.maxAngAccel));
   }
 
+  /**
+   * Aligns the robot to a specified path then follows it.
+   *
+   * @param goal The target path to align to.
+   * @return A command that aligns the robot to the specified path and follows it.
+   */
   public Command alignToPath(PathPlannerPath goal) {
     return AutoBuilder.pathfindThenFollowPath(
         goal,
@@ -201,6 +236,12 @@ public class Autos extends SubsystemBase {
             kSwerve.Auton.maxAngAccel)).andThen(new WaitCommand(0.0001));
   }
 
+  /**
+   * Follows a specified path.
+   *
+   * @param path The path to follow.
+   * @return A command that follows the specified path.
+   */
   public Command followPath(PathPlannerPath path) {
     return AutoBuilder.followPath(path);
   }
@@ -258,7 +299,7 @@ public class Autos extends SubsystemBase {
     Pose2d robotPose = m_PoseEstimator.get2dPose();
     ReefScorePoints[] points = ReefScorePoints.values();
 
-        // Update distances and find minimum in a single pass
+    // Update distances and find minimum in a single pass
     ReefScorePoints closest = points[0];
     if (!Robot.isRedAlliance()) {
       closest.setDistance(robotPose.getTranslation().getDistance(closest.getPoint()));
