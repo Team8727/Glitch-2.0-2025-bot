@@ -162,10 +162,10 @@ public class LEDSubsystem extends SubsystemBase {
   public LEDSubsystem(Elevator elevator) {
     // LED setup and port configuration
     lightStrip = new AddressableLED(5); // Correct PWM port
-    stripBuffer = new AddressableLEDBuffer(114); // Correct LED count
-    leftSide = new Section(stripBuffer, 0, 46);
-    rightSide = new Section(stripBuffer, 113, 64);
-    secretBuffer = new Section(stripBuffer, 47, 63);
+    stripBuffer = new AddressableLEDBuffer(36); // Correct LED count
+    leftSide = new Section(stripBuffer, 0, 14);
+    rightSide = new Section(stripBuffer, 36, 20);
+    secretBuffer = new Section(stripBuffer, 15, 19);
 
     lightStrip.setLength(stripBuffer.getLength());
 
