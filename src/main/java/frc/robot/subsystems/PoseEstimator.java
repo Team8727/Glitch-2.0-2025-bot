@@ -53,11 +53,7 @@ public class PoseEstimator extends SubsystemBase {
   private Field2d visionDebugField;
   public Field2d field2d = new Field2d();
 
-  /**
-   * Creates a new PoseEstimator.
-   *
-   * @param swerveSubsystem The swerve subsystem used for odometry and heading information.
-   */
+  /** Creates a new PoseEstimation. */
   public PoseEstimator(SwerveSubsystem swerveSubsystem) {
     // subsystem setups
     m_SwerveSubsystem = swerveSubsystem;
