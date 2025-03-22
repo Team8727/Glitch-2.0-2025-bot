@@ -35,7 +35,6 @@ import frc.robot.utilities.SparkConfigurator.LogData;
 public class AlgaeIntakePivot extends SubsystemBase {
 
   private final SparkMax intakePivotMotor;
-  private final SparkMaxConfig config;
 
   private final ArmFeedforward pivotFeedforward;
   private final SparkClosedLoopController pivotPID;
@@ -73,24 +72,21 @@ public class AlgaeIntakePivot extends SubsystemBase {
   // =-=-=-=- pivotMotor config, PID config, and maxMotion Constraints config -=-=-=-=-|Constructor|
 
     // Setting the output range, PID, and maxMotion constraints for the motor
-    config = new SparkMaxConfig();
-
+    SparkMaxConfig config = new SparkMaxConfig();
     config
       // Motor Config
       .smartCurrentLimit(Constants.kAlgaeIntake.kAlgaeIntakePivot.motorCurrentLimit)
       .idleMode(IdleMode.kBrake)
-      .inverted(false)
       // PID Control
       .closedLoop
         .outputRange(-1, 1)
-        .velocityFF(0)
         .pid(2, 0.0007, 2)
         .positionWrappingEnabled(false)
         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
 
     // Configuring Motor With Config
     intakePivotMotor.configure(
-        config,
+      config,
         ResetMode.kNoResetSafeParameters,
         PersistMode.kNoPersistParameters);
 

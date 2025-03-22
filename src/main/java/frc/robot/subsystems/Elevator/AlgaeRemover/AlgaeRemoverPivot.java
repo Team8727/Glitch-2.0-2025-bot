@@ -28,7 +28,6 @@ import java.util.Set;
 
 public class AlgaeRemoverPivot extends SubsystemBase {
   private final SparkMax removerPivotMotor;
-  private final SparkMaxConfig config;
   private final SparkClosedLoopController removerPivotPID;
 
   private final TrapezoidProfile m_profile = new TrapezoidProfile(
@@ -55,7 +54,7 @@ public class AlgaeRemoverPivot extends SubsystemBase {
                 LogData.VOLTAGE,
                 LogData.CURRENT));
 
-    config = new SparkMaxConfig();
+    SparkMaxConfig config = new SparkMaxConfig();
     config
         .smartCurrentLimit(60)
         .idleMode(IdleMode.kBrake)
@@ -67,7 +66,7 @@ public class AlgaeRemoverPivot extends SubsystemBase {
           .pid(1.4, 0, 2);
 
     removerPivotMotor.configure(
-        config,
+      config,
         ResetMode.kNoResetSafeParameters,
         PersistMode.kNoPersistParameters);
 

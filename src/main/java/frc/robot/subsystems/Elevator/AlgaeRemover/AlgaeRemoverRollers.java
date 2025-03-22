@@ -21,7 +21,6 @@ import java.util.Set;
 
 public class AlgaeRemoverRollers extends SubsystemBase {
   private final SparkMax removerRollerMotor;
-  private final SparkMaxConfig config;
   private final SparkClosedLoopController removerRollerPID;
 
   /** Creates a new AlgaeRemoverRollers. */
@@ -38,16 +37,15 @@ public class AlgaeRemoverRollers extends SubsystemBase {
                 LogData.VOLTAGE,
                 LogData.CURRENT));
 
-    config = new SparkMaxConfig();
+    SparkMaxConfig config = new SparkMaxConfig();
     config
         .smartCurrentLimit(25)
         .idleMode(IdleMode.kCoast)
-        .inverted(false)
         .closedLoop
-        .pidf(0, 0, 0, 0);
+        .pid(0, 0, 0);
 
     removerRollerMotor.configure(
-        config,
+      config,
         ResetMode.kNoResetSafeParameters,
         PersistMode.kNoPersistParameters);
 

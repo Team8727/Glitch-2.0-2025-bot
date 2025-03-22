@@ -25,7 +25,6 @@ import java.util.Set;
 
 public class AlgaeIntakeRollers extends SubsystemBase {
   private final SparkMax intakeRollerMotor;
-  private final SparkMaxConfig config;
   private final DigitalInput algaeCheck;
   private final SparkClosedLoopController rollerPID;
   public boolean isMoving = false;
@@ -52,27 +51,20 @@ public class AlgaeIntakeRollers extends SubsystemBase {
 // -=-=-=-=-=- pivotMotor config, PID config, and maxMotion constraints config -=-=-=-|Contructor|
 
     // Setting the output range, PID, and maxMotion constraints for the motor
-    config = new SparkMaxConfig();
-
+    SparkMaxConfig config = new SparkMaxConfig();
     config
       // Motor Config
       .smartCurrentLimit(30)
       .idleMode(IdleMode.kBrake)
       .inverted(true)
-
       // PID Control
       .closedLoop
         .outputRange(-1, 1)
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-        // MaxMotion Control for more precise position control
-        // .maxMotion
-        //   .maxVelocity(0)
-        //   .maxAcceleration(0)
-        //   .allowedClosedLoopError(0);
 
     // Configuring Motor With Config
     intakeRollerMotor.configure(
-        config, 
+      config,
         ResetMode.kNoResetSafeParameters, 
         PersistMode.kNoPersistParameters);
 

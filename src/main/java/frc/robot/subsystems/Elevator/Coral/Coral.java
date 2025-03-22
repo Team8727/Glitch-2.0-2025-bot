@@ -22,7 +22,6 @@ import java.util.Set;
 
 public class Coral extends SubsystemBase {
   private final SparkMax backMotor;
-  private final SparkMaxConfig backConfig;
   private final SparkMax frontMotor;
   private final SparkMaxConfig frontConfig;
   private final SparkLimitSwitch frontCoralSensor;
@@ -44,13 +43,13 @@ public class Coral extends SubsystemBase {
                 LogData.VELOCITY,
                 LogData.VOLTAGE,
                 LogData.CURRENT));
-    backConfig = new SparkMaxConfig();
+
+    SparkMaxConfig backConfig = new SparkMaxConfig();
     backConfig
         .smartCurrentLimit(40)
         .idleMode(IdleMode.kBrake)
         .inverted(true)
         .closedLoop
-        .velocityFF(0)
         .pid(0.5, 0, 0);
 
     backMotor.configure(

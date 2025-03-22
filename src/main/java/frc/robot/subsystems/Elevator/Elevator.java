@@ -39,9 +39,7 @@ public class Elevator extends SubsystemBase {
 
   private final SparkMax elevatorMotorR;
   private final SparkMax elevatorMotorL;
-  private final SparkMaxConfig motorRConfig;
   private final SparkClosedLoopController elevatorPID;
-  private final DigitalInput limitSwitch;
   private kElevator.ElevatorPosition targetHeight;
   private kElevator.ElevatorPosition previousHeight;
   private double targetRotations;
@@ -90,13 +88,11 @@ public class Elevator extends SubsystemBase {
         LogData.VOLTAGE,
         LogData.CURRENT));
 
-    motorRConfig = new SparkMaxConfig();
+    SparkMaxConfig motorRConfig = new SparkMaxConfig();
     motorRConfig
       .smartCurrentLimit(65, 65)
       .idleMode(IdleMode.kBrake)
-      .inverted(false)
       .closedLoop
-      .velocityFF(0) // Find Using SysId
       .pid(.4, 0, 4)
       .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
 
@@ -112,8 +108,6 @@ public class Elevator extends SubsystemBase {
 
     m_SparkMaxSim = 
       new SparkMaxSim(elevatorMotorR, kConfigs.neoMotor);
-
-    limitSwitch = new DigitalInput(kElevator.limitSwitchDIO);
 
     setElevatorHeightMotionProfile(kElevator.ElevatorPosition.L1);
   }

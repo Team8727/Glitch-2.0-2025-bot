@@ -34,7 +34,7 @@ public class RobotContainer {
   private final AlgaeRemoverRollers m_AlgaeRemoverRollers;
   private final Coral m_coral;
   private final Elevator m_elevator;
-  private final LEDSubsystem m_ledSubsytem;
+  private final LEDSubsystem m_ledSubsystem;
   private final Autos m_Autos;
   private final Controller m_mainController = new Controller(Controller.Operator.MAIN);
   private final Controller m_assistController = new Controller(Controller.Operator.ASSIST);
@@ -59,7 +59,7 @@ public class RobotContainer {
     m_AlgaeRemoverRollers = AlgaeRemoverRollers;
     m_coral = coral;
     m_elevator = elevator;
-    m_ledSubsytem = ledSubsystem;
+    m_ledSubsystem = ledSubsystem;
     m_Autos = autos;
 
     m_Autos.setupAutoChooser();
@@ -75,7 +75,7 @@ public class RobotContainer {
         m_AlgaeIntakeRollers,
         m_coral,
         m_elevator,
-        m_ledSubsytem,
+        m_ledSubsystem,
         m_AlgaeRemoverPivot,
         m_AlgaeRemoverRollers,
         m_Autos
@@ -90,7 +90,7 @@ public class RobotContainer {
         m_AlgaeIntakeRollers,
         m_coral,
         m_elevator,
-        m_ledSubsytem,
+        m_ledSubsystem,
         m_AlgaeRemoverPivot,
         m_AlgaeRemoverRollers
       )
