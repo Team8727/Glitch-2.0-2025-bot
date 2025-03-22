@@ -67,7 +67,7 @@ public class AlgaeIntakePivot extends SubsystemBase {
   // =-=-=-=- pivotMotor config, PID config, and maxMotion Constraints config -=-=-=-=-|Constructor|
 
     // Setting the output range, PID, and maxMotion constraints for the motor
-    SparkMaxConfigconfig = new SparkMaxConfig();
+    SparkMaxConfig config = new SparkMaxConfig();
     config
       // Motor Config
       .smartCurrentLimit(Constants.kAlgaeIntake.kAlgaeIntakePivot.motorCurrentLimit)
