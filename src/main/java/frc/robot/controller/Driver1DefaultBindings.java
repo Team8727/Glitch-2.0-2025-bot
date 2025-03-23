@@ -21,7 +21,6 @@ import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
 import frc.robot.subsystems.Elevator.Coral.Coral;
 import frc.robot.subsystems.Elevator.Elevator;
-import frc.robot.subsystems.PoseEstimator;
 
 /**
  * Default teleop controller bindings for the robot.
