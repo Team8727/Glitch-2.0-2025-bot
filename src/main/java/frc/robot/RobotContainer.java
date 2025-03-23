@@ -40,16 +40,16 @@ public class RobotContainer {
   private final Controller m_assistController = new Controller(Controller.Operator.ASSIST);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(
-    SwerveSubsystem swerveSubsystem,
-    PoseEstimator poseEstimator,
-    TestPivot AlgaeIntakePivot,
-    AlgaeIntakeRollers AlgaeIntakeRollers,
-    AlgaeRemoverPivot AlgaeRemoverPivot,
-    AlgaeRemoverRollers AlgaeRemoverRollers,
-    Coral coral,
-    Elevator elevator,
-    LEDSubsystem ledSubsystem,
-    Autos autos
+      SwerveSubsystem swerveSubsystem,
+      PoseEstimator poseEstimator,
+      TestPivot AlgaeIntakePivot,
+      AlgaeIntakeRollers AlgaeIntakeRollers,
+      AlgaeRemoverPivot AlgaeRemoverPivot,
+      AlgaeRemoverRollers AlgaeRemoverRollers,
+      Coral coral,
+      Elevator elevator,
+      LEDSubsystem ledSubsystem,
+      Autos autos
       ) {
     m_SwerveSubsystem = swerveSubsystem;
     m_PoseEstimator = poseEstimator;
