@@ -12,6 +12,7 @@ import frc.robot.subsystems.AlgaeIntake.TestPivot;
 import frc.robot.subsystems.Autos;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
+import frc.robot.subsystems.Elevator.AlgaeRemover.RollerTest;
 import frc.robot.subsystems.Elevator.Coral.Coral;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.LEDSubsystem;
@@ -31,7 +32,7 @@ public class RobotContainer {
   private final TestPivot m_AlgaeIntakePivot;
   private final AlgaeIntakeRollers m_AlgaeIntakeRollers;
   private final AlgaeRemoverPivot m_AlgaeRemoverPivot;
-  private final AlgaeRemoverRollers m_AlgaeRemoverRollers;
+  private final RollerTest m_AlgaeRemoverRollers;
   private final Coral m_coral;
   private final Elevator m_elevator;
   private final LEDSubsystem m_ledSubsystem;
@@ -45,7 +46,7 @@ public class RobotContainer {
     TestPivot AlgaeIntakePivot,
     AlgaeIntakeRollers AlgaeIntakeRollers,
     AlgaeRemoverPivot AlgaeRemoverPivot,
-    AlgaeRemoverRollers AlgaeRemoverRollers,
+    RollerTest AlgaeRemoverRollers,
     Coral coral,
     Elevator elevator,
     LEDSubsystem ledSubsystem,
