@@ -42,6 +42,19 @@ public class Autos extends SubsystemBase {
    * Each enum value contains the zone name, point, right and left poses, and distance to side.
    */
   public enum ReefScorePoints {
+    
+    // Marked by zone as depicted below:
+    //  
+    //   ___________________Blue Alliance__________________ ... _____ 
+    //            |  ⟋                        | |     | |        ⟍  | 
+    //   _________|⟋         K-⟋  ⟍-J        | |     | |          ⟍|
+    //            |        L-⟋      ⟍-I      | |     | |            |
+    //   Alliance |       A |         | H     | |Barge| |            |
+    //   Wall     |       B |         | G     | |     | |            |
+    //   _________|        C-⟍      ⟋-F      | |     | |            |
+    //            |⟍         D-⟍  ⟋-E        | |     | |          ⟋|
+    //   _________|__⟍________________________|_|_____|_|__ ... _⟋__|
+
     A_B("A-B",
       new Translation2d(3.65, 4.02), // side point
       GetScorePose(new Rotation2d(Math.toRadians(180)), 0, true), // right score location
@@ -162,7 +175,7 @@ public class Autos extends SubsystemBase {
     autoChooser.addOption("Path R_L4_I", "R_L4_F()");
     autoChooser.addOption("Path ML_L4_I", "ML_L4_I()");
     autoChooser.addOption("Path MR_L4_F", "MR_L4_F()");
-    autoChooser.addOption("Min", "Min()");
+    autoChooser.addOption("bareMinimum", "bareMinimum()");
     autoChooser.addOption("MultiPathTest", "MultiPathTest()");
   }
 
@@ -180,8 +193,8 @@ public class Autos extends SubsystemBase {
       MR_L4_F().schedule();
     } else if (autoChooser.getSelected().equals("ML_L4_I()")) {
       ML_L4_I().schedule();
-    } else if (autoChooser.getSelected().equals("Min()")) {
-      Min().schedule();
+    } else if (autoChooser.getSelected().equals("bareMinimum()")) {
+      bareMinimum().schedule();
     } else if(autoChooser.getSelected().equals("MultiPathTest()")) {
       MultiPathTest().schedule();
     } else {
@@ -337,7 +350,7 @@ public class Autos extends SubsystemBase {
   }
 
   // Commands for different paths
-  private Command Min() {
+  private Command bareMinimum() {
     return new SequentialCommandGroup(
       new InstantCommand(() -> setStartPose(paths.get("Min"))),
       alignToPath(paths.get("Min"))
