@@ -119,7 +119,7 @@ public final class Constants {
     public static final  double maxAngAccel = 10 * 2 * Math.PI; // 10
 
     public static class DriveSpeedScaling {
-      public static final double minDriveSpeed = 0.5; // TODO: Set this for scaling
+      public static final double minimumDriveSpeed = 4; // Will be divided by 20:  this/20
     }
 
     // Operator interface constants

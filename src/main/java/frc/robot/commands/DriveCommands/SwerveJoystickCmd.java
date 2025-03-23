@@ -7,6 +7,7 @@ import frc.robot.Robot;
 import frc.robot.Constants.kElevator;
 import frc.robot.Constants.kOI;
 import frc.robot.Constants.kSwerve;
+import frc.robot.Constants.kSwerve.DriveSpeedScaling;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.utilities.NetworkTableLogger;
@@ -52,7 +53,7 @@ public class SwerveJoystickCmd extends Command {
 
     // get elevator height for anti-tipping
     double elevatorHeight = m_Elevator.getElevatorHeight();
-    double driveSpeedConversionFactor = (kElevator.ElevatorPosition.L4.getOutputRotations() - (elevatorHeight - 4)) / kElevator.ElevatorPosition.L4.getOutputRotations();
+    double driveSpeedConversionFactor = (kElevator.ElevatorPosition.L4.getOutputRotations() - (elevatorHeight - DriveSpeedScaling.minimumDriveSpeed)) / kElevator.ElevatorPosition.L4.getOutputRotations();
     xSpeed = -(xSpeed * kSwerve.maxTransSpeed
      * driveSpeedConversionFactor); // * kSwerve.DriveSpeedScaling.minDriveSpeed; // Scaling to elevator height
     ySpeed = -(ySpeed * kSwerve.maxTransSpeed
