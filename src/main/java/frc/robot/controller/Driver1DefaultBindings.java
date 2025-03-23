@@ -4,11 +4,13 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.kElevator.ElevatorPosition;
 import frc.robot.commands.*;
+import frc.robot.commands.AlgaeIntake.IntakeAlgaeCmd;
 import frc.robot.commands.Coral.DeployCoralCmd;
 import frc.robot.commands.Coral.ReindexCoralCmd;
 import frc.robot.commands.Coral.RejectCoralCmd;
 import frc.robot.commands.Coral.IntakeCoralCmd;
 import frc.robot.commands.DriveCommands.SwerveJoystickCmd;
+import frc.robot.subsystems.AlgaeIntake.TestPivot;
 import frc.robot.subsystems.Autos;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.PoseEstimator;
@@ -26,7 +28,7 @@ import frc.robot.subsystems.Elevator.Coral.Coral;
 public class Driver1DefaultBindings implements ControllerBindings {
   private final SwerveSubsystem m_SwerveSubsystem;
   private final PoseEstimator m_poseEstimator;
-  private final AlgaeIntakePivot m_AlgaeIntakePivot;
+  private final TestPivot m_AlgaeIntakePivot;
   private final AlgaeIntakeRollers m_AlgaeIntakeRollers;
   private final Coral m_coral;
   private final Elevator m_elevator;
@@ -36,16 +38,16 @@ public class Driver1DefaultBindings implements ControllerBindings {
   private final Autos m_autos;
 
   public Driver1DefaultBindings(
-      SwerveSubsystem swerveSubsystem,
-      PoseEstimator poseEstimator,
-      AlgaeIntakePivot AlgaeIntakePivot,
-      AlgaeIntakeRollers AlgaeIntakeRollers,
-      Coral coral,
-      Elevator elevator,
-      LEDSubsystem ledSubsystem,
-      AlgaeRemoverPivot algaeRemoverPivot,
-      AlgaeRemoverRollers algaeRemoverRollers,
-      Autos autos) {
+    SwerveSubsystem swerveSubsystem,
+    PoseEstimator poseEstimator,
+    TestPivot AlgaeIntakePivot,
+    AlgaeIntakeRollers AlgaeIntakeRollers,
+    Coral coral,
+    Elevator elevator,
+    LEDSubsystem ledSubsystem,
+    AlgaeRemoverPivot algaeRemoverPivot,
+    AlgaeRemoverRollers algaeRemoverRollers,
+    Autos autos) {
     m_SwerveSubsystem = swerveSubsystem;
     m_poseEstimator = poseEstimator;
     m_AlgaeIntakePivot = AlgaeIntakePivot;
@@ -102,7 +104,7 @@ public class Driver1DefaultBindings implements ControllerBindings {
 
     // //                Algae Commands
     // // Intake algae
-    // controller.rightTrigger().whileTrue(new IntakeAlgaeCmd(m_AlgaeIntakePivot, m_AlgaeIntakeRollers, m_ledSubsytem));
+     controller.rightTrigger().whileTrue(new IntakeAlgaeCmd(m_AlgaeIntakePivot, m_AlgaeIntakeRollers, m_ledSubsytem));
     // // deploy algae
     // controller.rightBumper().onTrue(new ScoreAlgaeCmd(m_AlgaeIntakePivot, m_AlgaeIntakeRollers, m_ledSubsytem));
 
