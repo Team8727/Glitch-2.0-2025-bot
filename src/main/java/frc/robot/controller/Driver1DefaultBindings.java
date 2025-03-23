@@ -29,7 +29,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class Driver1DefaultBindings implements ControllerBindings {
   private final SwerveSubsystem m_SwerveSubsystem;
   private final PoseEstimator m_poseEstimator;
-  private final AlgaeIntakePivot m_AlgaeIntakePivot;
+  private final TestPivot m_AlgaeIntakePivot;
   private final AlgaeIntakeRollers m_AlgaeIntakeRollers;
   private final Coral m_coral;
   private final Elevator m_elevator;
@@ -105,7 +105,7 @@ public class Driver1DefaultBindings implements ControllerBindings {
 
     // //                Algae Commands
     // // Intake algae
-    // controller.rightTrigger().whileTrue(new IntakeAlgaeCmd(m_AlgaeIntakePivot, m_AlgaeIntakeRollers, m_ledSubsytem));
+     controller.rightTrigger().whileTrue(new IntakeAlgaeCmd(m_AlgaeIntakePivot, m_AlgaeIntakeRollers, m_ledSubsytem));
     // // deploy algae
     // controller.rightBumper().onTrue(new ScoreAlgaeCmd(m_AlgaeIntakePivot, m_AlgaeIntakeRollers, m_ledSubsytem));
 

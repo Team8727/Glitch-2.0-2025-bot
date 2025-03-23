@@ -28,7 +28,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem m_SwerveSubsystem;
   private final PoseEstimator m_PoseEstimator;
-  private final AlgaeIntakePivot m_AlgaeIntakePivot;
+  private final TestPivot m_AlgaeIntakePivot;
   private final AlgaeIntakeRollers m_AlgaeIntakeRollers;
   private final AlgaeRemoverPivot m_AlgaeRemoverPivot;
   private final AlgaeRemoverRollers m_AlgaeRemoverRollers;

@@ -20,7 +20,7 @@ import frc.robot.subsystems.PoseEstimator;
 public class Driver2DefaultBindings implements ControllerBindings {
   private final SwerveSubsystem m_SwerveSubsystem;
   private final PoseEstimator m_poseEstimator;
-  private final AlgaeIntakePivot m_AlgaeIntakePivot;
+  private final TestPivot m_AlgaeIntakePivot;
   private final AlgaeIntakeRollers m_AlgaeIntakeRollers;
   private final Coral m_coral;
   private final Elevator m_elevator;
