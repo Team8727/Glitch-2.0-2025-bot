@@ -12,6 +12,7 @@ import frc.robot.commands.Coral.IntakeCoralCmd;
 import frc.robot.commands.DriveCommands.SwerveJoystickCmd;
 import frc.robot.subsystems.AlgaeIntake.TestPivot;
 import frc.robot.subsystems.Autos;
+import frc.robot.subsystems.Elevator.AlgaeRemover.RollerTest;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.PoseEstimator;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -34,7 +35,7 @@ public class Driver1DefaultBindings implements ControllerBindings {
   private final Elevator m_elevator;
   private final LEDSubsystem m_ledSubsytem;
   private final AlgaeRemoverPivot m_AlgaeRemoverPivot;
-  private final AlgaeRemoverRollers m_AlgaeRemoverRollers;
+  private final RollerTest m_AlgaeRemoverRollers;
   private final Autos m_autos;
 
   public Driver1DefaultBindings(
@@ -46,7 +47,7 @@ public class Driver1DefaultBindings implements ControllerBindings {
     Elevator elevator,
     LEDSubsystem ledSubsystem,
     AlgaeRemoverPivot algaeRemoverPivot,
-    AlgaeRemoverRollers algaeRemoverRollers,
+    RollerTest algaeRemoverRollers,
     Autos autos) {
     m_SwerveSubsystem = swerveSubsystem;
     m_poseEstimator = poseEstimator;

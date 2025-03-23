@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.kAlgaeRemover.kPivot.RemoverPositions;
 import frc.robot.Constants.kElevator.ElevatorPosition;
+import frc.robot.subsystems.Elevator.AlgaeRemover.RollerTest;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
@@ -19,7 +20,7 @@ import frc.robot.subsystems.LEDSubsystem;
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class weirdAlgaeShootCmd extends SequentialCommandGroup {
   /** Creates a new removeAlgae. */
-  public weirdAlgaeShootCmd(AlgaeRemoverPivot algaeRemoverPivot, AlgaeRemoverRollers algaeRemoverRollers, ElevatorPosition setPos, Elevator elevator, LEDSubsystem ledSubsystem, Coral coral) {
+  public weirdAlgaeShootCmd(AlgaeRemoverPivot algaeRemoverPivot, RollerTest algaeRemoverRollers, ElevatorPosition setPos, Elevator elevator, LEDSubsystem ledSubsystem, Coral coral) {
 
     addRequirements(algaeRemoverPivot, algaeRemoverRollers, elevator); // Add the required subsystems here
 
@@ -29,7 +30,7 @@ public class weirdAlgaeShootCmd extends SequentialCommandGroup {
       new InstantCommand(() -> elevator.setDutyCycle(.5)),
       new ParallelCommandGroup(
         new InstantCommand(() -> algaeRemoverPivot.setPositionTrapazoidal(RemoverPositions.Fling)), // TODO: set positions
-        new InstantCommand(() -> algaeRemoverRollers.setRemoverRollerSpeed(.2)), // TODO: set speed
+        new InstantCommand(() -> algaeRemoverRollers.setSpeedDutyCycle(.2)), // TODO: set speed
         new InstantCommand(() -> coral.setOuttakeSpeedDuty(-.5))),
       new WaitCommand(.5),
       new InstantCommand(() -> elevator.isHoming = false) // Stop homing after the command is done

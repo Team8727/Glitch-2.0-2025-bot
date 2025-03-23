@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.Coral.ReindexCoralCmd;
 import frc.robot.commands.Coral.RejectCoralCmd;
 import frc.robot.subsystems.AlgaeIntake.TestPivot;
+import frc.robot.subsystems.Elevator.AlgaeRemover.RollerTest;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.PoseEstimator;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -27,7 +28,7 @@ public class Driver2DefaultBindings implements ControllerBindings {
   private final Elevator m_elevator;
   private final LEDSubsystem m_ledSubsytem;
   private final AlgaeRemoverPivot m_AlgaeRemoverPivot;
-  private final AlgaeRemoverRollers m_AlgaeRemoverRollers;
+  private final RollerTest m_AlgaeRemoverRollers;
 
   public Driver2DefaultBindings(
     SwerveSubsystem swerveSubsystem,
@@ -38,7 +39,7 @@ public class Driver2DefaultBindings implements ControllerBindings {
     Elevator elevator,
     LEDSubsystem ledSubsystem,
     AlgaeRemoverPivot algaeRemoverPivot,
-    AlgaeRemoverRollers algaeRemoverRollers) {
+    RollerTest algaeRemoverRollers) {
     m_SwerveSubsystem = swerveSubsystem;
     m_poseEstimator = poseEstimator;
     m_AlgaeIntakePivot = AlgaeIntakePivot;
