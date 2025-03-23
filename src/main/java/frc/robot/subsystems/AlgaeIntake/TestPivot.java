@@ -1,4 +1,3 @@
-
 package frc.robot.subsystems.AlgaeIntake;
 
 import com.revrobotics.spark.config.SparkMaxConfig;
