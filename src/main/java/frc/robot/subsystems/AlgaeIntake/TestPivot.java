@@ -9,6 +9,7 @@ public class TestPivot extends Pivot {
   private static final double maxVelocity = 100;
   private static final double maxAcceleration = 100;
   private static final double zeroedAngelFromHorizontal = 0;
+  private static final double allowedError = 2;
   private static final int CANID = kAlgaeIntakePivot.intakePivotMotorCANID;
   private static final SparkMaxConfig config = new SparkMaxConfig();
   static {
@@ -21,7 +22,7 @@ public class TestPivot extends Pivot {
   }
 
   public TestPivot() {
-    super(config, CANID, zeroedAngelFromHorizontal, maxVelocity, maxAcceleration);
+    super(config, CANID, zeroedAngelFromHorizontal, maxVelocity, maxAcceleration, allowedError);
   }
 
   /** This method will be called once per scheduler run */
