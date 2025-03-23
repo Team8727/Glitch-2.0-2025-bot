@@ -1,6 +1,8 @@
 package frc.robot.subsystems.Elevator.AlgaeRemover;
 
+import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import frc.robot.utilities.BaseSystems.Motors.SparkMaxMotor;
 import frc.robot.utilities.BaseSystems.Roller;
 
 import static frc.robot.Constants.kAlgaeRemover.kRollers;
@@ -19,7 +21,7 @@ public class RollerTest extends Roller {
   }
 
   public RollerTest() {
-    super(config, CANID);
+    super(new SparkMaxMotor(config, CANID, ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder));
   }
 
   /** This method will be called once per scheduler run */
