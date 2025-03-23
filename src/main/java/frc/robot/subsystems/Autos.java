@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 
+import frc.robot.commands.Coral.IntakeCoralCmd;
 import org.json.simple.parser.ParseException;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -23,9 +24,9 @@ import frc.robot.Constants.kAllianceInfo.RobotAlliance;
 import frc.robot.Constants.kElevator.ElevatorPosition;
 import frc.robot.Constants.kSwerve;
 import frc.robot.Constants.kVision;
-import frc.robot.Robot;
-import frc.robot.commands.CoralCmds.DeployCoralCmd;
-import frc.robot.commands.ElevatorCmds.SetElevatorHeightCmd;
+import frc.robot.Constants.kElevator.ElevatorPosition;
+import frc.robot.commands.Coral.DeployCoralCmd;
+import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.Elevator.Coral.Coral;
 import frc.robot.subsystems.LEDs.LEDPatterns;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
@@ -50,11 +51,11 @@ public class Autos extends SubsystemBase {
    * Each enum value contains the zone name, point, right and left poses, and distance to side.
    */
   public enum ReefScorePoints {
-    
+
     // Marked by zone as depicted below:
-    //  
-    //   ___________________Blue Alliance__________________ ... _____ 
-    //            |  ⟋                        | |     | |        ⟍  | 
+    //
+    //   ___________________Blue Alliance__________________ ... _____
+    //            |  ⟋                        | |     | |        ⟍  |
     //   _________|⟋         K-⟋  ⟍-J        | |     | |          ⟍|
     //            |        L-⟋      ⟍-I      | |     | |            |
     //   Alliance |       A |         | H     | |Barge| |            |
@@ -105,7 +106,7 @@ public class Autos extends SubsystemBase {
     private final Pose2d leftPose;
 
     // Getting translations and setting them to objects to avoid making new lists in `this.findClosestPoint()`
-    private static List<Translation2d> translation2ds = 
+    private static List<Translation2d> translation2ds =
       Arrays.asList(new Translation2d[] {
           A_B.point, C_D.point, E_F.point, G_H.point, I_J.point, K_L.point});
 
@@ -120,7 +121,7 @@ public class Autos extends SubsystemBase {
     }
 
     /**
-     * Finds the ReefScorePoint with the closest Translation2d to the provided robot pose. 
+     * Finds the ReefScorePoint with the closest Translation2d to the provided robot pose.
      * Requires RobotAlliance value to determine if it needs to flip the alliance for red alliance
      * @param robotAlliance the alliance of this match/practice
      * @param robotPose the current robot pose on the field
@@ -146,7 +147,7 @@ public class Autos extends SubsystemBase {
       // Return closest ReefScorePoint point
       return closestScorePoint;
     }
-    
+
     public ReefScorePoints getClosestPoint() {
       return closestScorePoint;
     }
@@ -332,7 +333,7 @@ public class Autos extends SubsystemBase {
         new Rotation2d(Math.toRadians(180)));
       return baseScoreLocation.rotateAround(reef, rotation);
   }
-  
+
   /**
    * Finds the closest ReefScorePoints location to the robot's current position.
    * This method calculates the distance from the robot to each defined ReefScorePoints 
