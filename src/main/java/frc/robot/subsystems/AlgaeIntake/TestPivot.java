@@ -3,10 +3,13 @@ package frc.robot.subsystems.AlgaeIntake;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import frc.robot.utilities.BaseSystems.Pivot;
 
+import static frc.robot.Constants.kAlgaeIntake.kAlgaeIntakePivot;
+
 public class TestPivot extends Pivot {
   private static final double maxVelocity = 100;
   private static final double maxAcceleration = 100;
   private static final double zeroedAngelFromHorizontal = 0;
+  private static final int CANID = kAlgaeIntakePivot.intakePivotMotorCANID;
   private static final SparkMaxConfig config = new SparkMaxConfig();
   static {
     config
@@ -18,13 +21,14 @@ public class TestPivot extends Pivot {
   }
 
   public TestPivot() {
-    super(config, zeroedAngelFromHorizontal, maxVelocity, maxAcceleration);
+    super(config, CANID, zeroedAngelFromHorizontal, maxVelocity, maxAcceleration);
   }
 
+  /** This method will be called once per scheduler run */
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
     super.periodic();
+    // Add any additional periodic logic here
 
   }
 }
