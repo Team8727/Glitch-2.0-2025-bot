@@ -13,7 +13,6 @@ import frc.robot.commands.ElevatorAlgaeCmds.weirdAlgaeIntakeCmd;
 import frc.robot.commands.ElevatorAlgaeCmds.weirdAlgaeShootCmd;
 import frc.robot.commands.ElevatorCmds.SetElevatorHeightCmd;
 import frc.robot.commands.ElevatorCmds.ZeroElevator;
-import frc.robot.subsystems.AlgaeIntake.AlgaeIntakePivot;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakeRollers;
 import frc.robot.subsystems.AlgaeIntake.TestPivot;
 import frc.robot.subsystems.Autos;
