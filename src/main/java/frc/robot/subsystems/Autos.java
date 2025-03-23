@@ -7,7 +7,10 @@ package frc.robot.subsystems;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 
-import frc.robot.commands.Coral.IntakeCoralCmd;
+import frc.robot.commands.CoralCmds.DeployCoralCmd;
+import frc.robot.commands.CoralCmds.IntakeCoralCmd;
+import frc.robot.commands.ElevatorCmds.SetElevatorHeightCmd;
+
 import org.json.simple.parser.ParseException;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -29,11 +32,9 @@ import frc.robot.Robot;
 import frc.robot.Constants.kSwerve;
 import frc.robot.Constants.kVision;
 import frc.robot.Constants.kElevator.ElevatorPosition;
-import frc.robot.commands.Coral.DeployCoralCmd;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.Elevator.Coral.Coral;
 import frc.robot.utilities.NetworkTableLogger;
-import frc.robot.commands.SetElevatorHeightCmd;
 
 public class Autos extends SubsystemBase {
   private final LEDSubsystem m_ledSubsystem;

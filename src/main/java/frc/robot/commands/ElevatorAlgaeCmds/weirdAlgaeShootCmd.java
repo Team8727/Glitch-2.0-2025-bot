@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.ElevatorAlgaeCmds;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.kAlgaeRemover.kPivot.RemoverPositions;
 import frc.robot.Constants.kElevator.ElevatorPosition;
+import frc.robot.commands.ElevatorCmds.SetElevatorHeightCmd;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
@@ -19,7 +20,7 @@ import frc.robot.subsystems.LEDSubsystem;
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class weirdAlgaeShootCmd extends SequentialCommandGroup {
   /** Creates a new removeAlgae. */
-  public weirdAlgaeShootCmd(AlgaeRemoverPivot algaeRemoverPivot, AlgaeRemoverRollers algaeRemoverRollers, ElevatorPosition setPos, Elevator elevator, LEDSubsystem ledSubsystem, Coral coral) {
+  public weirdAlgaeShootCmd(AlgaeRemoverPivot algaeRemoverPivot, AlgaeRemoverRollers algaeRemoverRollers, Elevator elevator, LEDSubsystem ledSubsystem, Coral coral) {
     addRequirements(algaeRemoverPivot, algaeRemoverRollers, elevator); // Add the required subsystems here
     // Use addRequirements() here to declare subsystem dependencies.
 
