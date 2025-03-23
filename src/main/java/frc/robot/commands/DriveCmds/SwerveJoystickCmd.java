@@ -7,7 +7,6 @@ import frc.robot.Robot;
 import frc.robot.Constants.kElevator;
 import frc.robot.Constants.kOI;
 import frc.robot.Constants.kSwerve;
-import frc.robot.Constants.kSwerve.DriveSpeedScaling;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.utilities.NetworkTableLogger;
