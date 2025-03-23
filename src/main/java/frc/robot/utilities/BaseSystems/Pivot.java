@@ -7,7 +7,6 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.utilities.NetworkTableLogger;
 import frc.robot.utilities.SparkConfigurator;
 
@@ -16,7 +15,7 @@ import java.util.Set;
 public abstract class Pivot extends SubsystemBase {
 
   private final SparkMax motor;
-  private final SparkClosedLoopController motorPID;
+  private final SparkClosedLoopController motorController;
 
   private final TrapezoidProfile m_profile;
   private TrapezoidProfile.State m_goal = new TrapezoidProfile.State(0,0);
@@ -33,6 +32,7 @@ public abstract class Pivot extends SubsystemBase {
    * Creates a new Pivot.
    *
    * @param config The configuration for the SparkMax motor
+   * @param CANID The CAN ID of the motor
    * @param zeroedAngelFromHorizontal The angle from horizontal to zero the pivot at
    * @param maxVelocity The maximum velocity of the pivot
    * @param maxAcceleration The maximum acceleration of the pivot
@@ -44,6 +44,7 @@ public abstract class Pivot extends SubsystemBase {
    */
   public Pivot(
       SparkMaxConfig config,
+      int CANID,
       double zeroedAngelFromHorizontal,
       double maxVelocity,
       double maxAcceleration,
@@ -63,7 +64,7 @@ public abstract class Pivot extends SubsystemBase {
     this.zeroedAngelFromHorizontal = zeroedAngelFromHorizontal;
 
     motor = getSparkMax(
-      Constants.kAlgaeRemover.kPivot.removerPivotMotorCANID,
+      CANID,
       SparkLowLevel.MotorType.kBrushless,
       false,
       Set.of(),
@@ -78,13 +79,14 @@ public abstract class Pivot extends SubsystemBase {
       SparkBase.ResetMode.kNoResetSafeParameters,
       SparkBase.PersistMode.kNoPersistParameters);
 
-    motorPID = motor.getClosedLoopController();
+    motorController = motor.getClosedLoopController();
   }
 
   /**
    * Creates a new Pivot.
    *
    * @param config The configuration for the SparkMax motor
+   * @param CANID The CAN ID of the motor
    * @param zeroedAngelFromHorizontal The angle from horizontal to zero the pivot at
    * @param maxVelocity The maximum velocity of the pivot
    * @param maxAcceleration The maximum acceleration of the pivot
@@ -93,9 +95,9 @@ public abstract class Pivot extends SubsystemBase {
    * @param kv The velocity gain of the pivot
    * @param ka The acceleration gain of the pivot
    */
-
   public Pivot(
       SparkMaxConfig config,
+      int CANID,
       double zeroedAngelFromHorizontal,
       double maxVelocity,
       double maxAcceleration,
@@ -103,23 +105,25 @@ public abstract class Pivot extends SubsystemBase {
       double kg,
       double kv,
       double ka) {
-    this(config, zeroedAngelFromHorizontal, maxVelocity, maxAcceleration, ks, kg, kv, ka, 0.02);
+    this(config, CANID, zeroedAngelFromHorizontal, maxVelocity, maxAcceleration, ks, kg, kv, ka, 0.02);
   }
 
   /**
    * Creates a new Pivot.
    *
    * @param config The configuration for the SparkMax motor
+   * @param CANID The CAN ID of the motor
    * @param zeroedAngelFromHorizontal The angle from horizontal to zero the pivot at
    * @param maxVelocity The maximum velocity of the pivot
    * @param maxAcceleration The maximum acceleration of the pivot
    */
   public Pivot(
       SparkMaxConfig config,
+      int CANID,
       double zeroedAngelFromHorizontal,
       double maxVelocity,
       double maxAcceleration) {
-    this(config, zeroedAngelFromHorizontal, maxVelocity, maxAcceleration, 0, 0, 0, 0);
+    this(config, CANID, zeroedAngelFromHorizontal, maxVelocity, maxAcceleration, 0, 0, 0, 0);
   }
 
   /**
@@ -134,7 +138,7 @@ public abstract class Pivot extends SubsystemBase {
 
   // set pivot position
   private void setMotorFFAndPIDPosition(double Position) {
-    motorPID.setReference(
+    motorController.setReference(
       Position,
       SparkBase.ControlType.kPosition,
       ClosedLoopSlot.kSlot0,
