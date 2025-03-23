@@ -11,7 +11,6 @@ import frc.robot.subsystems.AlgaeIntake.AlgaeIntakeRollers;
 import frc.robot.subsystems.AlgaeIntake.TestPivot;
 import frc.robot.subsystems.Autos;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
-import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
 import frc.robot.subsystems.Elevator.AlgaeRemover.RollerTest;
 import frc.robot.subsystems.Elevator.Coral.Coral;
 import frc.robot.subsystems.Elevator.Elevator;
