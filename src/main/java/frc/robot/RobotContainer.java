@@ -7,8 +7,8 @@ package frc.robot;
 import frc.robot.controller.Controller;
 import frc.robot.controller.Driver1DefaultBindings;
 import frc.robot.controller.Driver2DefaultBindings;
-import frc.robot.subsystems.AlgaeIntake.AlgaeIntakePivot;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakeRollers;
+import frc.robot.subsystems.AlgaeIntake.TestPivot;
 import frc.robot.subsystems.Autos;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
@@ -40,16 +40,16 @@ public class RobotContainer {
   private final Controller m_assistController = new Controller(Controller.Operator.ASSIST);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(
-      SwerveSubsystem swerveSubsystem,
-      PoseEstimator poseEstimator,
-      AlgaeIntakePivot AlgaeIntakePivot,
-      AlgaeIntakeRollers AlgaeIntakeRollers,
-      AlgaeRemoverPivot AlgaeRemoverPivot,
-      AlgaeRemoverRollers AlgaeRemoverRollers,
-      Coral coral,
-      Elevator elevator,
-      LEDSubsystem ledSubsystem,
-      Autos autos
+    SwerveSubsystem swerveSubsystem,
+    PoseEstimator poseEstimator,
+    TestPivot AlgaeIntakePivot,
+    AlgaeIntakeRollers AlgaeIntakeRollers,
+    AlgaeRemoverPivot AlgaeRemoverPivot,
+    AlgaeRemoverRollers AlgaeRemoverRollers,
+    Coral coral,
+    Elevator elevator,
+    LEDSubsystem ledSubsystem,
+    Autos autos
       ) {
     m_SwerveSubsystem = swerveSubsystem;
     m_PoseEstimator = poseEstimator;

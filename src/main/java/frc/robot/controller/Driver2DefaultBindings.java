@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.CoralCmds.ReindexCoralCmd;
 import frc.robot.commands.CoralCmds.RejectCoralCmd;
+import frc.robot.subsystems.AlgaeIntake.TestPivot;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakePivot;
@@ -31,7 +32,7 @@ public class Driver2DefaultBindings implements ControllerBindings {
   public Driver2DefaultBindings(
       SwerveSubsystem swerveSubsystem,
       PoseEstimator poseEstimator,
-      AlgaeIntakePivot AlgaeIntakePivot,
+      TestPivot AlgaeIntakePivot,
       AlgaeIntakeRollers AlgaeIntakeRollers,
       Coral coral,
       Elevator elevator,

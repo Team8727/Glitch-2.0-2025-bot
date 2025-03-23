@@ -3,6 +3,7 @@ package frc.robot.controller;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.kElevator.ElevatorPosition;
+import frc.robot.commands.AlgaeIntakeCmds.IntakeAlgaeCmd;
 import frc.robot.commands.CoralCmds.DeployCoralCmd;
 import frc.robot.commands.CoralCmds.IntakeCoralCmd;
 import frc.robot.commands.CoralCmds.ReindexCoralCmd;
@@ -14,6 +15,7 @@ import frc.robot.commands.ElevatorCmds.SetElevatorHeightCmd;
 import frc.robot.commands.ElevatorCmds.ZeroElevator;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakePivot;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakeRollers;
+import frc.robot.subsystems.AlgaeIntake.TestPivot;
 import frc.robot.subsystems.Autos;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
@@ -41,7 +43,7 @@ public class Driver1DefaultBindings implements ControllerBindings {
   public Driver1DefaultBindings(
       SwerveSubsystem swerveSubsystem,
       PoseEstimator poseEstimator,
-      AlgaeIntakePivot AlgaeIntakePivot,
+      TestPivot AlgaeIntakePivot,
       AlgaeIntakeRollers AlgaeIntakeRollers,
       Coral coral,
       Elevator elevator,
