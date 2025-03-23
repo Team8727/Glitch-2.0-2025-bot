@@ -24,6 +24,7 @@ import frc.robot.utilities.SparkConfigurator.LogData;
 
 import java.util.Set;
 
+import static edu.wpi.first.units.Units.Volt;
 import static frc.robot.utilities.SparkConfigurator.getSparkMax;
 
 public class AlgaeIntakePivot extends SubsystemBase {

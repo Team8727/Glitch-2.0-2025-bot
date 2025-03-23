@@ -4,8 +4,7 @@
 
 package frc.robot.subsystems.Elevator.AlgaeRemover;
 
-import static frc.robot.utilities.SparkConfigurator.getSparkMax;
-
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -24,6 +23,8 @@ import frc.robot.utilities.NetworkTableLogger;
 import frc.robot.utilities.SparkConfigurator.LogData;
 
 import java.util.Set;
+
+import static frc.robot.utilities.SparkConfigurator.getSparkMax;
 
 public class AlgaeRemoverPivot extends SubsystemBase {
   private final SparkMax removerPivotMotor;
