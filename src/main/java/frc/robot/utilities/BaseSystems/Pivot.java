@@ -1,21 +1,22 @@
 package frc.robot.utilities.BaseSystems;
 
-import static frc.robot.utilities.SparkConfigurator.getSparkMax;
 
 import com.revrobotics.spark.*;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.utilities.BaseSystems.Motors.Motor;
 import frc.robot.utilities.NetworkTableLogger;
-import frc.robot.utilities.SparkConfigurator;
 
 import java.util.Set;
 
 public abstract class Pivot extends SubsystemBase {
 
-  private final SparkMax motor;
-  private final SparkClosedLoopController motorController;
+  private final Motor motor;
 
   private final TrapezoidProfile m_profile;
   private TrapezoidProfile.State m_goal = new TrapezoidProfile.State(0,0);
@@ -28,6 +29,8 @@ public abstract class Pivot extends SubsystemBase {
   private final double dt;
   private final double zeroedAngelFromHorizontal;
 
+  private final double allowedError;
+
   /**
    * Creates a new Pivot.
    *
@@ -36,6 +39,7 @@ public abstract class Pivot extends SubsystemBase {
    * @param zeroedAngelFromHorizontal The angle from horizontal to zero the pivot at
    * @param maxVelocity The maximum velocity of the pivot
    * @param maxAcceleration The maximum acceleration of the pivot
+   * @param allowedError The allowed error for the pivot in degrees
    * @param ks The static gain of the pivot
    * @param kg The gravity gain of the pivot
    * @param kv The velocity gain of the pivot
@@ -43,16 +47,17 @@ public abstract class Pivot extends SubsystemBase {
    * @param dt The time step for the profile
    */
   public Pivot(
-      SparkMaxConfig config,
-      int CANID,
-      double zeroedAngelFromHorizontal,
-      double maxVelocity,
-      double maxAcceleration,
-      double ks,
-      double kg,
-      double kv,
-      double ka,
-      double dt) {
+    SparkMaxConfig config,
+    int CANID,
+    double zeroedAngelFromHorizontal,
+    double maxVelocity,
+    double maxAcceleration,
+    double allowedError,
+    double ks,
+    double kg,
+    double kv,
+    double ka,
+    double dt) {
     logger = new NetworkTableLogger(this.getName());
 
     m_profile = new TrapezoidProfile(
@@ -63,23 +68,9 @@ public abstract class Pivot extends SubsystemBase {
 
     this.zeroedAngelFromHorizontal = zeroedAngelFromHorizontal;
 
-    motor = getSparkMax(
-      CANID,
-      SparkLowLevel.MotorType.kBrushless,
-      false,
-      Set.of(),
-      Set.of(
-        SparkConfigurator.LogData.POSITION,
-        SparkConfigurator.LogData.VELOCITY,
-        SparkConfigurator.LogData.VOLTAGE,
-        SparkConfigurator.LogData.CURRENT));
+    motor = new SparkMaxMotor(config, CANID, FeedbackSensor.kAbsoluteEncoder);
 
-    motor.configure(
-      config,
-      SparkBase.ResetMode.kNoResetSafeParameters,
-      SparkBase.PersistMode.kNoPersistParameters);
-
-    motorController = motor.getClosedLoopController();
+    this.allowedError = allowedError/360;
   }
 
   /**
@@ -90,22 +81,24 @@ public abstract class Pivot extends SubsystemBase {
    * @param zeroedAngelFromHorizontal The angle from horizontal to zero the pivot at
    * @param maxVelocity The maximum velocity of the pivot
    * @param maxAcceleration The maximum acceleration of the pivot
+   * @param allowedError The allowed error for the pivot in degrees
    * @param ks The static gain of the pivot
    * @param kg The gravity gain of the pivot
    * @param kv The velocity gain of the pivot
    * @param ka The acceleration gain of the pivot
    */
   public Pivot(
-      SparkMaxConfig config,
-      int CANID,
-      double zeroedAngelFromHorizontal,
-      double maxVelocity,
-      double maxAcceleration,
-      double ks,
-      double kg,
-      double kv,
-      double ka) {
-    this(config, CANID, zeroedAngelFromHorizontal, maxVelocity, maxAcceleration, ks, kg, kv, ka, 0.02);
+    SparkMaxConfig config,
+    int CANID,
+    double zeroedAngelFromHorizontal,
+    double maxVelocity,
+    double maxAcceleration,
+    double allowedError,
+    double ks,
+    double kg,
+    double kv,
+    double ka) {
+    this(config, CANID, zeroedAngelFromHorizontal, maxVelocity, allowedError, maxAcceleration, ks, kg, kv, ka, 0.02);
   }
 
   /**
@@ -116,42 +109,82 @@ public abstract class Pivot extends SubsystemBase {
    * @param zeroedAngelFromHorizontal The angle from horizontal to zero the pivot at
    * @param maxVelocity The maximum velocity of the pivot
    * @param maxAcceleration The maximum acceleration of the pivot
+   * @param allowedError The allowed error for the pivot in degrees
    */
   public Pivot(
-      SparkMaxConfig config,
-      int CANID,
-      double zeroedAngelFromHorizontal,
-      double maxVelocity,
-      double maxAcceleration) {
-    this(config, CANID, zeroedAngelFromHorizontal, maxVelocity, maxAcceleration, 0, 0, 0, 0);
+    SparkMaxConfig config,
+    int CANID,
+    double zeroedAngelFromHorizontal,
+    double maxVelocity,
+    double maxAcceleration,
+    double allowedError) {
+    this(config, CANID, zeroedAngelFromHorizontal, maxVelocity, maxAcceleration, allowedError, 0, 0, 0, 0);
   }
 
   /**
-   * Set the pivot position using a trapezoidal profile
+   * Sets the pivot position using a trapezoidal profile.
    *
-   * @param angle The angle to set the pivot to
+   * @param angleDegrees The angle in degrees to set the pivot to.
    */
-  public void setPosition(double angle) {
-    double position = angle / 360;
+  public void setPosition(double angleDegrees) {
+    double position = angleDegrees / 360;
     m_goal = new TrapezoidProfile.State(position, 0);
+  }
+
+  /**
+   * Creates a command to set the pivot position to the specified angle in degrees.
+   *
+   * @param angleDegrees The angle in degrees to set the pivot to.
+   * @return A command that sets the pivot position and waits until the pivot reaches the setpoint.
+   */
+  public Command setPositionCommand(double angleDegrees) {
+    return new InstantCommand(() -> setPosition(angleDegrees))
+      .andThen(new WaitUntilCommand(this::isAtSetpoint));
   }
 
   // set pivot position
   private void setMotorFFAndPIDPosition(double Position) {
-    motorController.setReference(
+    motor.setPosition(
       Position,
       SparkBase.ControlType.kPosition,
       ClosedLoopSlot.kSlot0,
       pivotFeedforward.calculateWithVelocities(
-        motor.getAbsoluteEncoder().getPosition() + (zeroedAngelFromHorizontal/360),
-        motor.getAbsoluteEncoder().getVelocity(),
+        motor.getPosition() + (zeroedAngelFromHorizontal/360),
+        motor.getVelocity(),
         m_setpoint.velocity));
+  }
+
+  /**
+   * Checks if the pivot is at the setpoint.
+   *
+   * @return True if the pivot is within 0.01 units of the goal position, false otherwise.
+   */
+  public boolean isAtSetpoint() {
+    return Math.abs(motor.getPosition() - m_goal.position) < allowedError;
+  }
+
+  /**
+   * Gets the current position of the pivot.
+   *
+   * @return The current position of the pivot.
+   */
+  public double getPosition() {
+    return motor.getPosition();
+  }
+
+  /**
+   * Gets the current applied to the motor.
+   *
+   * @return The current applied to the motor.
+   */
+  public double getAppliedCurrent() {
+    return motor.getCurrent();
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    logger.logDouble("Pivot Position", motor.getAbsoluteEncoder().getPosition() * 360);
+    logger.logDouble("Pivot Position", motor.getPosition() * 360);
 
     m_setpoint = m_profile.calculate(dt, m_setpoint, m_goal);
 
