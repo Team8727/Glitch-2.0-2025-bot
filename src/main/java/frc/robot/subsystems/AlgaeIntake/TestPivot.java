@@ -1,6 +1,8 @@
 package frc.robot.subsystems.AlgaeIntake;
 
+import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import frc.robot.utilities.BaseSystems.Motors.SparkMaxMotor;
 import frc.robot.utilities.BaseSystems.Pivot;
 
 import static frc.robot.Constants.kAlgaeIntake.kAlgaeIntakePivot;
@@ -22,7 +24,7 @@ public class TestPivot extends Pivot {
   }
 
   public TestPivot() {
-    super(config, CANID, zeroedAngelFromHorizontal, maxVelocity, maxAcceleration, allowedError);
+    super(new SparkMaxMotor(config, CANID, ClosedLoopConfig.FeedbackSensor.kAbsoluteEncoder), zeroedAngelFromHorizontal, maxVelocity, maxAcceleration, allowedError);
   }
 
   /** This method will be called once per scheduler run */
