@@ -1,7 +1,5 @@
 package frc.robot.utilities;
 
-import static frc.robot.utilities.SparkConfigurator.*;
-
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -24,7 +22,11 @@ import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.Constants.kSwerve.kModule;
 import frc.robot.utilities.SparkConfigurator.LogData;
 import frc.robot.utilities.SparkConfigurator.Sensors;
+
 import java.util.Set;
+
+import static frc.robot.utilities.SparkConfigurator.getSparkFlex;
+import static frc.robot.utilities.SparkConfigurator.getSparkMax;
 
 public class MAXSwerve {
   private SwerveModuleState targetState = new SwerveModuleState();

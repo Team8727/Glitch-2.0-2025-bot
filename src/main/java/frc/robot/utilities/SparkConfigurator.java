@@ -9,11 +9,8 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import frc.robot.Constants;
 
-import java.util.Optional;
-import java.util.OptionalInt;
 import java.util.Set;
 
 public class SparkConfigurator {

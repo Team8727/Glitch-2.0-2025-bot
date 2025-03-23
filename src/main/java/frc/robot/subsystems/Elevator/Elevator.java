@@ -6,25 +6,17 @@ package frc.robot.subsystems.Elevator;
 
 import com.revrobotics.sim.SparkMaxSim;
 import com.revrobotics.spark.ClosedLoopSlot;
-import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
-
-import static edu.wpi.first.units.Units.Volt;
-import static frc.robot.utilities.SparkConfigurator.getFollowerMax;
-import static frc.robot.utilities.SparkConfigurator.getSparkMax;
-
-import java.util.Set;
-
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
-import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
@@ -34,7 +26,12 @@ import frc.robot.Constants.kConfigs;
 import frc.robot.Constants.kElevator;
 import frc.robot.utilities.NetworkTableLogger;
 import frc.robot.utilities.SparkConfigurator.LogData;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
+import java.util.Set;
+
+import static edu.wpi.first.units.Units.Volt;
+import static frc.robot.utilities.SparkConfigurator.getFollowerMax;
+import static frc.robot.utilities.SparkConfigurator.getSparkMax;
 public class Elevator extends SubsystemBase {
 
   private final SparkMax elevatorMotorR;

@@ -7,16 +7,16 @@ package frc.robot;
 import frc.robot.controller.Controller;
 import frc.robot.controller.Driver1DefaultBindings;
 import frc.robot.controller.Driver2DefaultBindings;
-import frc.robot.subsystems.Autos;
-import frc.robot.subsystems.LEDSubsystem;
-import frc.robot.subsystems.PoseEstimator;
-import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakePivot;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakeRollers;
-import frc.robot.subsystems.Elevator.Elevator;
+import frc.robot.subsystems.Autos;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
 import frc.robot.subsystems.Elevator.Coral.Coral;
+import frc.robot.subsystems.Elevator.Elevator;
+import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.PoseEstimator;
+import frc.robot.subsystems.SwerveSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a

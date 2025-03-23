@@ -4,19 +4,16 @@
 
 package frc.robot.subsystems.Elevator.AlgaeRemover;
 
-import static frc.robot.utilities.SparkConfigurator.getSparkMax;
-
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -24,7 +21,10 @@ import frc.robot.Constants.kAlgaeRemover;
 import frc.robot.Constants.kAlgaeRemover.kPivot.RemoverPositions;
 import frc.robot.utilities.NetworkTableLogger;
 import frc.robot.utilities.SparkConfigurator.LogData;
+
 import java.util.Set;
+
+import static frc.robot.utilities.SparkConfigurator.getSparkMax;
 
 public class AlgaeRemoverPivot extends SubsystemBase {
   private final SparkMax removerPivotMotor;

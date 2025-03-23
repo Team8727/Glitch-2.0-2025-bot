@@ -1,16 +1,15 @@
 package frc.robot.subsystems;
 
 import com.studica.frc.AHRS;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Robot;
 import frc.robot.Constants.kSwerve;
 import frc.robot.Constants.kSwerve.kModule;
+import frc.robot.Robot;
 import frc.robot.utilities.MAXSwerve;
 import frc.robot.utilities.NetworkTableLogger;
 

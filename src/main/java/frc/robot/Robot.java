@@ -4,33 +4,31 @@
 
 package frc.robot;
 
-import java.util.Optional;
-
-import org.littletonrobotics.urcl.URCL;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathfindingCommand;
-
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.kConfigs;
 import frc.robot.Constants.kSwerve;
-import frc.robot.subsystems.Autos;
-import frc.robot.subsystems.LEDSubsystem;
-import frc.robot.subsystems.PoseEstimator;
-import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakePivot;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakeRollers;
-import frc.robot.subsystems.Elevator.Elevator;
+import frc.robot.subsystems.Autos;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
 import frc.robot.subsystems.Elevator.Coral.Coral;
+import frc.robot.subsystems.Elevator.Elevator;
+import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.PoseEstimator;
+import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.utilities.NetworkTableLogger;
+import org.littletonrobotics.urcl.URCL;
+
+import java.util.Optional;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
