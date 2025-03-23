@@ -6,9 +6,9 @@ package frc.robot.commands.CoralCmds;
 
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Elevator.Elevator;
-import frc.robot.subsystems.Elevator.Coral.Coral;
 import frc.robot.Constants.kElevator.ElevatorPosition;
+import frc.robot.subsystems.Elevator.Coral.Coral;
+import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.LEDSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -24,6 +24,7 @@ public class DeployCoralCmd extends Command {
     m_coral = coral;
     m_ledSubsytem = ledSubsystem;
     m_elevatorPosition = elevator.getElevatorSetPosition();
+
     addRequirements(coral, elevator);
   }
 
@@ -44,8 +45,6 @@ public class DeployCoralCmd extends Command {
       m_coral.elevatorUp = false;
       isFinished = true;
       this.cancel();
-
-      // m_coral.setOutakePos(m_coral.frontMotor.getEncoder().getPosition()+1);
     }
   }
 

@@ -22,8 +22,8 @@ public class IntakeAlgaeCmd extends Command {
     m_algaeIntakePivot = algaeIntakePivot;
     m_algaeIntakeRollers = algaeRemoverPivot;
     m_ledSubsystem = ledSubsystem;
+
     addRequirements(algaeIntakePivot, algaeRemoverPivot); // Add the required subsystems here
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -33,7 +33,7 @@ public class IntakeAlgaeCmd extends Command {
     m_algaeIntakeRollers.isMoving = true;
     m_algaeIntakePivot.setPositionTrapazoidal(kAlgaeIntakePivot.IntakePosition.DOWN);
     m_algaeIntakeRollers.setRollerSpeedDuty(.8);
-    m_ledSubsystem.setPatternForDuration(m_ledSubsystem.algaePickup, 2);
+    m_ledSubsystem.setPatternForDuration(LEDSubsystem.algaePickup, 2);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -53,9 +53,7 @@ public class IntakeAlgaeCmd extends Command {
   public void end(boolean interrupted) {
     m_algaeIntakePivot.setPositionTrapazoidal(kAlgaeIntakePivot.IntakePosition.HOME);
     m_algaeIntakeRollers.setRollerSpeedDuty(0);
-    // Set the intake rollers to idle pull in voltage
-    // Go back to home position
-    // m_algaeIntakePivot.setIntakePivotPosition(kAlgaeIntakePivot.IntakePosition.HOME);
+    // Go back to home position and stop rollers
   }
 
   // Returns true when the command should end.

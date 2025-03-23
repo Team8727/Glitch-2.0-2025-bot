@@ -7,7 +7,6 @@ import frc.robot.Robot;
 import frc.robot.Constants.kElevator;
 import frc.robot.Constants.kOI;
 import frc.robot.Constants.kSwerve;
-import frc.robot.Constants.kSwerve.DriveSpeedScaling;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.utilities.NetworkTableLogger;
@@ -19,7 +18,7 @@ public class SwerveJoystickCmd extends Command {
   private final SwerveSubsystem m_SwerveSubsystem;
   private final Elevator m_Elevator;
   private final Supplier<Double> m_ySpdFunction, m_xSpdFunction, m_turningSpdFunction;
-  private final NetworkTableLogger m_logger = new NetworkTableLogger(this.getName().toString());
+  private final NetworkTableLogger m_logger = new NetworkTableLogger(this.getName());
 
   public SwerveJoystickCmd(
       SwerveSubsystem swerveSubsystem,
@@ -32,6 +31,7 @@ public class SwerveJoystickCmd extends Command {
     m_ySpdFunction = ySpdFunction;
     m_xSpdFunction = xSpdFunction;
     m_turningSpdFunction = turningSpdFunction;
+
     addRequirements(swerveSubsystem);
   }
 
@@ -53,13 +53,13 @@ public class SwerveJoystickCmd extends Command {
 
     // get elevator height for anti-tipping
     double elevatorHeight = m_Elevator.getElevatorHeight();
-    double driveSpeedConversionFactor = (kElevator.ElevatorPosition.L4.getOutputRotations() - (elevatorHeight - DriveSpeedScaling.minimumDriveSpeed)) / kElevator.ElevatorPosition.L4.getOutputRotations();
+    double driveSpeedConversionFactor = (kElevator.ElevatorPosition.L4.getOutputRotations() - (elevatorHeight - kSwerve.DriveSpeedScaling.minimumDriveSpeed)) / kElevator.ElevatorPosition.L4.getOutputRotations();
     xSpeed = -(xSpeed * kSwerve.maxTransSpeed
-     * driveSpeedConversionFactor); // * kSwerve.DriveSpeedScaling.minDriveSpeed; // Scaling to elevator height
+     * driveSpeedConversionFactor);  // Scaling to elevator height
     ySpeed = -(ySpeed * kSwerve.maxTransSpeed
-     * driveSpeedConversionFactor); // * kSwerve.DriveSpeedScaling.minDriveSpeed; // Scaling to elevator height
+     * driveSpeedConversionFactor);  // Scaling to elevator height
     turningSpeed = -(turningSpeed * kSwerve.maxAngSpeed
-     * driveSpeedConversionFactor); // * kSwerve.DriveSpeedScaling.minDriveSpeed; // Scaling to elevator height
+     * driveSpeedConversionFactor);  // Scaling to elevator height
 
     // set chassis speed
     ChassisSpeeds chassisSpeeds =
@@ -78,7 +78,6 @@ public class SwerveJoystickCmd extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    // m_SwerveSubsystem.stopModules(); // does nothing
   }
 
   @Override

@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.kAlgaeRemover.kPivot.RemoverPositions;
 import frc.robot.Constants.kElevator.ElevatorPosition;
-import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
 import frc.robot.subsystems.Elevator.Coral.Coral;
+import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.LEDSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -31,6 +31,7 @@ public class weirdAlgaeIntakeCmd extends Command {
     m_elevator = elevator;
     m_ledSubsystem = ledSubsystem;
     m_coral = coral;
+
     addRequirements(algaeRemoverPivot, algaeRemoverRollers, elevator); // Add the required subsystems here
     // Use addRequirements() here to declare subsystem dependencies.
   }

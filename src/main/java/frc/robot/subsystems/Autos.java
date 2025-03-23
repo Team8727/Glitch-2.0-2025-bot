@@ -4,47 +4,43 @@
 
 package frc.robot.subsystems;
 
-import java.io.IOException;
-import java.util.LinkedHashMap;
-
-import frc.robot.commands.CoralCmds.DeployCoralCmd;
-import frc.robot.commands.CoralCmds.IntakeCoralCmd;
-import frc.robot.commands.ElevatorCmds.SetElevatorHeightCmd;
-
-import org.json.simple.parser.ParseException;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Robot;
+import edu.wpi.first.wpilibj2.command.*;
+import frc.robot.Constants.kElevator.ElevatorPosition;
 import frc.robot.Constants.kSwerve;
 import frc.robot.Constants.kVision;
-import frc.robot.Constants.kElevator.ElevatorPosition;
-import frc.robot.subsystems.Elevator.Elevator;
+import frc.robot.Robot;
+import frc.robot.commands.CoralCmds.DeployCoralCmd;
+import frc.robot.commands.ElevatorCmds.SetElevatorHeightCmd;
 import frc.robot.subsystems.Elevator.Coral.Coral;
+import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.utilities.NetworkTableLogger;
+import org.json.simple.parser.ParseException;
+
+import java.io.IOException;
+import java.util.LinkedHashMap;
 
 public class Autos extends SubsystemBase {
   private final LEDSubsystem m_ledSubsystem;
   private final Coral m_coral;
   private final Elevator m_elevator;
   private final LinkedHashMap<String, PathPlannerPath> paths = new LinkedHashMap<>();
-  private final PoseEstimatior m_PoseEstimatior;
+  private final PoseEstimator m_PoseEstimator;
   private final SendableChooser<String> autoChooser = new SendableChooser<>();
   private final NetworkTableLogger logger = new NetworkTableLogger(this.getName());
 
+  /**
+   * Enum representing the scoring points on the reef.
+   * Each enum value contains the zone name, point, right and left poses, and distance to side.
+   */
   public enum ReefScorePoints {
     A_B("A-B",
       new Translation2d(3.65, 4.02), // side point
@@ -122,15 +118,18 @@ public class Autos extends SubsystemBase {
   }
 
   /** Creates a new Autos. */
-  public Autos(LEDSubsystem ledSubsystem, Coral coralSubsystem, Elevator elevatorSubsystem, PoseEstimatior poseEstimatior) {
+  public Autos(LEDSubsystem ledSubsystem, Coral coralSubsystem, Elevator elevatorSubsystem, PoseEstimator poseEstimator) {
     m_ledSubsystem = ledSubsystem;
     m_coral = coralSubsystem;
     m_elevator = elevatorSubsystem;
-    m_PoseEstimatior = poseEstimatior;
+    m_PoseEstimator = poseEstimator;
 
     loadPaths();
     }
 
+  /**
+   * Loads the paths from the specified path files.
+   */
   private void loadPaths() {
     loadPath("ML-I");
     loadPath("I-CPR");
@@ -141,6 +140,11 @@ public class Autos extends SubsystemBase {
     loadPath("M-H test");
   }
 
+  /**
+   * Loads a specific path from the given path name.
+   *
+   * @param pathName The name of the path file to load.
+   */
   private void loadPath(String pathName) {
     try {
       paths.put(pathName, PathPlannerPath.fromPathFile(pathName));
@@ -149,6 +153,9 @@ public class Autos extends SubsystemBase {
     }
   }
 
+  /**
+   * Sets up the auto chooser with different autonomous options.
+   */
   public void setupAutoChooser() {
     autoChooser.setDefaultOption("Path M-L4-H", "M_L4_H()");
     autoChooser.addOption("Path L-L4-I", "L_L4_I()");
@@ -159,6 +166,9 @@ public class Autos extends SubsystemBase {
     autoChooser.addOption("MultiPathTest", "MultiPathTest()");
   }
 
+  /**
+   * runs the autonomous command based on the selected option in the auto chooser.
+   */
   public void selectAuto() {
     if (autoChooser.getSelected().equals("M_L4_H()")) {
       M_L4_H().schedule();
@@ -172,17 +182,28 @@ public class Autos extends SubsystemBase {
       ML_L4_I().schedule();
     } else if (autoChooser.getSelected().equals("Min()")) {
       Min().schedule();
-    } else if(autoChooser.getSelected() == "MultiPathTest()") {
+    } else if(autoChooser.getSelected().equals("MultiPathTest()")) {
       MultiPathTest().schedule();
     } else {
       System.out.println("something is very wrong if you see this");
     }
   }
 
+  /**
+   * Returns the auto chooser.
+   *
+   * @return The SendableChooser object for selecting autonomous commands.
+   */
   public SendableChooser<String> getAutoChooser() {
     return autoChooser;
   }
 
+  /**
+   * Aligns the robot to a specified goal pose.
+   *
+   * @param goal The target pose to align to.
+   * @return A command that aligns the robot to the specified pose.
+   */
   public Command align(Pose2d goal) {
     return AutoBuilder.pathfindToPose(
         goal,
@@ -193,6 +214,12 @@ public class Autos extends SubsystemBase {
             kSwerve.Auton.maxAngAccel));
   }
 
+  /**
+   * Aligns the robot to a specified path then follows it.
+   *
+   * @param goal The target path to align to.
+   * @return A command that aligns the robot to the specified path and follows it.
+   */
   public Command alignToPath(PathPlannerPath goal) {
     return AutoBuilder.pathfindThenFollowPath(
         goal,
@@ -203,6 +230,12 @@ public class Autos extends SubsystemBase {
             kSwerve.Auton.maxAngAccel)).andThen(new WaitCommand(0.0001));
   }
 
+  /**
+   * Follows a specified path.
+   *
+   * @param path The path to follow.
+   * @return A command that follows the specified path.
+   */
   public Command followPath(PathPlannerPath path) {
     return AutoBuilder.followPath(path);
   }
@@ -257,10 +290,10 @@ public class Autos extends SubsystemBase {
    *         to the robot's current location, with its distance value updated.
    */
   private ReefScorePoints findClosestSide() {
-    Pose2d robotPose = m_PoseEstimatior.get2dPose();
+    Pose2d robotPose = m_PoseEstimator.get2dPose();
     ReefScorePoints[] points = ReefScorePoints.values();
 
-        // Update distances and find minimum in a single pass
+    // Update distances and find minimum in a single pass
     ReefScorePoints closest = points[0];
     if (!Robot.isRedAlliance()) {
       closest.setDistance(robotPose.getTranslation().getDistance(closest.getPoint()));
@@ -282,21 +315,28 @@ public class Autos extends SubsystemBase {
     }
     return closest;
   }
-  
+
+  /**
+   * Sets the starting pose of the robot based on the given path.
+   * The method checks the alliance color and sets the pose accordingly.
+   *
+   * @param path The PathPlannerPath object representing the path to set the starting pose for.
+   */
   private void setStartPose(PathPlannerPath path) {
     Pose2d startPose;
-    if (DriverStation.getAlliance().get() ==  Alliance.Red) {
+    if (DriverStation.getAlliance().orElse(Alliance.Blue) ==  Alliance.Red) {
       startPose = path.flipPath().getStartingHolonomicPose().orElse(path.getStartingDifferentialPose());
     } else {
       startPose = path.getStartingHolonomicPose().orElse(path.getStartingDifferentialPose());
     }
     if (Robot.isReal()) {
-      m_PoseEstimatior.resetPoseToPose2d(startPose);
+      m_PoseEstimator.resetPoseToPose2d(startPose);
     } else {
-      m_PoseEstimatior.resetPoseToPose2d(new Pose2d(startPose.getTranslation(), startPose.getRotation().plus(m_PoseEstimatior.get2dPose().getRotation())));
+      m_PoseEstimator.resetPoseToPose2d(new Pose2d(startPose.getTranslation(), startPose.getRotation().plus(m_PoseEstimator.get2dPose().getRotation())));
     }
   }
 
+  // Commands for different paths
   private Command Min() {
     return new SequentialCommandGroup(
       new InstantCommand(() -> setStartPose(paths.get("Min"))),

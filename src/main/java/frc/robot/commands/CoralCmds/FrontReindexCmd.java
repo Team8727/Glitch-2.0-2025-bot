@@ -14,8 +14,8 @@ public class FrontReindexCmd extends Command {
   /** Creates a new FrontReingdx. */
   public FrontReindexCmd(Coral coral) {
     m_Coral = coral;
+
     addRequirements(coral);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.

@@ -5,9 +5,9 @@
 package frc.robot.commands.AlgaeIntakeCmds;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.kAlgaeIntake.kAlgaeIntakePivot;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakePivot;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakeRollers;
-import frc.robot.Constants.kAlgaeIntake.kAlgaeIntakePivot;
 import frc.robot.subsystems.LEDSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -23,8 +23,8 @@ public class ScoreAlgaeCmd extends Command {
     this.m_algaeIntakePivot = algaeIntakePivot;
     this.m_algaeIntakeRollers = algaeIntakeRollers;
     m_ledSubsystem = ledSubsystem;
+
     addRequirements(algaeIntakePivot, algaeIntakeRollers); // Add the required subsystems here
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -34,7 +34,7 @@ public class ScoreAlgaeCmd extends Command {
     m_algaeIntakePivot.setPositionTrapazoidal(kAlgaeIntakePivot.IntakePosition.SCORE);
     m_algaeIntakeRollers.isMoving = true;
     m_algaeIntakeRollers.setRollerSpeedDuty(-1);
-    m_ledSubsystem.setPatternForDuration(m_ledSubsystem.algaePickup.reversed(), 2);
+    m_ledSubsystem.setPatternForDuration(LEDSubsystem.algaePickup.reversed(), 2);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
