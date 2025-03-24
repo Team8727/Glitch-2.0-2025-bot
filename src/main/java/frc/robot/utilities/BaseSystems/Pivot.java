@@ -1,6 +1,5 @@
 package frc.robot.utilities.BaseSystems;
 
-
 import com.revrobotics.spark.*;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -34,8 +33,7 @@ public abstract class Pivot extends SubsystemBase {
   /**
    * Creates a new Pivot.
    *
-   * @param config The configuration for the SparkMax motor
-   * @param CANID The CAN ID of the motor
+   * @param motor The motor to use for the pivot.
    * @param zeroedAngelFromHorizontal The angle from horizontal to zero the pivot at
    * @param maxVelocity The maximum velocity of the pivot
    * @param maxAcceleration The maximum acceleration of the pivot
@@ -47,8 +45,7 @@ public abstract class Pivot extends SubsystemBase {
    * @param dt The time step for the profile
    */
   public Pivot(
-    SparkMaxConfig config,
-    int CANID,
+    Motor motor,
     double zeroedAngelFromHorizontal,
     double maxVelocity,
     double maxAcceleration,
@@ -68,7 +65,7 @@ public abstract class Pivot extends SubsystemBase {
 
     this.zeroedAngelFromHorizontal = zeroedAngelFromHorizontal;
 
-    motor = new SparkMaxMotor(config, CANID, FeedbackSensor.kAbsoluteEncoder);
+    this.motor = motor;
 
     this.allowedError = allowedError/360;
   }
@@ -76,8 +73,7 @@ public abstract class Pivot extends SubsystemBase {
   /**
    * Creates a new Pivot.
    *
-   * @param config The configuration for the SparkMax motor
-   * @param CANID The CAN ID of the motor
+   * @param motor The motor to use for the pivot.
    * @param zeroedAngelFromHorizontal The angle from horizontal to zero the pivot at
    * @param maxVelocity The maximum velocity of the pivot
    * @param maxAcceleration The maximum acceleration of the pivot
@@ -88,8 +84,7 @@ public abstract class Pivot extends SubsystemBase {
    * @param ka The acceleration gain of the pivot
    */
   public Pivot(
-    SparkMaxConfig config,
-    int CANID,
+    Motor motor,
     double zeroedAngelFromHorizontal,
     double maxVelocity,
     double maxAcceleration,
@@ -98,27 +93,25 @@ public abstract class Pivot extends SubsystemBase {
     double kg,
     double kv,
     double ka) {
-    this(config, CANID, zeroedAngelFromHorizontal, maxVelocity, allowedError, maxAcceleration, ks, kg, kv, ka, 0.02);
+    this(motor, zeroedAngelFromHorizontal, maxVelocity, allowedError, maxAcceleration, ks, kg, kv, ka, 0.02);
   }
 
   /**
    * Creates a new Pivot.
    *
-   * @param config The configuration for the SparkMax motor
-   * @param CANID The CAN ID of the motor
+   * @param motor The motor to use for the pivot.
    * @param zeroedAngelFromHorizontal The angle from horizontal to zero the pivot at
    * @param maxVelocity The maximum velocity of the pivot
    * @param maxAcceleration The maximum acceleration of the pivot
    * @param allowedError The allowed error for the pivot in degrees
    */
   public Pivot(
-    SparkMaxConfig config,
-    int CANID,
+    Motor motor,
     double zeroedAngelFromHorizontal,
     double maxVelocity,
     double maxAcceleration,
     double allowedError) {
-    this(config, CANID, zeroedAngelFromHorizontal, maxVelocity, maxAcceleration, allowedError, 0, 0, 0, 0);
+    this(motor, zeroedAngelFromHorizontal, maxVelocity, maxAcceleration, allowedError, 0, 0, 0, 0);
   }
 
   /**
