@@ -26,7 +26,9 @@ import frc.robot.utilities.NetworkTableLogger;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 public class Autos extends SubsystemBase {
   private final LEDSubsystem m_ledSubsystem;
@@ -103,6 +105,24 @@ public class Autos extends SubsystemBase {
       this.point = point;
       this.rightPose = rightPose;
       this.leftPose = leftPose;
+    }
+
+    public static List<Translation2d> getAllTranslationPoints(boolean isBlueAlliance) {
+      if (isBlueAlliance) {
+        return Arrays.asList(new Translation2d[] {
+          A_B.point, C_D.point, E_F.point, G_H.point, I_J.point, K_L.point
+        });
+      } else {
+        // Rotate points for Red Alliance
+        return Arrays.asList(new Translation2d[] {
+          A_B.point.rotateAround(kVision.fieldCenter, new Rotation2d(Math.toRadians(180))),
+          C_D.point.rotateAround(kVision.fieldCenter, new Rotation2d(Math.toRadians(180))),
+          E_F.point.rotateAround(kVision.fieldCenter, new Rotation2d(Math.toRadians(180))),
+          G_H.point.rotateAround(kVision.fieldCenter, new Rotation2d(Math.toRadians(180))),
+          I_J.point.rotateAround(kVision.fieldCenter, new Rotation2d(Math.toRadians(180))),
+          K_L.point.rotateAround(kVision.fieldCenter, new Rotation2d(Math.toRadians(180)))
+        });
+      }
     }
 
     public String getZone() {
@@ -293,7 +313,7 @@ public class Autos extends SubsystemBase {
         new Rotation2d(Math.toRadians(180)));
       return baseScoreLocation.rotateAround(reef, rotation);
   }
-
+  
   /**
    * Finds the closest ReefScorePoints location to the robot's current position.
    * This method calculates the distance from the robot to each defined ReefScorePoints 
@@ -303,30 +323,29 @@ public class Autos extends SubsystemBase {
    *         to the robot's current location, with its distance value updated.
    */
   private ReefScorePoints findClosestSide() {
+
+      // Get the robot's current pose
     Pose2d robotPose = m_PoseEstimator.get2dPose();
-    ReefScorePoints[] points = ReefScorePoints.values();
 
-    // Update distances and find minimum in a single pass
-    ReefScorePoints closest = points[0];
-    if (!Robot.isRedAlliance()) {
-      closest.setDistance(robotPose.getTranslation().getDistance(closest.getPoint()));
-    } else {
-      closest.setDistance(robotPose.getTranslation().getDistance(closest.getPoint().rotateAround(kVision.fieldCenter, new Rotation2d(Math.toRadians(180)))));
-    }
+      // Find the closest translation point from the robot's current position
+    Translation2d closestTranslationPoint = robotPose.getTranslation().nearest(
+        ReefScorePoints.getAllTranslationPoints(!Robot.isRedAlliance()));
 
-    for (int i = 1; i < points.length; i++) {
-      double distance;
-      if (!Robot.isRedAlliance()) {
-        distance = robotPose.getTranslation().getDistance(points[i].getPoint());
-      } else {
-        distance = robotPose.getTranslation().getDistance(points[i].getPoint().rotateAround(kVision.fieldCenter, new Rotation2d(Math.toRadians(180))));
-      }
-      points[i].setDistance(distance);
-      if (distance < closest.getDistance()) {
-          closest = points[i];
+      // Initialize the closest score point to null
+    ReefScorePoints closestScorePoint = null; 
+
+      // Iterate through all ReefScorePoints to find the one that matches the closest translation point
+    for (ReefScorePoints aScorePoint : ReefScorePoints.values()) {
+      if (aScorePoint.point.equals(closestTranslationPoint)) {
+        closestScorePoint = aScorePoint;
       }
     }
-    return closest;
+    
+      // Log the closest score point to NetworkTables for reference (maybe for Elastic?)
+    logger.logString("closestScorePoint-Right", closestScorePoint.getZone());
+    logger.logString("closestScorePoint-Left", closestScorePoint.getZone());
+    
+    return closestScorePoint;
   }
 
   /**
