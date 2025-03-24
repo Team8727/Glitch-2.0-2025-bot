@@ -1,5 +1,7 @@
 package frc.robot.utilities.BaseSystems;
 
+import com.revrobotics.spark.*;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -8,6 +10,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.utilities.BaseSystems.Motors.Motor;
 import frc.robot.utilities.NetworkTableLogger;
+
+import java.util.Set;
 
 public abstract class Pivot extends SubsystemBase {
 
@@ -135,6 +139,8 @@ public abstract class Pivot extends SubsystemBase {
   private void setMotorFFAndPIDPosition(double Position) {
     motor.setPosition(
       Position,
+      SparkBase.ControlType.kPosition,
+      ClosedLoopSlot.kSlot0,
       pivotFeedforward.calculateWithVelocities(
         motor.getPosition() + (zeroedAngelFromHorizontal/360),
         motor.getVelocity(),

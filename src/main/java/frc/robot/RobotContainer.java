@@ -11,7 +11,7 @@ import frc.robot.subsystems.AlgaeIntake.AlgaeIntakeRollers;
 import frc.robot.subsystems.AlgaeIntake.TestPivot;
 import frc.robot.subsystems.Autos;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
-import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
+import frc.robot.subsystems.Elevator.AlgaeRemover.RollerTest;
 import frc.robot.subsystems.Elevator.Coral.Coral;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.LEDSubsystem;
@@ -31,7 +31,7 @@ public class RobotContainer {
   private final TestPivot m_AlgaeIntakePivot;
   private final AlgaeIntakeRollers m_AlgaeIntakeRollers;
   private final AlgaeRemoverPivot m_AlgaeRemoverPivot;
-  private final AlgaeRemoverRollers m_AlgaeRemoverRollers;
+  private final RollerTest m_AlgaeRemoverRollers;
   private final Coral m_coral;
   private final Elevator m_elevator;
   private final LEDSubsystem m_ledSubsystem;
@@ -40,16 +40,16 @@ public class RobotContainer {
   private final Controller m_assistController = new Controller(Controller.Operator.ASSIST);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(
-      SwerveSubsystem swerveSubsystem,
-      PoseEstimator poseEstimator,
-      TestPivot AlgaeIntakePivot,
-      AlgaeIntakeRollers AlgaeIntakeRollers,
-      AlgaeRemoverPivot AlgaeRemoverPivot,
-      AlgaeRemoverRollers AlgaeRemoverRollers,
-      Coral coral,
-      Elevator elevator,
-      LEDSubsystem ledSubsystem,
-      Autos autos
+    SwerveSubsystem swerveSubsystem,
+    PoseEstimator poseEstimator,
+    TestPivot AlgaeIntakePivot,
+    AlgaeIntakeRollers AlgaeIntakeRollers,
+    AlgaeRemoverPivot AlgaeRemoverPivot,
+    RollerTest AlgaeRemoverRollers,
+    Coral coral,
+    Elevator elevator,
+    LEDSubsystem ledSubsystem,
+    Autos autos
       ) {
     m_SwerveSubsystem = swerveSubsystem;
     m_PoseEstimator = poseEstimator;
