@@ -93,8 +93,6 @@ public class LEDSubsystem extends SubsystemBase {
 
   private Elevator m_elevator;
 
-  private boolean triggerSecretPattern = false;
-
   // Define LED Patterns
   public static final LEDPattern purple = LEDPattern.solid(getColor(Color.kPurple));
   
@@ -130,15 +128,14 @@ public class LEDSubsystem extends SubsystemBase {
 
   public static final LEDPattern blinkyGreen = LEDPattern.solid(getColor(Color.kGreen)).blink(Second.of(0.1));
   // Elevator progress bar pattern
-  public static final LEDPattern elevatorProgressBase = LEDPattern.gradient(
+  public final LEDPattern elevatorProgress = LEDPattern.gradient(
     GradientType.kDiscontinuous, 
     getColor(Color.kGreen), 
     getColor(Color.kYellow), 
     getColor(Color.kOrange), 
-    Color.kRed);
-  public final LEDPattern elevatorProgressMap = LEDPattern.progressMaskLayer(
-    () -> m_elevator.getElevatorHeight() / kElevator.ElevatorPosition.L4.getOutputRotations());
-  public final LEDPattern elevatorProgress = elevatorProgressBase.mask(elevatorProgressMap);
+    Color.kRed)
+  .mask(LEDPattern.progressMaskLayer(
+    () -> m_elevator.getElevatorHeight() / kElevator.ElevatorPosition.L4.getOutputRotations()));
   // Coral pickup pattern
   public static final LEDPattern coralPickup = LEDPattern.gradient(
     GradientType.kDiscontinuous, 
@@ -156,6 +153,34 @@ public class LEDSubsystem extends SubsystemBase {
     getColor(Color.kOrange),
     Color.kRed)
       .blink(Second.of(0.5));
+
+  public static final LEDPattern enzoMap = LEDPattern.steps(
+    Map.of(
+      0.0, Color.kBlack,
+      0.08, getColor(Color.kGreen),
+      0.48, Color.kWhite,
+      0.56, Color.kBlack,
+      0.72, Color.kWhite,
+      0.80, getColor(Color.kGreen),
+      0.92, Color.kBlack
+    )
+  );
+  /*
+   *  B
+   *  G
+   *  G
+   *  W
+   *  B
+   *  B
+   *  B
+   *  W
+   *  G
+   *  G
+   *  G
+   *  G
+   *  G
+   *  B
+   */
   
   /** Creates a new LEDSubsystem. */
   public LEDSubsystem(Elevator elevator) {
@@ -204,13 +229,14 @@ public class LEDSubsystem extends SubsystemBase {
     setPattern(LEDPattern.solid(Color.kBlack));
   }
 
-  public void combinePatterns(LEDPattern leftPattern, LEDPattern rightPattern) {
-    combinePatternsForDuration(leftPattern, rightPattern, Section.infiniteDurationSeconds);
+  public void combinePatterns(LEDPattern leftPattern, LEDPattern rightPattern, LEDPattern secretPattern) {
+    combinePatternsForDuration(leftPattern, rightPattern, secretPattern, Section.infiniteDurationSeconds);
   }
 
-  public void combinePatternsForDuration(LEDPattern leftPattern, LEDPattern rightPattern, double seconds) {
+  public void combinePatternsForDuration(LEDPattern leftPattern, LEDPattern rightPattern, LEDPattern secretPattern, double seconds) {
     leftSide.setPattern(leftPattern, seconds);
     rightSide.setPattern(rightPattern, seconds);
+    secretBuffer.setPattern(secretPattern, seconds);
   }
 
   public void activateSecretPattern() {

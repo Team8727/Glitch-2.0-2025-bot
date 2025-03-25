@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -179,6 +180,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     CommandScheduler.getInstance().cancelAll();
     m_ledSubsystem.setPattern(LEDSubsystem.green);
+    // LEDSubsystem.combinePatterns(LEDSubsystem.enzoMap, LEDSubsystem.enzoMap, LEDSubsystem.green);
 
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
