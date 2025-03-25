@@ -14,6 +14,7 @@ import com.pathplanner.lib.commands.PathfindingCommand;
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
@@ -161,7 +162,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     CommandScheduler.getInstance().cancelAll();
     m_robotContainer.autonomousInit();
-    m_ledSubsytem.setPattern(m_ledSubsytem.rainbow);
+    m_ledSubsytem.setPattern(LEDSubsystem.rainbow);
 
     m_Autos.selectAuto(); // TODO: Only enable this if you want the robot to do stuff during autonomous
 
@@ -174,7 +175,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     CommandScheduler.getInstance().cancelAll();
-    m_ledSubsytem.setPattern(m_ledSubsytem.green);
+    m_ledSubsytem.setPattern(LEDSubsystem.green);
+    // m_ledSubsytem.combinePatterns(LEDSubsystem.enzoMap, LEDSubsystem.enzoMap, LEDSubsystem.green);
     // m_ledSubsytem.setPattern(m_ledSubsytem.elevatorProgress);
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to

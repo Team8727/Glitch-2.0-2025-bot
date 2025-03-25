@@ -39,7 +39,7 @@ public class RemoveAlgaeCmd extends Command {
       System.out.println("test");
       m_pivot.setPositionTrapazoidal(RemoverPositions.RaisedL2); // TODO: set positions
       m_rollers.setRemoverRollerSpeed(.7); // TODO: set speed
-      m_ledSubsystem.combinePatternsForDuration(m_ledSubsystem.blue, m_ledSubsystem.ace, 2);
+      m_ledSubsystem.combinePatternsForDuration(LEDSubsystem.blue, LEDSubsystem.ace, LEDSubsystem.green, 2);
     } else {
       m_elevator.setElevatorHeightMotionProfile(m_setPos);
       this.cancel();
