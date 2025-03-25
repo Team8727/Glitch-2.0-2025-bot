@@ -14,12 +14,12 @@ import frc.robot.subsystems.LEDSubsystem;
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class IntakeAlgaeCmd extends Command {
   /** Creates a new GroundIntakeAlgae. */
-  private final TestPivot m_algaeIntakePivot;
+  private final AlgaeIntakePivot m_algaeIntakePivot;
   private final AlgaeIntakeRollers m_algaeIntakeRollers;
   private final LEDSubsystem m_ledSubsystem;
 
   public IntakeAlgaeCmd(
-    TestPivot algaeIntakePivot, AlgaeIntakeRollers algaeRemoverPivot, LEDSubsystem ledSubsystem) {
+    AlgaeIntakePivot algaeIntakePivot, AlgaeIntakeRollers algaeRemoverPivot, LEDSubsystem ledSubsystem) {
     m_algaeIntakePivot = algaeIntakePivot;
     m_algaeIntakeRollers = algaeRemoverPivot;
     m_ledSubsystem = ledSubsystem;
@@ -32,7 +32,7 @@ public class IntakeAlgaeCmd extends Command {
   public void initialize() {
     System.out.println("moving");
     m_algaeIntakeRollers.isMoving = true;
-    m_algaeIntakePivot.setPosition(kAlgaeIntakePivot.IntakePosition.DOWN.getIntakePositionDegrees());
+    m_algaeIntakePivot.setPositionTrapazoidal(kAlgaeIntakePivot.IntakePosition.DOWN);
     m_algaeIntakeRollers.setRollerSpeedDuty(.8);
     m_ledSubsystem.setPatternForDuration(LEDSubsystem.algaePickup, 2);
   }
@@ -43,7 +43,7 @@ public class IntakeAlgaeCmd extends Command {
 
     if (m_algaeIntakeRollers.getAlgaeCheck()) {
       m_algaeIntakeRollers.isMoving = false;
-      m_algaeIntakePivot.setPosition(kAlgaeIntakePivot.IntakePosition.HOME.getIntakePositionDegrees());
+      m_algaeIntakePivot.setPositionTrapazoidal(kAlgaeIntakePivot.IntakePosition.HOME);
       
       this.cancel();
     }
@@ -52,7 +52,7 @@ public class IntakeAlgaeCmd extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_algaeIntakePivot.setPosition(kAlgaeIntakePivot.IntakePosition.HOME.getIntakePositionDegrees());
+    m_algaeIntakePivot.setPositionTrapazoidal(kAlgaeIntakePivot.IntakePosition.HOME);
     m_algaeIntakeRollers.setRollerSpeedDuty(0);
     // Go back to home position and stop rollers
   }

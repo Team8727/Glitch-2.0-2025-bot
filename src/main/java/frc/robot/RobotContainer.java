@@ -7,10 +7,12 @@ package frc.robot;
 import frc.robot.controller.Controller;
 import frc.robot.controller.Driver1DefaultBindings;
 import frc.robot.controller.Driver2DefaultBindings;
+import frc.robot.subsystems.AlgaeIntake.AlgaeIntakePivot;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakeRollers;
 import frc.robot.subsystems.AlgaeIntake.TestPivot;
 import frc.robot.subsystems.Autos;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
+import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
 import frc.robot.subsystems.Elevator.AlgaeRemover.RollerTest;
 import frc.robot.subsystems.Elevator.Coral.Coral;
 import frc.robot.subsystems.Elevator.Elevator;
@@ -28,10 +30,10 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem m_SwerveSubsystem;
   private final PoseEstimator m_PoseEstimator;
-  private final TestPivot m_AlgaeIntakePivot;
+  private final AlgaeIntakePivot m_AlgaeIntakePivot;
   private final AlgaeIntakeRollers m_AlgaeIntakeRollers;
   private final AlgaeRemoverPivot m_AlgaeRemoverPivot;
-  private final RollerTest m_AlgaeRemoverRollers;
+  private final AlgaeRemoverRollers m_AlgaeRemoverRollers;
   private final Coral m_coral;
   private final Elevator m_elevator;
   private final LEDSubsystem m_ledSubsystem;
@@ -42,10 +44,10 @@ public class RobotContainer {
   public RobotContainer(
     SwerveSubsystem swerveSubsystem,
     PoseEstimator poseEstimator,
-    TestPivot AlgaeIntakePivot,
+    AlgaeIntakePivot AlgaeIntakePivot,
     AlgaeIntakeRollers AlgaeIntakeRollers,
     AlgaeRemoverPivot AlgaeRemoverPivot,
-    RollerTest AlgaeRemoverRollers,
+    AlgaeRemoverRollers AlgaeRemoverRollers,
     Coral coral,
     Elevator elevator,
     LEDSubsystem ledSubsystem,

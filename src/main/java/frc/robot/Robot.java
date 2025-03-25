@@ -15,10 +15,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.kConfigs;
 import frc.robot.Constants.kSwerve;
+import frc.robot.subsystems.AlgaeIntake.AlgaeIntakePivot;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakeRollers;
 import frc.robot.subsystems.AlgaeIntake.TestPivot;
 import frc.robot.subsystems.Autos;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
+import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
 import frc.robot.subsystems.Elevator.AlgaeRemover.RollerTest;
 import frc.robot.subsystems.Elevator.Coral.Coral;
 import frc.robot.subsystems.Elevator.Elevator;
@@ -43,10 +45,10 @@ public class Robot extends TimedRobot {
   private final Elevator m_elevator = new Elevator();
   private final LEDSubsystem m_ledSubsystem = new LEDSubsystem(m_elevator);
   private final NetworkTableLogger logger = new NetworkTableLogger("SHOW UPPPP");
-  private final RollerTest m_AlgeaRemoverRollers = new RollerTest();
+  private final AlgaeRemoverRollers m_AlgeaRemoverRollers = new AlgaeRemoverRollers();
   private final AlgaeRemoverPivot m_AlgaeRemoverPivot = new AlgaeRemoverPivot();
   private final Coral m_coral = new Coral();
-  private final TestPivot m_AlgaeIntakePivot = new TestPivot();
+  private final AlgaeIntakePivot m_AlgaeIntakePivot = new AlgaeIntakePivot();
   private final AlgaeIntakeRollers m_AlgaeIntakeRollers = new AlgaeIntakeRollers();
   private final Autos m_Autos = new Autos(m_ledSubsystem, m_coral, m_elevator, m_PoseEstimator);
 
