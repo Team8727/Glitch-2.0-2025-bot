@@ -6,6 +6,9 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathfindingCommand;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -15,11 +18,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.kConfigs;
 import frc.robot.Constants.kSwerve;
+import frc.robot.Constants.kVision;
+import frc.robot.Constants.kAllianceInfo.RobotAlliance;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakePivot;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakeRollers;
+import frc.robot.subsystems.AlgaeIntake.TestPivot;
 import frc.robot.subsystems.Autos;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
+import frc.robot.subsystems.Elevator.AlgaeRemover.RollerTest;
 import frc.robot.subsystems.Elevator.Coral.Coral;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.LEDSubsystem;
@@ -41,14 +48,14 @@ public class Robot extends TimedRobot {
   private final SwerveSubsystem m_SwerveSubsystem = new SwerveSubsystem();
   private final PoseEstimator m_PoseEstimator = new PoseEstimator(m_SwerveSubsystem);
   private final Elevator m_elevator = new Elevator();
-  private final LEDSubsystem m_ledSubsytem = new LEDSubsystem(m_elevator);
+  private final LEDSubsystem m_ledSubsystem = new LEDSubsystem(m_elevator);
   private final NetworkTableLogger logger = new NetworkTableLogger("SHOW UPPPP");
   private final AlgaeRemoverRollers m_AlgeaRemoverRollers = new AlgaeRemoverRollers();
   private final AlgaeRemoverPivot m_AlgaeRemoverPivot = new AlgaeRemoverPivot();
   private final Coral m_coral = new Coral();
   private final AlgaeIntakePivot m_AlgaeIntakePivot = new AlgaeIntakePivot();
   private final AlgaeIntakeRollers m_AlgaeIntakeRollers = new AlgaeIntakeRollers();
-  private final Autos m_Autos = new Autos(m_ledSubsytem, m_coral, m_elevator, m_PoseEstimator);
+  private final Autos m_Autos = new Autos(m_ledSubsystem, m_coral, m_elevator, m_PoseEstimator);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -100,7 +107,7 @@ public class Robot extends TimedRobot {
             m_AlgeaRemoverRollers,
             m_coral,
             m_elevator,
-            m_ledSubsytem,
+          m_ledSubsystem,
             m_Autos
             );
     
@@ -146,7 +153,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    m_ledSubsytem.setPattern(LEDSubsystem.purple);
+    m_ledSubsystem.setPattern(LEDSubsystem.purple);
   }
 
   @Override
@@ -157,7 +164,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     CommandScheduler.getInstance().cancelAll();
     m_robotContainer.autonomousInit();
-    m_ledSubsytem.setPattern(LEDSubsystem.rainbow);
+    m_ledSubsystem.setPattern(LEDSubsystem.rainbow);
 
     m_Autos.selectAuto(); // TODO: Only enable this if you want the robot to do stuff during autonomous
 
@@ -171,7 +178,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     CommandScheduler.getInstance().cancelAll();
-    m_ledSubsytem.setPattern(LEDSubsystem.green);
+    m_ledSubsystem.setPattern(LEDSubsystem.green);
 
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
@@ -202,7 +209,10 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+    // logger.logPose2d("closest", new Pose2d(Autos.ReefScorePoints.findClosestScorePoint(isRedAlliance() ? RobotAlliance.RED_ALLIANCE : RobotAlliance.BLUE_ALLIANCE, m_PoseEstimator.get2dPose()).getPoint(), new Rotation2d()).rotateAround(kVision.fieldCenter, isRedAlliance() ? new Rotation2d(Math.toRadians(180)) : new Rotation2d(Math.toRadians(0))));
+    // logger.logString("zone of closest", Autos.ReefScorePoints.findClosestScorePoint(null, m_PoseEstimator.get2dPose()).getZone());
+  }
 
   public static boolean isRedAlliance() {
     return DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Red);

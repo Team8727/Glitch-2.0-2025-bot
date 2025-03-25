@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.kAlgaeIntake.kAlgaeIntakePivot;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakePivot;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakeRollers;
+import frc.robot.subsystems.AlgaeIntake.TestPivot;
 import frc.robot.subsystems.LEDSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -18,7 +19,7 @@ public class IntakeAlgaeCmd extends Command {
   private final LEDSubsystem m_ledSubsystem;
 
   public IntakeAlgaeCmd(
-      AlgaeIntakePivot algaeIntakePivot, AlgaeIntakeRollers algaeRemoverPivot, LEDSubsystem ledSubsystem) {
+    AlgaeIntakePivot algaeIntakePivot, AlgaeIntakeRollers algaeRemoverPivot, LEDSubsystem ledSubsystem) {
     m_algaeIntakePivot = algaeIntakePivot;
     m_algaeIntakeRollers = algaeRemoverPivot;
     m_ledSubsystem = ledSubsystem;
