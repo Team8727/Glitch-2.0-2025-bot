@@ -13,9 +13,9 @@ public abstract class Pivot extends SubsystemBase {
 
   private final Motor motor;
 
-  private final TrapezoidProfile m_profile;
-  private TrapezoidProfile.State m_goal = new TrapezoidProfile.State(0,0);
-  private TrapezoidProfile.State m_setpoint = new TrapezoidProfile.State(0,0);
+  private final TrapezoidProfile profile;
+  private TrapezoidProfile.State goal = new TrapezoidProfile.State(0,0);
+  private TrapezoidProfile.State setpoint = new TrapezoidProfile.State(0,0);
 
   private final ArmFeedforward pivotFeedforward;
 
@@ -53,7 +53,7 @@ public abstract class Pivot extends SubsystemBase {
     double dt) {
     logger = new NetworkTableLogger(this.getName());
 
-    m_profile = new TrapezoidProfile(
+    profile = new TrapezoidProfile(
       new TrapezoidProfile.Constraints(maxVelocity, maxAcceleration));
 
     pivotFeedforward =  new ArmFeedforward(ks, kg, kv, ka ,dt);
@@ -117,7 +117,8 @@ public abstract class Pivot extends SubsystemBase {
    */
   public void setPosition(double angleDegrees) {
     double position = angleDegrees / 360;
-    m_goal = new TrapezoidProfile.State(position, 0);
+    goal = new TrapezoidProfile.State(position, 0);
+    setpoint = new TrapezoidProfile.State(motor.getPosition(), 0);
   }
 
   /**
@@ -136,9 +137,9 @@ public abstract class Pivot extends SubsystemBase {
     motor.setPosition(
       Position,
       pivotFeedforward.calculateWithVelocities(
-        motor.getPosition() + (zeroedAngelFromHorizontal/360),
+        motor.getPosition() + (zeroedAngelFromHorizontal/360),//TODO: convert to radians per second
         motor.getVelocity(),
-        m_setpoint.velocity));
+        setpoint.velocity));
   }
 
   /**
@@ -147,7 +148,7 @@ public abstract class Pivot extends SubsystemBase {
    * @return True if the pivot is within 0.01 units of the goal position, false otherwise.
    */
   public boolean isAtSetpoint() {
-    return Math.abs(motor.getPosition() - m_goal.position) < allowedError;
+    return Math.abs(motor.getPosition() - goal.position) < allowedError;
   }
 
   /**
@@ -168,13 +169,13 @@ public abstract class Pivot extends SubsystemBase {
     return motor.getCurrent();
   }
 
+  // This method will be called once per scheduler run
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
     logger.logDouble("Pivot Position", motor.getPosition() * 360);
 
-    m_setpoint = m_profile.calculate(dt, m_setpoint, m_goal);
+    setpoint = profile.calculate(dt, setpoint, goal);
 
-    setMotorFFAndPIDPosition(m_setpoint.position);
+    setMotorFFAndPIDPosition(setpoint.position);
   }
 }
