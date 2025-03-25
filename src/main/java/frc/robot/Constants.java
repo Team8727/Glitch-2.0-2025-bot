@@ -92,6 +92,13 @@ public final class Constants {
     public static double rotationDeadzone = 0.08;
   }
 
+  public static class kAllianceInfo {
+    public enum RobotAlliance {
+      RED_ALLIANCE,
+      BLUE_ALLIANCE;
+    }
+  }
+
   // Swerve subsystem constants (module constants included)
   public static class kSwerve {
     // Chassis dimensions from wheel center to center (meters)
