@@ -11,9 +11,10 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.kAlgaeRemover.kPivot.RemoverPositions;
 import frc.robot.Constants.kElevator.ElevatorPosition;
 import frc.robot.commands.ElevatorCmds.SetElevatorHeightCmd;
+import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
+import frc.robot.subsystems.Elevator.AlgaeRemover.RollerTest;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
-import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
 import frc.robot.subsystems.Elevator.Coral.Coral;
 import frc.robot.subsystems.LEDSubsystem;
 
@@ -21,7 +22,6 @@ import frc.robot.subsystems.LEDSubsystem;
 public class weirdAlgaeShootCmd extends SequentialCommandGroup {
   /** Creates a new removeAlgae. */
   public weirdAlgaeShootCmd(AlgaeRemoverPivot algaeRemoverPivot, AlgaeRemoverRollers algaeRemoverRollers, Elevator elevator, LEDSubsystem ledSubsystem, Coral coral) {
-
     addRequirements(algaeRemoverPivot, algaeRemoverRollers, elevator); // Add the required subsystems here
 
     addCommands(

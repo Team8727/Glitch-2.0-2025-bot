@@ -3,20 +3,23 @@ package frc.robot.controller;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.kElevator.ElevatorPosition;
+import frc.robot.commands.AlgaeIntakeCmds.IntakeAlgaeCmd;
 import frc.robot.commands.CoralCmds.DeployCoralCmd;
 import frc.robot.commands.CoralCmds.IntakeCoralCmd;
 import frc.robot.commands.CoralCmds.ReindexCoralCmd;
 import frc.robot.commands.CoralCmds.RejectCoralCmd;
 import frc.robot.commands.DriveCmds.SwerveJoystickCmd;
 import frc.robot.commands.ElevatorAlgaeCmds.weirdAlgaeIntakeCmd;
+import frc.robot.subsystems.AlgaeIntake.AlgaeIntakePivot;
+import frc.robot.subsystems.AlgaeIntake.TestPivot;
 import frc.robot.commands.ElevatorAlgaeCmds.weirdAlgaeShootCmd;
 import frc.robot.commands.ElevatorCmds.SetElevatorHeightCmd;
 import frc.robot.commands.ElevatorCmds.ZeroElevator;
-import frc.robot.subsystems.AlgaeIntake.AlgaeIntakePivot;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakeRollers;
 import frc.robot.subsystems.Autos;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
+import frc.robot.subsystems.Elevator.AlgaeRemover.RollerTest;
 import frc.robot.subsystems.Elevator.Coral.Coral;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.LEDSubsystem;
@@ -39,16 +42,16 @@ public class Driver1DefaultBindings implements ControllerBindings {
   private final Autos m_autos;
 
   public Driver1DefaultBindings(
-      SwerveSubsystem swerveSubsystem,
-      PoseEstimator poseEstimator,
-      AlgaeIntakePivot AlgaeIntakePivot,
-      AlgaeIntakeRollers AlgaeIntakeRollers,
-      Coral coral,
-      Elevator elevator,
-      LEDSubsystem ledSubsystem,
-      AlgaeRemoverPivot algaeRemoverPivot,
-      AlgaeRemoverRollers algaeRemoverRollers,
-      Autos autos) {
+    SwerveSubsystem swerveSubsystem,
+    PoseEstimator poseEstimator,
+    AlgaeIntakePivot AlgaeIntakePivot,
+    AlgaeIntakeRollers AlgaeIntakeRollers,
+    Coral coral,
+    Elevator elevator,
+    LEDSubsystem ledSubsystem,
+    AlgaeRemoverPivot algaeRemoverPivot,
+    AlgaeRemoverRollers algaeRemoverRollers,
+    Autos autos) {
     m_SwerveSubsystem = swerveSubsystem;
     m_poseEstimator = poseEstimator;
     m_AlgaeIntakePivot = AlgaeIntakePivot;
@@ -105,14 +108,14 @@ public class Driver1DefaultBindings implements ControllerBindings {
 
     // //                Algae Commands
     // // Intake algae
-    // controller.rightTrigger().whileTrue(new IntakeAlgaeCmd(m_AlgaeIntakePivot, m_AlgaeIntakeRollers, m_ledSubsytem));
+     controller.rightTrigger().whileTrue(new IntakeAlgaeCmd(m_AlgaeIntakePivot, m_AlgaeIntakeRollers, m_ledSubsytem));
     // // deploy algae
     // controller.rightBumper().onTrue(new ScoreAlgaeCmd(m_AlgaeIntakePivot, m_AlgaeIntakeRollers, m_ledSubsytem));
 
     // Remove Algae A2
     controller.povDown().whileTrue(new weirdAlgaeIntakeCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers, ElevatorPosition.A3, m_elevator, m_ledSubsytem, m_coral));
     // Remove Algae A2
-    controller.povUp().whileTrue(new weirdAlgaeShootCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers ,m_elevator, m_ledSubsytem, m_coral));
+    controller.povUp().whileTrue(new weirdAlgaeShootCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers,m_elevator, m_ledSubsytem, m_coral));
   }
 
   @Override
