@@ -6,25 +6,17 @@ package frc.robot.subsystems.Elevator;
 
 import com.revrobotics.sim.SparkMaxSim;
 import com.revrobotics.spark.ClosedLoopSlot;
-import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
-
-import static edu.wpi.first.units.Units.Volt;
-import static frc.robot.utilities.SparkConfigurator.getFollowerMax;
-import static frc.robot.utilities.SparkConfigurator.getSparkMax;
-
-import java.util.Set;
-
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
-import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
@@ -34,23 +26,26 @@ import frc.robot.Constants.kConfigs;
 import frc.robot.Constants.kElevator;
 import frc.robot.utilities.NetworkTableLogger;
 import frc.robot.utilities.SparkConfigurator.LogData;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
+import java.util.Set;
+
+import static edu.wpi.first.units.Units.Volt;
+import static frc.robot.utilities.SparkConfigurator.getFollowerMax;
+import static frc.robot.utilities.SparkConfigurator.getSparkMax;
 public class Elevator extends SubsystemBase {
 
   private final SparkMax elevatorMotorR;
   private final SparkMax elevatorMotorL;
-  private final SparkMaxConfig motorRConfig;
   private final SparkClosedLoopController elevatorPID;
-  private final DigitalInput limitSwitch;
   private kElevator.ElevatorPosition targetHeight;
   private kElevator.ElevatorPosition previousHeight;
   private double targetRotations;
-  private NetworkTableLogger logger = new NetworkTableLogger("Elevator");
+  private final NetworkTableLogger logger = new NetworkTableLogger(this.getSubsystem());
   public boolean isHoming = false;
 
 //-=-=-=-=-=-=-=-=-TrapezoidProfile=-=-=-=-=-=-=-=- /
 
-  private static double kDt = 0.02;
+  private static final double kDt = 0.02;
 
   // Create a motion profile with the given maximum velocity and maximum
   // acceleration constraints for the next setpoint.
@@ -77,8 +72,6 @@ public class Elevator extends SubsystemBase {
 
   private final SparkMaxSim m_SparkMaxSim;
 
-  private final Timer m_timer = new Timer();
-
   /** Creates a new Elevator. */
   public Elevator() {
     elevatorMotorR = getSparkMax(
@@ -92,20 +85,14 @@ public class Elevator extends SubsystemBase {
         LogData.VOLTAGE,
         LogData.CURRENT));
 
-    motorRConfig = new SparkMaxConfig();
-    motorRConfig // TODO: SET ALL OF THIS STUFF
+    SparkMaxConfig motorRConfig = new SparkMaxConfig();
+    motorRConfig
       .smartCurrentLimit(65, 65)
       .idleMode(IdleMode.kBrake)
-      .inverted(false)
       .closedLoop
-      .velocityFF(0) // Find Using SysId
       .pid(.4, 0, 4)
       .feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-      // .maxMotion
-      // .positionMode(MAXMotionPositionMode.kMAXMotionTrapezoidal)
-      // .maxVelocity(4771.41593898)
-      // .maxAcceleration(236.923835739)
-      // .allowedClosedLoopError(0);//DO NOT CHANGE THIS UNLESS YOU'RE 100000% SURE YOU KNOW WHAT YOUR DOING PLEASE LISTEN TO THIS WARNING OR ELSE YOU WILL DIE IM NOT EVEN JOKING PLEASE DON'T CHANGE THIS.
+
     elevatorMotorR.configure(motorRConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
 
     elevatorMotorL = getFollowerMax(
@@ -118,8 +105,6 @@ public class Elevator extends SubsystemBase {
 
     m_SparkMaxSim = 
       new SparkMaxSim(elevatorMotorR, kConfigs.neoMotor);
-
-    limitSwitch = new DigitalInput(kElevator.limitSwitchDIO);
 
     setElevatorHeightMotionProfile(kElevator.ElevatorPosition.L1);
   }
@@ -136,39 +121,13 @@ public class Elevator extends SubsystemBase {
     elevatorPID.setReference(0, ControlType.kDutyCycle);
   }
 
-  private void setElevatorHeight(double nextVel) {
+  private void setElevatorHeight(double nextPos) {
     // get double from enum
     elevatorPID.setReference(
-      m_setpoint.position, 
+      nextPos,
       ControlType.kPosition, 
       ClosedLoopSlot.kSlot0
       );
-    // System.out.println(elevatorFeedforward.calculateWithVelocities(elevatorMotorR.getEncoder().getVelocity(),nextVel));
-    // run(() -> elevatorPID.setReference(targetRotations, ControlType.kPosition))
-    
-    //   .until(limitSwitch::get)
-    //   .andThen(() -> resetElevatorEncoders())
-    //   .withTimeout(1);// TODO: limit tune probobly
-    
-    // System.out.println("move");
-    
-    // if (targetHeight == kElevator.ElevatorPosition.HOME && !limitSwitch.get()) {
-    //   run(() -> elevatorPID.setReference(-30*5, ControlType.kVelocity)) //TODO: this ends instantly so until does nothing
-    //   .until(() -> limitSwitch.get())
-    //   .andThen(() -> {
-    //     elevatorPID.setReference(0, ControlType.kVelocity);
-    //     resetElevatorEncoders();
-    //   });
-    // }
-    // TODO: current zeroing?
-    // if (targetHeight == kElevator.ElevatorPosition.HOME) {
-    //   run(() -> elevatorPID.setReference(-30 * 5, ControlType.kVelocity))
-    //   .until(() -> elevatorMotorL.getOutputCurrent() >= 60)
-    //   .andThen(() -> {
-    //     elevatorPID.setReference(0, ControlType.kVelocity);
-    //     resetElevatorEncoders();
-    //   });
-    // }
   }
 
   public void setElevatorHeightMotionProfile(kElevator.ElevatorPosition height_chosen) {
@@ -179,11 +138,6 @@ public class Elevator extends SubsystemBase {
     targetRotations = height_chosen.getOutputRotations();
     m_goal = new TrapezoidProfile.State(targetRotations, 0);
     m_setpoint = new TrapezoidProfile.State(elevatorMotorR.getEncoder().getPosition(), 0);
-    // if (height_chosen == kElevator.ElevatorPosition.L1 && previousHeight == kElevator.ElevatorPosition.L4) {
-    //   m_intermediate = new TrapezoidProfile.State(6, 20);
-    // } else {
-    //   m_intermediate = new TrapezoidProfile.State(targetRotations, 0);
-    // }
   }
 
   public kElevator.ElevatorPosition getElevatorSetPosition() {
@@ -202,12 +156,6 @@ public class Elevator extends SubsystemBase {
     elevatorMotorR.getEncoder().setPosition(0);
     elevatorMotorL.getEncoder().setPosition(0);
   }
-  // public void setElevatorHeightFF(kElevator.ElevatorPosition height) {
-  //   // get double from enum
-  //   double targetHeight = height.getRotations();
-  //   elevatorPID.setReference(targetHeight, ControlType.kPosition);
-  //   // currentHeight = height;
-  // }
 
   // Creates a SysIdRoutine
   SysIdRoutine routine = new SysIdRoutine(
@@ -231,17 +179,13 @@ public class Elevator extends SubsystemBase {
         
     //-=-=-=-=-=-=-=- Trapezoid Profile -=-=-=-=-=-=-=-
 
-    // Retrieve the profiled setpoint for the next timestep. This setpoint moves toward the goal while obeying the constraints.
+    // Retrieve the profiled setpoint for the next timestamp. This setpoint moves toward the goal while obeying the constraints.
     // if (getElevatorHeight() >= m_intermediate.position) {
     //   m_setpoint = m_profile.calculate(kDt, m_setpoint, m_intermediate);
     // } else {
     //   m_setpoint = m_profile.calculate(kDt, m_setpoint, m_goal);
     // }
-    
-    // if (limitSwitch.get()) {
-    //   resetElevatorEncoders();
-    // }
-    
+
     if (!isHoming) {
       m_setpoint = m_profile.calculate(kDt, m_setpoint, m_goal);
       // Send setpoint to offboard controller PID (I made this in periodic so when the setpositionTrapezoidProfile Method is updated it runs the elevator)
@@ -261,12 +205,5 @@ public class Elevator extends SubsystemBase {
     RoboRioSim.setVInVoltage(
       BatterySim.calculateDefaultBatteryLoadedVoltage(elevatorSim.getCurrentDrawAmps())
     );
-    
-  }
-
-  public void teleopPeriodic() {
-    // if (Robot.isSimulation()) {
-    //   setElevatorHeightMotionProfile(ElevatorPosition.L4);
-    // }
   }
 }

@@ -2,30 +2,18 @@ package frc.robot.utilities;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.networktables.BooleanPublisher;
-import edu.wpi.first.networktables.DoublePublisher;
-import edu.wpi.first.networktables.IntegerPublisher;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StringPublisher;
-import edu.wpi.first.networktables.StructArrayPublisher;
-import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.*;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilderImpl;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * Custom NetworkTable logger created by Glitch 2.0 in 2025. This logger is used to log values to
- * the network table (can be seen using AdvantageScope, Glass, Elastic, etc.)
- *
- * @param subsystemFor the subsystem this logger will log values for
- */
 public class NetworkTableLogger {
   // NetworkTable to log to
   private final NetworkTable table;
@@ -52,10 +40,12 @@ public class NetworkTableLogger {
   public NetworkTableLogger(String subsystemFor) {
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
 
-    // Get the table within the default instance that contains the data. There can
-    // be as many tables as you like and exist to make it easier to organize
-    // your data. In this case, it's a table called what the parameter
-    // subsystemFor holds: (the subsystem to log for).
+    /*
+      Get the table within the default instance that contains the data. There can
+      be as many tables as you like and exist to make it easier to organize
+      your data. In this case, it's a table called what the parameter
+      subsystemFor holds: (the subsystem to log for).
+     */
     table = inst.getTable(subsystemFor);
   }
 
@@ -118,7 +108,7 @@ public class NetworkTableLogger {
    * Elastic, etc.)
    *
    * @param key the key, a string, that will represent the value
-   * @param string the value (string) that will be logged
+   * @param value the value (string) that will be logged
    */
   public void logString(String key, String value) {
     if (!stringPublishers.containsKey(key)) {

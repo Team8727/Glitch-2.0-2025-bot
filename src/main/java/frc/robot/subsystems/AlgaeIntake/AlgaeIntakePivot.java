@@ -4,23 +4,13 @@
 
 package frc.robot.subsystems.AlgaeIntake;
 
-import static edu.wpi.first.units.Units.Volt;
-import static frc.robot.utilities.SparkConfigurator.getSparkMax;
-
-import java.util.Set;
-
-import com.revrobotics.spark.ClosedLoopSlot;
-import com.revrobotics.spark.SparkBase;
+import com.revrobotics.spark.*;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkLowLevel;
-import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
-
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,15 +22,19 @@ import frc.robot.Constants.kAlgaeIntake.kAlgaeIntakePivot.IntakePosition;
 import frc.robot.utilities.NetworkTableLogger;
 import frc.robot.utilities.SparkConfigurator.LogData;
 
+import java.util.Set;
+
+import static edu.wpi.first.units.Units.Volt;
+import static frc.robot.utilities.SparkConfigurator.getSparkMax;
+
 public class AlgaeIntakePivot extends SubsystemBase {
 
   private final SparkMax intakePivotMotor;
-  private final SparkMaxConfig config;
 
   private final ArmFeedforward pivotFeedforward;
   private final SparkClosedLoopController pivotPID;
 
-  private final NetworkTableLogger logger = new NetworkTableLogger(this.getSubsystem().toString());
+  private final NetworkTableLogger logger = new NetworkTableLogger(this.getSubsystem());
 
   private final double kDt = 0.02;
 
@@ -73,30 +67,23 @@ public class AlgaeIntakePivot extends SubsystemBase {
   // =-=-=-=- pivotMotor config, PID config, and maxMotion Constraints config -=-=-=-=-|Constructor|
 
     // Setting the output range, PID, and maxMotion constraints for the motor
-    config = new SparkMaxConfig(); 
-
+    SparkMaxConfig config = new SparkMaxConfig();
     config
       // Motor Config
       .smartCurrentLimit(Constants.kAlgaeIntake.kAlgaeIntakePivot.motorCurrentLimit)
       .idleMode(IdleMode.kBrake)
-      .inverted(false)
       // PID Control
       .closedLoop
         .outputRange(-1, 1)
-        .velocityFF(0)
         .pid(2, 0.0007, 2)
         .positionWrappingEnabled(false)
         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
-        // .maxMotion // MaxMotion Control for more precise position control
-        //   .maxVelocity(100) 
-        //   .maxAcceleration(50)
-        //   .allowedClosedLoopError(0);
 
     // Configuring Motor With Config
     intakePivotMotor.configure(
-        config,
-        ResetMode.kNoResetSafeParameters,
-        PersistMode.kNoPersistParameters);
+      config,
+      ResetMode.kNoResetSafeParameters,
+      PersistMode.kNoPersistParameters);
 
   // -=-=-=-=- PID controller for the motor for convenience -=-=-=-=-=-=-=-=|Constructor|
 
@@ -112,7 +99,7 @@ public class AlgaeIntakePivot extends SubsystemBase {
     pivotPID.setReference(rotation, SparkBase.ControlType.kMAXMotionPositionControl);
   }
 
-  private void setMotorFFandPIDPosition(double intakePosition, double VelocitySetpoint) {
+  private void setMotorFFAndPIDPosition(double intakePosition) {
     pivotPID.setReference(
         intakePosition,
         ControlType.kPosition, 
@@ -129,17 +116,6 @@ public class AlgaeIntakePivot extends SubsystemBase {
     m_goal = new TrapezoidProfile.State(rotation, 0);
   }
 
-    // pivotMotor.setReference() //To set built-in PID (maybe put the feedforward calculation in
-    // here as parameter?
-    // pivotFeedforward.calculate(positionRadians, velocityRadPerSec);  //For velocity and position
-    // control, acceleration assumed to be 0
-    // pivotFeedforward.calculate(positionRadians, velocityRadPerSec, accelRadPerSecSquared);  //For
-    // control of all three values
-    // pivotFeedforward.calculate(currentAngle, currentVelocity, nextVelocity, dt)  // For velocity
-    // control
-    // pivotFeedforward.calculateWithVelocities(currentAngle, currentVelocity, nextVelocity); //
-    // Other method of velocity control
-
 // -=-=-=-=-=-=- Commands -=-=-=-=-=-=-=-=-=-=-|Subsystem|
 
 
@@ -152,37 +128,26 @@ public class AlgaeIntakePivot extends SubsystemBase {
 
 @Override
 public void periodic() {
-  if (intakePivotMotor.getAbsoluteEncoder().getPosition() < 0.375) 
+  if (intakePivotMotor.getAbsoluteEncoder().getPosition() < 0.375) {
     m_setpoint = m_profile.calculate(kDt, m_setpoint, m_goal);
-    setMotorFFandPIDPosition(m_setpoint.position, m_setpoint.velocity);{
+    setMotorFFAndPIDPosition(m_setpoint.position);
+  } else {
+    pivotPID.setReference(0, ControlType.kDutyCycle);
   }
-  
-  logger.logDouble("intake Pos", intakePivotMotor.getAbsoluteEncoder().getPosition() * 360);
 
   // This method will be called once per scheduler run
-  if (m_shouldLog) {
-    startLogging();
-  }
+  logValues();
 }
 
   // -=-=-=--=-=-=-= Logging =-=-=-=-=-=-=-=-=-=-|Subsystem|
 
-  boolean m_shouldLog = false;
-  NetworkTableLogger periodicLogger = new NetworkTableLogger(this.getSubsystem().toString());
-
-  /**
-   * Whether to log values (like encoder data)
-   */
-  public void shouldLogValues(boolean shouldLog) {
-    m_shouldLog = shouldLog;
-  }
-
   /**
    * Used in subsystem periodic to log and update values
    */
-  public void startLogging() { // Only for calling in the periodic of this subsystem
-    periodicLogger.logDouble("Motor Current", intakePivotMotor.getOutputCurrent());
-    periodicLogger.logDouble("Motor Encoder Value (Relative Encoder):", intakePivotMotor.getEncoder().getPosition());
+  public void logValues() { // Only for calling in the periodic of this subsystem
+    logger.logDouble("Motor Current", intakePivotMotor.getOutputCurrent());
+    logger.logDouble("Motor Encoder Value (Relative Encoder):", intakePivotMotor.getEncoder().getPosition());
+    logger.logDouble("intake Pos", intakePivotMotor.getAbsoluteEncoder().getPosition() * 360);
   }
 
   // -=-=-=-=-=-=- System Identification (SysId) + Methods + Commands -=-=-=-=-=-=-=-=-=-=-|Subsystem|
@@ -203,20 +168,12 @@ public void periodic() {
   }
 
   // For running the motor using various SysIdRoutine commands for SysId to analyze for PID and FF values
-  public Command sysIdRoutine_quasistatic_fwd() {
-    return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+  public Command sysIdRoutine_quasistatic(SysIdRoutine.Direction direction) {
+    return sysIdRoutine.quasistatic(direction);
   }
 
-  public Command sysIdRoutine_quasistatic_rev() {
-    return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
-  }
-
-  public Command sysIdRoutine_dynamic_fwd() {
-    return sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
-  }
-
-  public Command sysIdRoutine_dynamic_rev() {
-    return sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
+  public Command sysIdRoutine_dynamic(SysIdRoutine.Direction direction) {
+    return sysIdRoutine.dynamic(direction);
   }
 
   // Stopping the SysIdRoutine (for onFalse of the button trigger)

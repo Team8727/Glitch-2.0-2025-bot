@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Coral;
+package frc.robot.commands.CoralCmds;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Elevator.Coral.Coral;
@@ -14,8 +14,8 @@ public class RejectCoralCmd extends Command {
   /** Creates a new ReindexCoralCmd. */
   public RejectCoralCmd(Coral coral) {
     m_coral = coral;
+
     addRequirements(coral);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -33,9 +33,6 @@ public class RejectCoralCmd extends Command {
       this.cancel();
       Thread.currentThread().interrupt();
     }).start();
-
-    // m_coral.setIntakeSpeedDuty(-.1);
-    // CustomCommands.waitCommand(.1, () -> m_coral.setIntakeSpeedDuty(.1));
   }
 
   // Called every time the scheduler runs while the command is scheduled.
