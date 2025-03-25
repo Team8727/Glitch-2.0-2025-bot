@@ -6,6 +6,9 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathfindingCommand;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -15,6 +18,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.kConfigs;
 import frc.robot.Constants.kSwerve;
+import frc.robot.Constants.kVision;
+import frc.robot.Constants.kAllianceInfo.RobotAlliance;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakePivot;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakeRollers;
 import frc.robot.subsystems.AlgaeIntake.TestPivot;
@@ -204,7 +209,10 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+    // logger.logPose2d("closest", new Pose2d(Autos.ReefScorePoints.findClosestScorePoint(isRedAlliance() ? RobotAlliance.RED_ALLIANCE : RobotAlliance.BLUE_ALLIANCE, m_PoseEstimator.get2dPose()).getPoint(), new Rotation2d()).rotateAround(kVision.fieldCenter, isRedAlliance() ? new Rotation2d(Math.toRadians(180)) : new Rotation2d(Math.toRadians(0))));
+    // logger.logString("zone of closest", Autos.ReefScorePoints.findClosestScorePoint(null, m_PoseEstimator.get2dPose()).getZone());
+  }
 
   public static boolean isRedAlliance() {
     return DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Red);
