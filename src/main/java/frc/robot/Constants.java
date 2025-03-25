@@ -297,12 +297,12 @@ public final class Constants {
         new Rotation3d(0, Math.toRadians(20), Math.toRadians(-20)));
     public static final Transform3d camera3Position = // Left Rear
       new Transform3d(
-        new Translation3d(Units.inchesToMeters(6.625), Units.inchesToMeters(-8), Units.inchesToMeters(19.5)),
-        new Rotation3d(0, Math.toRadians(25), Math.toRadians(30)));
+        new Translation3d(Units.inchesToMeters(8), Units.inchesToMeters(-8), Units.inchesToMeters(19.5)),
+        new Rotation3d(0, Math.toRadians(25), Math.toRadians(34)));
     public static final Transform3d camera4Position = // Front
       new Transform3d(
-        new Translation3d(Units.inchesToMeters(6.625), Units.inchesToMeters(8), Units.inchesToMeters(19.5)),
-        new Rotation3d(0, Math.toRadians(25), Math.toRadians(-30)));
+        new Translation3d(Units.inchesToMeters(8), Units.inchesToMeters(8), Units.inchesToMeters(19.5)),
+        new Rotation3d(0, Math.toRadians(25), Math.toRadians(-34)));
 
     public static final Matrix<N3, N1> stateStdDevs =
         MatBuilder.fill(Nat.N3(), Nat.N1(), 0.02, 0.02, 0.01);
