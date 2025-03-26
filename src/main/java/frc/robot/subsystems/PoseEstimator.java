@@ -37,15 +37,11 @@ public class PoseEstimator extends SubsystemBase {
 
   private VisionSystemSim visionSim;
 
-  private final PhotonCamera camera1 = new PhotonCamera("backRight");
-  private final PhotonCamera camera2 = new PhotonCamera("backLeft");
-  private final PhotonCamera camera3 = new PhotonCamera("front");
-  private final PhotonCamera camera4 = new PhotonCamera("backUp");
+  private final PhotonCamera frontRightCamera = new PhotonCamera("frontRight");
+  private final PhotonCamera frontLeftCamera = new PhotonCamera("frontLeft");
 
-  private PhotonCameraSim cameraSimBackRight;
-  private PhotonCameraSim cameraSimBackLeft;
-  private PhotonCameraSim cameraSimFront;
-  private PhotonCameraSim cameraSimBackUp;
+  private PhotonCameraSim cameraSimFrontRight;
+  private PhotonCameraSim cameraSimFrontLeft;
 
   private SimCameraProperties cameraProp;
 
@@ -86,46 +82,30 @@ public class PoseEstimator extends SubsystemBase {
       cameraProp.setAvgLatencyMs(35);
       cameraProp.setLatencyStdDevMs(5);
 
-      cameraSimBackRight = new PhotonCameraSim(camera1, cameraProp);
-      cameraSimBackLeft = new PhotonCameraSim(camera2, cameraProp);
-      cameraSimFront = new PhotonCameraSim(camera3, cameraProp);
-      cameraSimBackUp = new PhotonCameraSim(camera4, cameraProp);
+      cameraSimFrontRight = new PhotonCameraSim(frontRightCamera, cameraProp);
+      cameraSimFrontLeft = new PhotonCameraSim(frontLeftCamera, cameraProp);
 
       // this slows down loop time a lot
-      // cameraSimBackLeft.enableDrawWireframe(true);
-      // cameraSimBackRight.enableDrawWireframe(true);
-      // cameraSimFront.enableDrawWireframe(true);
-      // cameraSimBackUp.enableDrawWireframe(true);
+      // cameraSimFrontRight.enableDrawWireframe(true);
+      // cameraSimFrontLeft.enableDrawWireframe(true);
 
-      visionSim.addCamera(cameraSimBackRight, kVision.camera1Position);
-      visionSim.addCamera(cameraSimBackLeft, kVision.camera2Position);
-      visionSim.addCamera(cameraSimFront, kVision.camera4Position);
-      visionSim.addCamera(cameraSimBackUp, kVision.camera3Position);
+      visionSim.addCamera(cameraSimFrontRight, kVision.frontRightCamera);
+      visionSim.addCamera(cameraSimFrontLeft, kVision.frontLeftCamera);
     }
     resetStartPose();
   }
 
   // photon pose estimators
-  PhotonPoseEstimator PoseEstimator1 =
+  PhotonPoseEstimator PoseEstimatorFrontLeft =
       new PhotonPoseEstimator(
           kVision.aprilTagFieldLayout,
           PoseStrategy.CLOSEST_TO_REFERENCE_POSE,
-          kVision.camera1Position);
-  PhotonPoseEstimator PoseEstimator2 =
+          kVision.frontLeftCamera);
+  PhotonPoseEstimator PoseEstimatorFrontRight =
       new PhotonPoseEstimator(
           kVision.aprilTagFieldLayout,
           PoseStrategy.CLOSEST_TO_REFERENCE_POSE,
-          kVision.camera2Position);
-  PhotonPoseEstimator PoseEstimator3 =
-      new PhotonPoseEstimator(
-          kVision.aprilTagFieldLayout,
-          PoseStrategy.CLOSEST_TO_REFERENCE_POSE,
-          kVision.camera3Position);
-  PhotonPoseEstimator PoseEstimator4 =
-      new PhotonPoseEstimator(
-          kVision.aprilTagFieldLayout,
-          PoseStrategy.CLOSEST_TO_REFERENCE_POSE,
-          kVision.camera4Position);
+          kVision.frontRightCamera);
 
 
   /**
@@ -136,7 +116,7 @@ public class PoseEstimator extends SubsystemBase {
   public Pose2d getStartPose2d() {
     // vars
     Pose3d pose3d = new Pose3d();
-    PhotonPipelineResult result = camera1.getLatestResult();
+    PhotonPipelineResult result = frontLeftCamera.getLatestResult();
     boolean hasTargets = result.hasTargets();
     // if camera sees targets
     if (hasTargets) {
@@ -148,7 +128,7 @@ public class PoseEstimator extends SubsystemBase {
             PhotonUtils.estimateFieldToRobotAprilTag(
                 target.getBestCameraToTarget(),
                 kVision.aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(),
-                kVision.camera1Position);
+                kVision.frontLeftCamera);
       }
     }
     return pose3d.toPose2d();
@@ -266,10 +246,8 @@ public class PoseEstimator extends SubsystemBase {
   @Override
   public void simulationPeriodic() {
     visionSim.update(m_SwervePoseEstimator.getEstimatedPosition());
-    networkTableLogger.logPose3d("cam back Right", visionSim.getCameraPose(cameraSimBackRight).orElse(new Pose3d()));
-    networkTableLogger.logPose3d("cam back left", visionSim.getCameraPose(cameraSimBackLeft).orElse(new Pose3d()));
-    networkTableLogger.logPose3d("cam front", visionSim.getCameraPose(cameraSimFront).orElse(new Pose3d()));
-    networkTableLogger.logPose3d("cam back up", visionSim.getCameraPose(cameraSimBackUp).orElse(new Pose3d()));
+    networkTableLogger.logPose3d("cam front", visionSim.getCameraPose(cameraSimFrontRight).orElse(new Pose3d()));
+    networkTableLogger.logPose3d("cam back up", visionSim.getCameraPose(cameraSimFrontLeft).orElse(new Pose3d()));
     m_SwervePoseEstimator.addVisionMeasurement(visionSim.getRobotPose().toPose2d(), RobotController.getFPGATime());
     networkTableLogger.logField2d("Vision Debug Field", visionDebugField);
 
@@ -281,14 +259,10 @@ public class PoseEstimator extends SubsystemBase {
    */
   @Override
   public void periodic() {
-    // // camera 1 pose estimation
-    // addVisionMeasurement(camera1, PoseEstimator1);
-    // // // camera 2 pose estimation
-    // addVisionMeasurement(camera2, PoseEstimator2);
-    // // // camera 3 pose estimation
-    // addVisionMeasurement(camera3, PoseEstimator3);
-    // // // camera 4 pose estimation
-    // addVisionMeasurement(camera4, PoseEstimator4);
+      // camera 3 pose estimation
+     addVisionMeasurement(frontRightCamera, PoseEstimatorFrontLeft);
+      // camera 4 pose estimation
+     addVisionMeasurement(frontLeftCamera, PoseEstimatorFrontRight);
 
     // gyro update
     m_SwervePoseEstimator.updateWithTime(

@@ -13,16 +13,11 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.MatBuilder;
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
@@ -289,35 +284,19 @@ public final class Constants {
     AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark);
 
     public static final Translation2d fieldCenter = new Translation2d(8.770, 4.026); // meters
-    // x   y     z
+    // y   x     z
     // 8   7     22
     // -8  7     22
     // -8  6.625 19.5
     //  8  6.625 19.5
-    public static final Transform3d camera1Position = // Right Rear
+    public static final Transform3d frontLeftCamera = // Left Rear
       new Transform3d(
-        new Translation3d(Units.inchesToMeters(7), Units.inchesToMeters(8), Units.inchesToMeters(22)), 
-        new Rotation3d(0, Math.toRadians(20), Math.toRadians(20)));
-    public static final Transform3d camera2Position = // Upper
+        new Translation3d(Units.inchesToMeters(8), Units.inchesToMeters(-8), Units.inchesToMeters(19.5)),
+        new Rotation3d(0, Math.toRadians(25), Math.toRadians(34)));
+    public static final Transform3d frontRightCamera = // Front
       new Transform3d(
-        new Translation3d(Units.inchesToMeters(7), Units.inchesToMeters(-8), Units.inchesToMeters(22)),
-        new Rotation3d(0, Math.toRadians(20), Math.toRadians(-20)));
-    public static final Transform3d camera3Position = // Left Rear
-      new Transform3d(
-        new Translation3d(Units.inchesToMeters(6.625), Units.inchesToMeters(-8), Units.inchesToMeters(19.5)),
-        new Rotation3d(0, Math.toRadians(25), Math.toRadians(30)));
-    public static final Transform3d camera4Position = // Front
-      new Transform3d(
-        new Translation3d(Units.inchesToMeters(6.625), Units.inchesToMeters(8), Units.inchesToMeters(19.5)),
-        new Rotation3d(0, Math.toRadians(25), Math.toRadians(-30)));
-
-    public static final Matrix<N3, N1> stateStdDevs =
-        MatBuilder.fill(Nat.N3(), Nat.N1(), 0.02, 0.02, 0.01);
-    public static final Matrix<N3, N1> visionStdDevs =
-        MatBuilder.fill(Nat.N3(), Nat.N1(), 0.03, 0.03, 0.25);
-    public static final double visionScalingFactor =
-        2.3; // scaling factor applied to the visionStdDevs per meter bigger means trust less at distance
-
+        new Translation3d(Units.inchesToMeters(8), Units.inchesToMeters(8), Units.inchesToMeters(19.5)),
+        new Rotation3d(0, Math.toRadians(25), Math.toRadians(-34)));
   }
   public static class kAlgaeRemover {
     public static class kPivot {
