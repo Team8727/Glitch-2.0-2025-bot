@@ -9,7 +9,7 @@ import frc.robot.commands.CoralCmds.IntakeCoralCmd;
 import frc.robot.commands.CoralCmds.ReindexCoralCmd;
 import frc.robot.commands.CoralCmds.RejectCoralCmd;
 import frc.robot.commands.DriveCmds.SwerveJoystickCmd;
-import frc.robot.commands.ElevatorAlgaeCmds.weirdAlgaeIntakeCmd;
+import frc.robot.commands.weirdAlgaeIntakeCmd;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakePivot;
 import frc.robot.subsystems.AlgaeIntake.TestPivot;
 import frc.robot.commands.ElevatorAlgaeCmds.weirdAlgaeShootCmd;
