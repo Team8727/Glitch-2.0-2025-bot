@@ -21,8 +21,9 @@ import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
 import frc.robot.subsystems.Elevator.AlgaeRemover.RollerTest;
 import frc.robot.subsystems.Elevator.Coral.Coral;
+import frc.robot.subsystems.LEDs.LEDPatterns;
+import frc.robot.subsystems.LEDs.LEDSubsystem;
 import frc.robot.subsystems.Elevator.Elevator;
-import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.PoseEstimator;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -37,6 +38,7 @@ public class Driver1DefaultBindings implements ControllerBindings {
   private final Coral m_coral;
   private final Elevator m_elevator;
   private final LEDSubsystem m_ledSubsytem;
+  private final LEDPatterns m_ledPatterns;
   private final AlgaeRemoverPivot m_AlgaeRemoverPivot;
   private final AlgaeRemoverRollers m_AlgaeRemoverRollers;
   private final Autos m_autos;
@@ -49,6 +51,7 @@ public class Driver1DefaultBindings implements ControllerBindings {
     Coral coral,
     Elevator elevator,
     LEDSubsystem ledSubsystem,
+    LEDPatterns ledPatterns,
     AlgaeRemoverPivot algaeRemoverPivot,
     AlgaeRemoverRollers algaeRemoverRollers,
     Autos autos) {
@@ -59,6 +62,7 @@ public class Driver1DefaultBindings implements ControllerBindings {
     m_coral = coral;
     m_elevator = elevator;
     m_ledSubsytem = ledSubsystem;
+    m_ledPatterns = ledPatterns;
     m_AlgaeRemoverPivot = algaeRemoverPivot;
     m_AlgaeRemoverRollers = algaeRemoverRollers;
     m_autos = autos;
@@ -95,13 +99,13 @@ public class Driver1DefaultBindings implements ControllerBindings {
 
     //              Elevator Commands
     // elevator L1
-    controller.x().onTrue(new SetElevatorHeightCmd(ElevatorPosition.L1, m_elevator, m_coral, m_ledSubsytem));
+    controller.x().onTrue(new SetElevatorHeightCmd(ElevatorPosition.L1, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
     // elevator L2
-    controller.a().onTrue(new SetElevatorHeightCmd(ElevatorPosition.L2, m_elevator, m_coral, m_ledSubsytem));
+    controller.a().onTrue(new SetElevatorHeightCmd(ElevatorPosition.L2, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
     // elevator L3
-    controller.b().onTrue(new SetElevatorHeightCmd(ElevatorPosition.L3, m_elevator, m_coral, m_ledSubsytem));
+    controller.b().onTrue(new SetElevatorHeightCmd(ElevatorPosition.L3, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
     // elevator L4
-    controller.y().onTrue(new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsytem));
+    controller.y().onTrue(new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
 
     // zero elevator
     controller.rightTrigger().and(controller.rightBumper()).onTrue(new ZeroElevator(m_elevator));
@@ -115,7 +119,7 @@ public class Driver1DefaultBindings implements ControllerBindings {
     // Remove Algae A2
     controller.povDown().whileTrue(new weirdAlgaeIntakeCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers, ElevatorPosition.A3, m_elevator, m_ledSubsytem, m_coral));
     // Remove Algae A2
-    controller.povUp().whileTrue(new weirdAlgaeShootCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers,m_elevator, m_ledSubsytem, m_coral));
+    controller.povUp().whileTrue(new weirdAlgaeShootCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers,m_elevator, m_ledSubsytem, m_ledPatterns, m_coral));
   }
 
   @Override
