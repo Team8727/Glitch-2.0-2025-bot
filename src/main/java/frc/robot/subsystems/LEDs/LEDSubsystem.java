@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.LEDs;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.kElevator;
 import frc.robot.Robot;
 import frc.robot.subsystems.Elevator.Elevator;
+import frc.robot.subsystems.LEDs.LEDPatterns.enzoMap;
 
 import java.util.Map;
 
@@ -23,15 +24,16 @@ import static edu.wpi.first.units.Units.Second;
 public class LEDSubsystem extends SubsystemBase {
   private final AddressableLED lightStrip;
   private final AddressableLEDBuffer stripBuffer;
+  public LEDPattern currentPattern = defaultPattern;
 
   // HACK: Flip blue and green channels on real robot until we figure out 
   // the root cause of the sim/real color discrepancy
-  private static Color getColor(Color color) {
+  public static Color getColor(Color color) {
     final boolean kFlipBlueAndGreen = Robot.isReal();
     return kFlipBlueAndGreen ? new Color(color.red, color.blue, color.green) : color;
   }
 
-  private static final LEDPattern defaultPattern = LEDPattern.solid(getColor(Color.kGreen));
+  public static final LEDPattern defaultPattern = LEDPattern.solid(getColor(Color.kGreen));
 
   /**
    * Represents a section of the LED strip with a specific pattern and duration.
@@ -57,6 +59,7 @@ public class LEDSubsystem extends SubsystemBase {
       this.pattern = pattern;
       this.durationSeconds = durationSeconds;
       this.elapsedSeconds = 0.0;
+      currentPattern = pattern;
     }
 
     /**
@@ -90,97 +93,6 @@ public class LEDSubsystem extends SubsystemBase {
   private final Section leftSide;
   private final Section rightSide;
   private final Section secretBuffer;
-
-  private Elevator m_elevator;
-
-  // Define LED Patterns
-  public static final LEDPattern purple = LEDPattern.solid(getColor(Color.kPurple));
-  
-  // Rainbow pattern with a scrolling mask
-  public static final LEDPattern rainbow = LEDPattern.rainbow(
-    256, 
-    256)
-    .scrollAtRelativeSpeed(
-      Percent.per(Second).of(15))
-      .reversed()
-      .mask(
-        LEDPattern.steps(
-          Map.of(
-              0.0, Color.kWhite,
-              0.25, Color.kBlack,
-              0.75, Color.kWhite))
-      .scrollAtRelativeSpeed(
-        Percent.per(Second).of(20)));
-
-  // Blue gradient pattern with a scrolling mask
-  public static final LEDPattern blue =
-      LEDPattern.gradient(LEDPattern.GradientType.kContinuous, getColor(Color.kBlue), getColor(Color.kGreen))
-          .scrollAtRelativeSpeed(
-            Percent.per(Second).of(15));
-
-  // Green to purple gradient pattern
-  public static final LEDPattern ace =
-      LEDPattern.gradient(GradientType.kContinuous, getColor(Color.kGreen), getColor(Color.kPurple))
-          .scrollAtRelativeSpeed(
-            Percent.per(Second).of(15));
-
-  public static final LEDPattern green = LEDPattern.solid(getColor(Color.kGreen));
-
-  public static final LEDPattern blinkyGreen = LEDPattern.solid(getColor(Color.kGreen)).blink(Second.of(0.1));
-  // Elevator progress bar pattern
-  public final LEDPattern elevatorProgress = LEDPattern.gradient(
-    GradientType.kDiscontinuous, 
-    getColor(Color.kGreen), 
-    getColor(Color.kYellow), 
-    getColor(Color.kOrange), 
-    Color.kRed)
-  .mask(LEDPattern.progressMaskLayer(
-    () -> m_elevator.getElevatorHeight() / kElevator.ElevatorPosition.L4.getOutputRotations()));
-  // Coral pickup pattern
-  public static final LEDPattern coralPickup = LEDPattern.gradient(
-    GradientType.kDiscontinuous, 
-    getColor(Color.kGreen), 
-    getColor(Color.kPink), 
-    getColor(Color.kYellow), 
-    Color.kRed)
-      .blink(Second.of(0.5));
-
-  // Algae pickup pattern
-  public static final LEDPattern algaePickup = LEDPattern.gradient(
-    GradientType.kDiscontinuous,
-    getColor(Color.kGreen),
-    getColor(Color.kPurple),
-    getColor(Color.kOrange),
-    Color.kRed)
-      .blink(Second.of(0.5));
-
-  public static final LEDPattern enzoMap = LEDPattern.steps(
-    Map.of(
-      0.0, Color.kBlack,
-      0.08, getColor(Color.kGreen),
-      0.48, Color.kWhite,
-      0.56, Color.kBlack,
-      0.72, Color.kWhite,
-      0.80, getColor(Color.kGreen),
-      0.92, Color.kBlack
-    )
-  );
-  /*
-   *  B
-   *  G
-   *  G
-   *  W
-   *  B
-   *  B
-   *  B
-   *  W
-   *  G
-   *  G
-   *  G
-   *  G
-   *  G
-   *  B
-   */
   
   /** Creates a new LEDSubsystem. */
   public LEDSubsystem(Elevator elevator) {
@@ -195,8 +107,6 @@ public class LEDSubsystem extends SubsystemBase {
 
     lightStrip.setData(stripBuffer);
     lightStrip.start();
-
-    m_elevator = elevator;
   }
 
   public void resetToDefaultPattern() {
@@ -240,11 +150,15 @@ public class LEDSubsystem extends SubsystemBase {
   }
 
   public void activateSecretPattern() {
-    secretBuffer.setPattern(blinkyGreen);
+    secretBuffer.setPattern(LEDPatterns.blinkyGreen);
   }
 
   public void deactivateSecretPattern() {
     secretBuffer.setPattern(defaultPattern); // TODO: might want to set this to whatever the other strips are set to
+  }
+
+  public void enzoLEDS(enzoMap enzoMap, double seconds) {
+    combinePatternsForDuration(enzoMap.getEnzoMap(), enzoMap.getEnzoMap(), defaultPattern, seconds);
   }
 
   @Override

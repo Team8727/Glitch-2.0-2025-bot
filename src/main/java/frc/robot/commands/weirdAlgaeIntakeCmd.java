@@ -11,7 +11,8 @@ import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
 import frc.robot.subsystems.Elevator.Coral.Coral;
-import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.LEDs.LEDPatterns;
+import frc.robot.subsystems.LEDs.LEDSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class weirdAlgaeIntakeCmd extends Command {
@@ -42,7 +43,7 @@ public class weirdAlgaeIntakeCmd extends Command {
       m_pivot.setPositionTrapazoidal(RemoverPositions.RaisedL2); // TODO: set positions
       m_rollers.setRemoverRollerSpeed(.5); // TODO: set speed
       m_coral.setOuttakeSpeedDuty(-.5);
-      m_ledSubsystem.combinePatternsForDuration(LEDSubsystem.blue, LEDSubsystem.ace, LEDSubsystem.green, 2);
+      m_ledSubsystem.combinePatternsForDuration(LEDPatterns.blue, LEDPatterns.ace, LEDPatterns.green, 2);
     } else {
       m_elevator.setElevatorHeightMotionProfile(m_setPos);
       this.cancel();
@@ -57,6 +58,7 @@ public class weirdAlgaeIntakeCmd extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_ledSubsystem.setPattern(LEDSubsystem.defaultPattern);
   }
 
   // Returns true when the command should end.
