@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.kElevator;
 import frc.robot.Robot;
 import frc.robot.subsystems.Elevator.Elevator;
+import frc.robot.subsystems.LEDs.LEDPatterns.enzoMap;
 
 import java.util.Map;
 
@@ -23,6 +24,7 @@ import static edu.wpi.first.units.Units.Second;
 public class LEDSubsystem extends SubsystemBase {
   private final AddressableLED lightStrip;
   private final AddressableLEDBuffer stripBuffer;
+  public LEDPattern currentPattern = defaultPattern;
 
   // HACK: Flip blue and green channels on real robot until we figure out 
   // the root cause of the sim/real color discrepancy
@@ -31,7 +33,7 @@ public class LEDSubsystem extends SubsystemBase {
     return kFlipBlueAndGreen ? new Color(color.red, color.blue, color.green) : color;
   }
 
-  private static final LEDPattern defaultPattern = LEDPattern.solid(getColor(Color.kGreen));
+  public static final LEDPattern defaultPattern = LEDPattern.solid(getColor(Color.kGreen));
 
   /**
    * Represents a section of the LED strip with a specific pattern and duration.
@@ -57,6 +59,7 @@ public class LEDSubsystem extends SubsystemBase {
       this.pattern = pattern;
       this.durationSeconds = durationSeconds;
       this.elapsedSeconds = 0.0;
+      currentPattern = pattern;
     }
 
     /**
@@ -90,8 +93,6 @@ public class LEDSubsystem extends SubsystemBase {
   private final Section leftSide;
   private final Section rightSide;
   private final Section secretBuffer;
-
-  private Elevator m_elevator;
   
   /** Creates a new LEDSubsystem. */
   public LEDSubsystem(Elevator elevator) {
@@ -106,8 +107,6 @@ public class LEDSubsystem extends SubsystemBase {
 
     lightStrip.setData(stripBuffer);
     lightStrip.start();
-
-    m_elevator = elevator;
   }
 
   public void resetToDefaultPattern() {
@@ -156,6 +155,10 @@ public class LEDSubsystem extends SubsystemBase {
 
   public void deactivateSecretPattern() {
     secretBuffer.setPattern(defaultPattern); // TODO: might want to set this to whatever the other strips are set to
+  }
+
+  public void enzoLEDS(enzoMap enzoMap, double seconds) {
+    combinePatternsForDuration(enzoMap.getEnzoMap(), enzoMap.getEnzoMap(), defaultPattern, seconds);
   }
 
   @Override

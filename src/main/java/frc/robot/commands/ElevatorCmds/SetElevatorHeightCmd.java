@@ -61,7 +61,7 @@ public class SetElevatorHeightCmd extends Command {
     System.out.println("SetElevatorHeightCmd ended");
     endCmd = false; // reset the endCmd flag when the command ends
 
-    m_ledSubsystem.resetToDefaultPattern();
+    // m_ledSubsystem.resetToDefaultPattern();
   }
 
   // Returns true when the command should end.

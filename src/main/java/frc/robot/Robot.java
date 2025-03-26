@@ -31,6 +31,7 @@ import frc.robot.subsystems.Elevator.AlgaeRemover.RollerTest;
 import frc.robot.subsystems.Elevator.Coral.Coral;
 import frc.robot.subsystems.LEDs.LEDPatterns;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
+import frc.robot.subsystems.LEDs.LEDPatterns.enzoMap;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.PoseEstimator;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -182,8 +183,10 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     CommandScheduler.getInstance().cancelAll();
+    
     m_ledSubsystem.setPattern(LEDPatterns.green);
-    // LEDSubsystem.combinePatterns(LEDSubsystem.enzoMap, LEDSubsystem.enzoMap, LEDSubsystem.green);
+
+    // m_ledSubsystem.enzoLEDS(enzoMap.NORMAL, Math.random() * 15);
 
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
@@ -195,7 +198,11 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    // if (m_ledSubsystem.currentPattern == LEDSubsystem.defaultPattern) {
+    //   m_ledSubsystem.enzoLEDS(enzoMap.NORMAL, Math.random() * 15);
+    // }
+  }
 
   @Override
   public void testInit() {
