@@ -7,6 +7,7 @@ package frc.robot.commands.CoralCmds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.kElevator;
 import frc.robot.subsystems.Elevator.Coral.Coral;
+import frc.robot.subsystems.LEDs.LEDPatterns;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
 import frc.robot.subsystems.Elevator.Elevator;
 
@@ -40,7 +41,7 @@ public class IntakeCoralCmd extends Command {
       //   // m_ledSubsystem.activateSecretPattern(!m_coral.getBackCoralSensor());
       //   // Thread.currentThread().interrupt();
       // }).start();
-      m_ledSubsystem.activateSecretPattern();
+      m_ledSubsystem.setPattern(LEDPatterns.blinkyGreen);;
     }
   }
 
@@ -67,7 +68,7 @@ public class IntakeCoralCmd extends Command {
   public void end(boolean interrupted) {
     m_coral.setIntakeSpeedDuty(0);
     m_coral.setOuttakeSpeedDuty(0);
-    m_ledSubsystem.deactivateSecretPattern();
+    m_ledSubsystem.setPattern(LEDSubsystem.defaultPattern);
   }
 
   // Returns true when the command should end.
