@@ -292,11 +292,11 @@ public final class Constants {
     public static final Transform3d frontLeftCamera = // Left Rear
       new Transform3d(
         new Translation3d(Units.inchesToMeters(8), Units.inchesToMeters(-8), Units.inchesToMeters(19.5)),
-        new Rotation3d(0, Math.toRadians(25), Math.toRadians(34)));
+        new Rotation3d(Math.toRadians(14.586), Math.toRadians(25), Math.toRadians(34)));
     public static final Transform3d frontRightCamera = // Front
       new Transform3d(
         new Translation3d(Units.inchesToMeters(8), Units.inchesToMeters(8), Units.inchesToMeters(19.5)),
-        new Rotation3d(0, Math.toRadians(25), Math.toRadians(-34)));
+        new Rotation3d(Math.toRadians(-14.586), Math.toRadians(25), Math.toRadians(-34)));
   }
   public static class kAlgaeRemover {
     public static class kPivot {
