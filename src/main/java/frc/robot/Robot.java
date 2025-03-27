@@ -29,8 +29,10 @@ import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
 import frc.robot.subsystems.Elevator.AlgaeRemover.RollerTest;
 import frc.robot.subsystems.Elevator.Coral.Coral;
+import frc.robot.subsystems.LEDs.LEDPatterns;
+import frc.robot.subsystems.LEDs.LEDSubsystem;
+import frc.robot.subsystems.LEDs.LEDPatterns.enzoMap;
 import frc.robot.subsystems.Elevator.Elevator;
-import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.PoseEstimator;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.utilities.NetworkTableLogger;
@@ -50,13 +52,14 @@ public class Robot extends TimedRobot {
   private final PoseEstimator m_PoseEstimator = new PoseEstimator(m_SwerveSubsystem);
   private final Elevator m_elevator = new Elevator();
   private final LEDSubsystem m_ledSubsystem = new LEDSubsystem(m_elevator);
+  private final LEDPatterns m_ledPatterns = new LEDPatterns(m_elevator);
   private final NetworkTableLogger logger = new NetworkTableLogger("SHOW UPPPP");
   private final AlgaeRemoverRollers m_AlgeaRemoverRollers = new AlgaeRemoverRollers();
   private final AlgaeRemoverPivot m_AlgaeRemoverPivot = new AlgaeRemoverPivot();
   private final Coral m_coral = new Coral();
   private final AlgaeIntakePivot m_AlgaeIntakePivot = new AlgaeIntakePivot();
   private final AlgaeIntakeRollers m_AlgaeIntakeRollers = new AlgaeIntakeRollers();
-  private final Autos m_Autos = new Autos(m_ledSubsystem, m_coral, m_elevator, m_PoseEstimator);
+  private final Autos m_Autos = new Autos(m_ledSubsystem, m_ledPatterns, m_coral, m_elevator, m_PoseEstimator);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -101,14 +104,15 @@ public class Robot extends TimedRobot {
     m_robotContainer =
         new RobotContainer(
             m_SwerveSubsystem,
-          m_PoseEstimator,
+            m_PoseEstimator,
             m_AlgaeIntakePivot,
             m_AlgaeIntakeRollers,
             m_AlgaeRemoverPivot,
             m_AlgeaRemoverRollers,
             m_coral,
             m_elevator,
-          m_ledSubsystem,
+            m_ledSubsystem,
+            m_ledPatterns,
             m_Autos
             );
     
@@ -154,7 +158,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    m_ledSubsystem.setPattern(LEDSubsystem.purple);
+    m_ledSubsystem.setPattern(LEDPatterns.purple);
   }
 
   @Override
@@ -165,7 +169,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     CommandScheduler.getInstance().cancelAll();
     m_robotContainer.autonomousInit();
-    m_ledSubsystem.setPattern(LEDSubsystem.rainbow);
+    m_ledSubsystem.setPattern(LEDPatterns.rainbow);
 
     m_Autos.selectAuto(); // TODO: Only enable this if you want the robot to do stuff during autonomous
 
@@ -179,8 +183,10 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     CommandScheduler.getInstance().cancelAll();
-    m_ledSubsystem.setPattern(LEDSubsystem.green);
-    // LEDSubsystem.combinePatterns(LEDSubsystem.enzoMap, LEDSubsystem.enzoMap, LEDSubsystem.green);
+    
+    m_ledSubsystem.setPattern(LEDPatterns.green);
+
+    // m_ledSubsystem.enzoLEDS(enzoMap.NORMAL, Math.random() * 15);
 
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
@@ -192,7 +198,11 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    // if (m_ledSubsystem.currentPattern == LEDSubsystem.defaultPattern) {
+    //   m_ledSubsystem.enzoLEDS(enzoMap.NORMAL, Math.random() * 15);
+    // }
+  }
 
   @Override
   public void testInit() {

@@ -8,8 +8,9 @@ package frc.robot.commands.CoralCmds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.kElevator.ElevatorPosition;
 import frc.robot.subsystems.Elevator.Coral.Coral;
+import frc.robot.subsystems.LEDs.LEDPatterns;
+import frc.robot.subsystems.LEDs.LEDSubsystem;
 import frc.robot.subsystems.Elevator.Elevator;
-import frc.robot.subsystems.LEDSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class DeployCoralCmd extends Command {
@@ -33,7 +34,7 @@ public class DeployCoralCmd extends Command {
   public void initialize() {
     m_coral.elevatorUp = true;
     m_coral.setOuttakeSpeedDuty(.2);
-    m_ledSubsytem.setPatternForDuration(m_ledSubsytem.coralPickup.reversed(), 2);
+    m_ledSubsytem.setPatternForDuration(LEDPatterns.coralPickup.reversed(), 2);
   }
 
   // Called every time the scheduler runs while the command is scheduled
@@ -52,6 +53,7 @@ public class DeployCoralCmd extends Command {
   @Override
   public void end(boolean interrupted) {
     isFinished = false;
+    m_ledSubsytem.setPattern(LEDSubsystem.defaultPattern);
   }
 
   // Returns true when the command should end.
