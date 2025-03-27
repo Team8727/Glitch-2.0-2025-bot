@@ -58,7 +58,7 @@ public class weirdAlgaeIntakeCmd extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_ledSubsystem.setPattern(LEDSubsystem.defaultPattern);
+    // m_ledSubsystem.setPattern(LEDSubsystem.defaultPattern);
   }
 
   // Returns true when the command should end.
