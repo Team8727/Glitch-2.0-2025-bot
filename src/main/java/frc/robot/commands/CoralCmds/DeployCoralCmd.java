@@ -53,7 +53,7 @@ public class DeployCoralCmd extends Command {
   @Override
   public void end(boolean interrupted) {
     isFinished = false;
-    m_ledSubsytem.setPattern(LEDSubsystem.defaultPattern);
+    // m_ledSubsytem.setPattern(LEDSubsystem.defaultPattern);
   }
 
   // Returns true when the command should end.
