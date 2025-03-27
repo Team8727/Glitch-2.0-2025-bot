@@ -9,7 +9,8 @@ import frc.robot.Constants.kAlgaeIntake.kAlgaeIntakePivot;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakePivot;
 import frc.robot.subsystems.AlgaeIntake.AlgaeIntakeRollers;
 import frc.robot.subsystems.AlgaeIntake.TestPivot;
-import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.LEDs.LEDPatterns;
+import frc.robot.subsystems.LEDs.LEDSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class IntakeAlgaeCmd extends Command {
@@ -34,7 +35,7 @@ public class IntakeAlgaeCmd extends Command {
     m_algaeIntakeRollers.isMoving = true;
     m_algaeIntakePivot.setPositionTrapazoidal(kAlgaeIntakePivot.IntakePosition.DOWN);
     m_algaeIntakeRollers.setRollerSpeedDuty(.8);
-    m_ledSubsystem.setPatternForDuration(LEDSubsystem.algaePickup, 2);
+    m_ledSubsystem.setPatternForDuration(LEDPatterns.algaePickup, 2);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

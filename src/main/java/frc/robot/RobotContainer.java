@@ -15,8 +15,9 @@ import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
 import frc.robot.subsystems.Elevator.AlgaeRemover.RollerTest;
 import frc.robot.subsystems.Elevator.Coral.Coral;
+import frc.robot.subsystems.LEDs.LEDPatterns;
+import frc.robot.subsystems.LEDs.LEDSubsystem;
 import frc.robot.subsystems.Elevator.Elevator;
-import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.PoseEstimator;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -37,6 +38,7 @@ public class RobotContainer {
   private final Coral m_coral;
   private final Elevator m_elevator;
   private final LEDSubsystem m_ledSubsystem;
+  private final LEDPatterns m_ledPatterns;
   private final Autos m_Autos;
   private final Controller m_mainController = new Controller(Controller.Operator.MAIN);
   private final Controller m_assistController = new Controller(Controller.Operator.ASSIST);
@@ -51,6 +53,7 @@ public class RobotContainer {
     Coral coral,
     Elevator elevator,
     LEDSubsystem ledSubsystem,
+    LEDPatterns ledPatterns,
     Autos autos
       ) {
     m_SwerveSubsystem = swerveSubsystem;
@@ -62,6 +65,7 @@ public class RobotContainer {
     m_coral = coral;
     m_elevator = elevator;
     m_ledSubsystem = ledSubsystem;
+    m_ledPatterns = ledPatterns;
     m_Autos = autos;
 
     m_Autos.setupAutoChooser();
@@ -78,6 +82,7 @@ public class RobotContainer {
         m_coral,
         m_elevator,
         m_ledSubsystem,
+        m_ledPatterns,
         m_AlgaeRemoverPivot,
         m_AlgaeRemoverRollers,
         m_Autos

@@ -7,8 +7,9 @@ package frc.robot.commands.ElevatorCmds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.kElevator.ElevatorPosition;
 import frc.robot.subsystems.Elevator.Coral.Coral;
+import frc.robot.subsystems.LEDs.LEDPatterns;
+import frc.robot.subsystems.LEDs.LEDSubsystem;
 import frc.robot.subsystems.Elevator.Elevator;
-import frc.robot.subsystems.LEDSubsystem;
 
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -16,15 +17,17 @@ public class SetElevatorHeightCmd extends Command {
   private final Elevator m_elevator;
   private final ElevatorPosition m_scoreLevel;
   private final LEDSubsystem m_ledSubsystem;
+  private final LEDPatterns m_ledPatterns;
   private final Coral m_coral;
   private boolean endCmd = false; // flag to indicate when the command should end
 
   /** Creates a new SetEvevatorHeightCmd. */
-  public SetElevatorHeightCmd(ElevatorPosition scoreLevel, Elevator elevator, Coral coral, LEDSubsystem ledSubsystem) {
+  public SetElevatorHeightCmd(ElevatorPosition scoreLevel, Elevator elevator, Coral coral, LEDSubsystem ledSubsystem, LEDPatterns ledPatterns) {
 
     m_scoreLevel = scoreLevel;
     m_elevator = elevator;
     m_ledSubsystem = ledSubsystem;
+    m_ledPatterns = ledPatterns;
     m_coral = coral;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(elevator, coral, ledSubsystem);
@@ -41,7 +44,7 @@ public class SetElevatorHeightCmd extends Command {
     }
 
     if (m_scoreLevel != ElevatorPosition.L1) {
-      m_ledSubsystem.setPattern(m_ledSubsystem.elevatorProgress);
+      m_ledSubsystem.setPattern(m_ledPatterns.elevatorProgress);
     }
   }
 
@@ -58,7 +61,7 @@ public class SetElevatorHeightCmd extends Command {
     System.out.println("SetElevatorHeightCmd ended");
     endCmd = false; // reset the endCmd flag when the command ends
 
-    m_ledSubsystem.resetToDefaultPattern();
+    // m_ledSubsystem.resetToDefaultPattern();
   }
 
   // Returns true when the command should end.
