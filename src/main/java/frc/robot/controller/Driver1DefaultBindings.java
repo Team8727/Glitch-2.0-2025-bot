@@ -82,7 +82,7 @@ public class Driver1DefaultBindings implements ControllerBindings {
     // intake coral
     controller.leftTrigger().toggleOnTrue(new IntakeCoralCmd(m_coral, m_elevator, m_ledSubsytem));
     // deploy coral
-    controller.leftBumper().onTrue(new DeployCoralCmd(m_coral, m_ledSubsytem, m_elevator));
+//    controller.leftBumper().onTrue(new DeployCoralCmd(m_coral, m_ledSubsytem, m_elevator));
 
     // reindex coral
     controller.povRight().onTrue(new ReindexCoralCmd(m_coral, m_elevator, m_ledSubsytem));
@@ -108,7 +108,7 @@ public class Driver1DefaultBindings implements ControllerBindings {
 
     // //                Algae Commands
     // // Intake algae
-     controller.rightTrigger().whileTrue(new IntakeAlgaeCmd(m_AlgaeIntakePivot, m_AlgaeIntakeRollers, m_ledSubsytem));
+     controller.rightTrigger().onTrue(new DeployCoralCmd(m_coral, m_ledSubsytem, m_elevator));
     // // deploy algae
     // controller.rightBumper().onTrue(new ScoreAlgaeCmd(m_AlgaeIntakePivot, m_AlgaeIntakeRollers, m_ledSubsytem));
 
