@@ -45,9 +45,6 @@ public class SwerveJoystickCmd extends Command {
     double ySpeed = m_xSpdFunction.get();
     double turningSpeed = m_turningSpdFunction.get();
 
-    System.out.println("xSpeed: " + xSpeed + ", ySpeed: " + ySpeed);
-    System.out.println("turningSpeed: " + turningSpeed);
-
     // apply deadband
     xSpeed = MathUtil.applyDeadband(xSpeed, kOI.translationDeadzone);
     ySpeed = MathUtil.applyDeadband(ySpeed, kOI.translationDeadzone);
