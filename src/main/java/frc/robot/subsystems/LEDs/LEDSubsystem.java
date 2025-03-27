@@ -17,6 +17,7 @@ import frc.robot.subsystems.LEDs.LEDPatterns.enzoMap;
 public class LEDSubsystem extends SubsystemBase {
   private final AddressableLED lightStrip;
   private final AddressableLEDBuffer stripBuffer;
+  private AddressableLEDBuffer fakeBuffer;
   private boolean altLogic = false;
   private boolean noiseLogic = false;
   private LEDPattern firePattern;
