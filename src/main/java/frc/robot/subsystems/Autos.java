@@ -31,11 +31,8 @@ import frc.robot.subsystems.LEDs.LEDPatterns;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.utilities.NetworkTableLogger;
-import org.json.simple.parser.ParseException;
 
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 public class Autos extends SubsystemBase {
@@ -129,8 +126,8 @@ public class Autos extends SubsystemBase {
      * @param robotPose the current robot pose on the field
      * @return the closest ReefScorePoint to the provided robot pose
      */
-    public static ReefScorePoints findClosestScorePoint(RobotAlliance robotAlliance, Pose2d robotPose) {
-          // Iterate through all ReefScorePoints to find the one that matches the closest translation point
+    public static ReefScorePoints findClosestReefSide(RobotAlliance robotAlliance, Pose2d robotPose) {
+          // Iterate through all ReefScorePoints points to find the one that matches the closest translation point
         for (var aScorePoint : ReefScorePoints.values()) {
           // Find the closest translation point from the robot's current position and get the point with that component
           if (robotAlliance == RobotAlliance.RED_ALLIANCE) {
@@ -146,7 +143,7 @@ public class Autos extends SubsystemBase {
           }
         }
 
-      // Return closest ReefScorePoint
+      // Return closest ReefScorePoint point
       return closestScorePoint;
     }
     
@@ -330,7 +327,7 @@ public class Autos extends SubsystemBase {
       new Pose2d(
         reef.plus(
           new Translation2d(
-            0.7 + kSwerve.width + distanceFromReef,
+            0.67 + kSwerve.width + distanceFromReef,
             verticalOffset)), 
         new Rotation2d(Math.toRadians(180)));
       return baseScoreLocation.rotateAround(reef, rotation);
@@ -353,7 +350,7 @@ public class Autos extends SubsystemBase {
     RobotAlliance alliance = Robot.isRedAlliance() ? RobotAlliance.RED_ALLIANCE : RobotAlliance.BLUE_ALLIANCE;
 
     // Get closest ReefScorePoint (enum)
-    ReefScorePoints closestScorePoint = ReefScorePoints.findClosestScorePoint(alliance, robotPose);
+    ReefScorePoints closestScorePoint = ReefScorePoints.findClosestReefSide(alliance, robotPose);
 
     // Log closest ReefScorePoint's zone
     logger.logString("Zone of closest ReefScorePoint", closestScorePoint.zone);

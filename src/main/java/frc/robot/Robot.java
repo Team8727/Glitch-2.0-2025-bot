@@ -9,6 +9,7 @@ import com.pathplanner.lib.commands.PathfindingCommand;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.LEDPattern;
@@ -80,6 +81,9 @@ public class Robot extends TimedRobot {
           //         poselist, 
           //         new TrajectoryConfig(10, 5))); //TODO: get this from pathplanner somehow
           // });
+          if (Robot.isRedAlliance()) {
+            chassisSpeeds = new ChassisSpeeds(-chassisSpeeds.vxMetersPerSecond, -chassisSpeeds.vyMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
+          }
           logger.logChassisSpeeds("speeds", chassisSpeeds);
           m_SwerveSubsystem.setChassisSpeeds(chassisSpeeds);
         },

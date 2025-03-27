@@ -82,20 +82,21 @@ public class Driver1DefaultBindings implements ControllerBindings {
     // Zero heading
     controller.start().onTrue(new InstantCommand(m_poseEstimator::zeroHeading));
 
+    // auto align right
+    controller.rightBumper().onTrue(new InstantCommand(() -> m_autos.alignToClosestSide(true))); // Align to closest side when POV right is pressed
+    // auto align left
+    controller.leftBumper().onTrue(new InstantCommand(() -> m_autos.alignToClosestSide(false))); // Align to closest side when POV left is pressed
+
     //               Coral Commands
     // intake coral
     controller.leftTrigger().toggleOnTrue(new IntakeCoralCmd(m_coral, m_elevator, m_ledSubsytem));
     // deploy coral
-    controller.leftBumper().onTrue(new DeployCoralCmd(m_coral, m_ledSubsytem, m_elevator));
+    controller.rightTrigger().onTrue(new DeployCoralCmd(m_coral, m_ledSubsytem, m_elevator));
 
     // reindex coral
     controller.povRight().onTrue(new ReindexCoralCmd(m_coral, m_elevator, m_ledSubsytem));
     // reject coral
     controller.povLeft().onTrue(new RejectCoralCmd(m_coral));
-
-    // auto align
-    controller.leftBumper().onTrue(new InstantCommand(() -> m_autos.alignToClosestSide(true))); // Align to closest side when POV right is pressed
-    controller.rightBumper().onTrue(new InstantCommand(() -> m_autos.alignToClosestSide(false))); // Align to closest side when POV left is pressed
 
     //              Elevator Commands
     // elevator L1
@@ -110,16 +111,11 @@ public class Driver1DefaultBindings implements ControllerBindings {
     // zero elevator
     controller.rightTrigger().and(controller.rightBumper()).onTrue(new ZeroElevator(m_elevator));
 
-    // //                Algae Commands
-    // // Intake algae
-     controller.rightTrigger().whileTrue(new IntakeAlgaeCmd(m_AlgaeIntakePivot, m_AlgaeIntakeRollers, m_ledSubsytem));
-    // // deploy algae
-    // controller.rightBumper().onTrue(new ScoreAlgaeCmd(m_AlgaeIntakePivot, m_AlgaeIntakeRollers, m_ledSubsytem));
-
+    //                Algae Commands
     // Remove Algae A2
     controller.povDown().whileTrue(new weirdAlgaeIntakeCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers, ElevatorPosition.A3, m_elevator, m_ledSubsytem, m_coral));
-    // Remove Algae A2
-    controller.povUp().whileTrue(new weirdAlgaeShootCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers,m_elevator, m_ledSubsytem, m_ledPatterns, m_coral));
+    // shoot algae
+    controller.povUp().whileTrue(new weirdAlgaeShootCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers,m_elevator, m_ledSubsytem, m_coral));
   }
 
   @Override
