@@ -233,4 +233,10 @@ public class Robot extends TimedRobot {
   public static boolean isRedAlliance() {
     return DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Red);
   }
+
+  public static RobotAlliance getRobotAlliance() {
+    return DriverStation.getAlliance().orElse(Alliance.Blue).equals(Alliance.Red)
+      ? RobotAlliance.RED_ALLIANCE 
+      : RobotAlliance.BLUE_ALLIANCE;
+  }
 }
