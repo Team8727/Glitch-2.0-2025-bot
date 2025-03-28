@@ -1,7 +1,6 @@
 package frc.robot.controller;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.kElevator.ElevatorPosition;
 import frc.robot.commands.AlgaeIntakeCmds.IntakeAlgaeCmd;
@@ -85,11 +84,11 @@ public class Driver1DefaultBindings implements ControllerBindings {
 
     // Auto align right
     controller.rightBumper().onTrue(
-      new InstantCommand(() -> m_autos.alignToClosestSide(true))); // Align to closest side when POV right is pressed
+      new InstantCommand(() -> m_autos.alignToClosestSide(true))); 
     
     // Auto align left
     controller.leftBumper().onTrue(
-        new InstantCommand(() -> m_autos.alignToClosestSide(false))); // Align to closest side when POV right is pressed
+        new InstantCommand(() -> m_autos.alignToClosestSide(false)));
     
     //               Coral Commands
     // intake coral
