@@ -83,54 +83,14 @@ public class Driver1DefaultBindings implements ControllerBindings {
     // Zero heading
     controller.start().onTrue(new InstantCommand(m_poseEstimator::zeroHeading));
 
-    // auto align right and raise elevator l4
-    controller.rightBumper().and(controller.y()).onTrue(
-      new ParallelCommandGroup(
-        new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns),
-        new InstantCommand(() -> m_autos.alignToClosestSide(true)))); // Align to closest side when POV right is pressed
+    // Auto align right
+    controller.rightBumper().onTrue(
+      new InstantCommand(() -> m_autos.alignToClosestSide(true))); // Align to closest side when POV right is pressed
     
-    // auto align left and raise elevator l4
-    controller.leftBumper().and(controller.y()).onTrue(
-      new ParallelCommandGroup(
-        new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns),
-        new InstantCommand(() -> m_autos.alignToClosestSide(false)))); // Align to closest side when POV right is pressed
-
-    // auto align right and raise elevator l3
-    controller.rightBumper().and(controller.b()).onTrue(
-      new ParallelCommandGroup(
-        new SetElevatorHeightCmd(ElevatorPosition.L3, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns),
-        new InstantCommand(() -> m_autos.alignToClosestSide(true)))); // Align to closest side when POV right is pressed
-
-    // auto align left and raise elevator l3
-    controller.leftBumper().and(controller.b()).onTrue(
-      new ParallelCommandGroup(
-        new SetElevatorHeightCmd(ElevatorPosition.L3, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns),
-        new InstantCommand(() -> m_autos.alignToClosestSide(false)))); // Align to closest side when POV right is pressed
-
-    // auto align right and raise elevator l2
-    controller.rightBumper().and(controller.a()).onTrue(
-      new ParallelCommandGroup(
-        new SetElevatorHeightCmd(ElevatorPosition.L2, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns),
-        new InstantCommand(() -> m_autos.alignToClosestSide(true)))); // Align to closest side when POV right is pressed
-
-    // auto align left and raise elevator l2
-    controller.leftBumper().and(controller.a()).onTrue(
-      new ParallelCommandGroup(
-        new SetElevatorHeightCmd(ElevatorPosition.L2, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns),
-        new InstantCommand(() -> m_autos.alignToClosestSide(false)))); // Align to closest side when POV right is pressed
-
-    // auto align right and raise elevator l1
-    controller.rightBumper().and(controller.x()).onTrue(
-      new ParallelCommandGroup(
-        new SetElevatorHeightCmd(ElevatorPosition.L1, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns),
-        new InstantCommand(() -> m_autos.alignToClosestSide(true)))); // Align to closest side when POV right is pressed
-
-    // auto align left and raise elevator l1
-    controller.leftBumper().and(controller.x()).onTrue(
-      new ParallelCommandGroup(
-        new SetElevatorHeightCmd(ElevatorPosition.L1, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns),
-        new InstantCommand(() -> m_autos.alignToClosestSide(false)))); // Align to closest side when POV right is pressed
-
+    // Auto align left
+    controller.leftBumper().onTrue(
+        new InstantCommand(() -> m_autos.alignToClosestSide(false))); // Align to closest side when POV right is pressed
+    
     //               Coral Commands
     // intake coral
     controller.leftTrigger().toggleOnTrue(new IntakeCoralCmd(m_coral, m_elevator, m_ledSubsytem));
@@ -144,13 +104,13 @@ public class Driver1DefaultBindings implements ControllerBindings {
 
     //              Elevator Commands
     // elevator L1
-    controller.x().and(controller.rightBumper().negate()).and(controller.leftBumper().negate()).onTrue(new SetElevatorHeightCmd(ElevatorPosition.L1, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
+    controller.x().onTrue(new SetElevatorHeightCmd(ElevatorPosition.L1, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
     // elevator L2
-    controller.a().and(controller.rightBumper().negate()).and(controller.leftBumper().negate()).onTrue(new SetElevatorHeightCmd(ElevatorPosition.L2, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
+    controller.a().onTrue(new SetElevatorHeightCmd(ElevatorPosition.L2, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
     // elevator L3
-    controller.b().and(controller.rightBumper().negate()).and(controller.leftBumper().negate()).onTrue(new SetElevatorHeightCmd(ElevatorPosition.L3, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
+    controller.b().onTrue(new SetElevatorHeightCmd(ElevatorPosition.L3, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
     // elevator L4
-    controller.y().and(controller.rightBumper().negate()).and(controller.leftBumper().negate()).onTrue(new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
+    controller.y().onTrue(new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
 
     // zero elevator
     controller.rightTrigger().and(controller.rightBumper()).onTrue(new ZeroElevator(m_elevator));
@@ -165,6 +125,6 @@ public class Driver1DefaultBindings implements ControllerBindings {
   @Override
   public void unbind(CommandXboxController controller) {
     m_SwerveSubsystem.removeDefaultCommand();
-}
+  }
 
 }
