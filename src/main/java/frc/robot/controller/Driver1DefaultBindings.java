@@ -1,5 +1,7 @@
 package frc.robot.controller;
 
+import com.fasterxml.jackson.annotation.JacksonAnnotation;
+
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.kElevator.ElevatorPosition;
@@ -78,44 +80,46 @@ public class Driver1DefaultBindings implements ControllerBindings {
         controller::getLeftX,
         controller::getRightX));
 
-    //              Drive Commands
-    // Zero heading
-    controller.start().onTrue(new InstantCommand(m_poseEstimator::zeroHeading));
+    // -=-=-=-=-=-=- Drive Commands -=-=-=-=-=-=- 
+      // Zero heading
+      controller.start().onTrue(new InstantCommand(m_poseEstimator::zeroHeading));
 
-    // auto align right
-    controller.rightBumper().onTrue(new InstantCommand(() -> m_autos.alignToClosestSide(true))); // Align to closest side when POV right is pressed
-    // auto align left
-    controller.leftBumper().onTrue(new InstantCommand(() -> m_autos.alignToClosestSide(false))); // Align to closest side when POV left is pressed
+      // Auto align right
+      controller.rightBumper().onTrue(new InstantCommand(() -> m_autos.alignToClosestSide(true))); // Align to closest side when POV right is pressed
+      // Auto align left
+      controller.leftBumper().onTrue(new InstantCommand(() -> m_autos.alignToClosestSide(false))); // Align to closest side when POV left is pressed
 
-    //               Coral Commands
-    // intake coral
-    controller.leftTrigger().toggleOnTrue(new IntakeCoralCmd(m_coral, m_elevator, m_ledSubsytem));
-    // deploy coral
-    controller.rightTrigger().onTrue(new DeployCoralCmd(m_coral, m_ledSubsytem, m_elevator));
+    // -=-=-=-=-=-=- Coral Commands -=-=-=-=-=-=- 
+      // intake coral
+      controller.leftTrigger().toggleOnTrue(new IntakeCoralCmd(m_coral, m_elevator, m_ledSubsytem));
+      // deploy coral
+      controller.rightTrigger().onTrue(new DeployCoralCmd(m_coral, m_ledSubsytem, m_elevator));
 
-    // reindex coral
-    controller.povRight().onTrue(new ReindexCoralCmd(m_coral, m_elevator, m_ledSubsytem));
-    // reject coral
-    controller.povLeft().onTrue(new RejectCoralCmd(m_coral));
+      // reindex coral
+      controller.povRight().onTrue(new ReindexCoralCmd(m_coral, m_elevator, m_ledSubsytem));
+      // reject coral
+      controller.povLeft().onTrue(new RejectCoralCmd(m_coral));
 
-    //              Elevator Commands
-    // elevator L1
-    controller.x().onTrue(new SetElevatorHeightCmd(ElevatorPosition.L1, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
-    // elevator L2
-    controller.a().onTrue(new SetElevatorHeightCmd(ElevatorPosition.L2, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
-    // elevator L3
-    controller.b().onTrue(new SetElevatorHeightCmd(ElevatorPosition.L3, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
-    // elevator L4
-    controller.y().onTrue(new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
+    // -=-=-=-=-=-=- Elevator Commands -=-=-=-=-=-=- 
+      // Elevator L1
+      controller.x().onTrue(new SetElevatorHeightCmd(ElevatorPosition.L1, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
+      // Elevator L2
+      controller.a().onTrue(new SetElevatorHeightCmd(ElevatorPosition.L2, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
+      // Elevator L3
+      controller.b().onTrue(new SetElevatorHeightCmd(ElevatorPosition.L3, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
+      // Elevator L4
+      controller.y().onTrue(new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
 
-    // zero elevator
-    controller.rightTrigger().and(controller.rightBumper()).onTrue(new ZeroElevator(m_elevator));
+      // Zero elevator
+      controller.rightTrigger().and(controller.rightBumper()).onTrue(new ZeroElevator(m_elevator));
 
-    //                Algae Commands
-    // Remove Algae A2
+    // -=-=-=-=-=-=- Algae Commands -=-=-=-=-=-=- 
+      // Remove Algae A2
     controller.povDown().whileTrue(new weirdAlgaeIntakeCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers, ElevatorPosition.A3, m_elevator, m_ledSubsytem, m_coral));
-    // shoot algae
+      // shoot algae
     controller.povUp().whileTrue(new weirdAlgaeShootCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers, m_elevator, m_ledSubsytem, m_ledPatterns, m_coral));
+    
+    // -=-=-=-=-=-=-+-=-=-=-=-=-=-+-=-=-=-=-=-=- 
   }
 
   @Override
