@@ -51,7 +51,8 @@ public class SetElevatorHeightCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_elevator.m_setpoint.position == m_scoreLevel.getOutputRotations()) {
+    // Set the endCmd flag to true when the elevator reaches the desired height with a tolerance of 0.3 rotations
+    if (Math.abs(m_elevator.getElevatorHeight() - m_scoreLevel.getOutputRotations()) <= 0.3) {
       endCmd = true; // set the endCmd to true when the elevator reaches the desired height
     }
   }
