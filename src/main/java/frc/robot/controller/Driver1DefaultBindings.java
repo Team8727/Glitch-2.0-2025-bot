@@ -1,7 +1,5 @@
 package frc.robot.controller;
 
-import com.fasterxml.jackson.annotation.JacksonAnnotation;
-
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.kElevator.ElevatorPosition;
@@ -83,11 +81,10 @@ public class Driver1DefaultBindings implements ControllerBindings {
     // -=-=-=-=-=-=- Drive Commands -=-=-=-=-=-=- 
       // Zero heading
       controller.start().onTrue(new InstantCommand(m_poseEstimator::zeroHeading));
-
       // Auto align right
-      controller.rightBumper().onTrue(new InstantCommand(() -> m_autos.alignToClosestSide(true))); // Align to closest side when POV right is pressed
+      controller.rightBumper().and(controller.rightTrigger().negate()).onTrue(new InstantCommand(() -> m_autos.alignToClosestSide(true))); // Align to closest side when POV right is pressed
       // Auto align left
-      controller.leftBumper().onTrue(new InstantCommand(() -> m_autos.alignToClosestSide(false))); // Align to closest side when POV left is pressed
+      controller.leftBumper().and(controller.leftTrigger().negate()).onTrue(new InstantCommand(() -> m_autos.alignToClosestSide(false))); // Align to closest side when POV left is pressed
 
     // -=-=-=-=-=-=- Coral Commands -=-=-=-=-=-=- 
       // intake coral
@@ -110,15 +107,16 @@ public class Driver1DefaultBindings implements ControllerBindings {
       // Elevator L4
       controller.y().onTrue(new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
 
-      // Zero elevator
-      controller.rightTrigger().and(controller.rightBumper()).onTrue(new ZeroElevator(m_elevator));
+      // Zero elevator (back button is the left small button on the controller near the top)
+      controller.back().onTrue(new ZeroElevator(m_elevator));
+
 
     // -=-=-=-=-=-=- Algae Commands -=-=-=-=-=-=- 
-      // Remove Algae A2
-    controller.povDown().whileTrue(new weirdAlgaeIntakeCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers, ElevatorPosition.A3, m_elevator, m_ledSubsytem, m_coral));
-      // shoot algae
-    controller.povUp().whileTrue(new weirdAlgaeShootCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers, m_elevator, m_ledSubsytem, m_ledPatterns, m_coral));
-    
+        // Remove Algae A2
+      controller.povDown().whileTrue(new weirdAlgaeIntakeCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers, ElevatorPosition.A3, m_elevator, m_ledSubsytem, m_coral));
+        // shoot algae
+      controller.povUp().whileTrue(new weirdAlgaeShootCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers, m_elevator, m_ledSubsytem, m_ledPatterns, m_coral));
+      
     // -=-=-=-=-=-=-+-=-=-=-=-=-=-+-=-=-=-=-=-=- 
   }
 
