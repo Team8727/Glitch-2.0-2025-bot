@@ -50,7 +50,7 @@ public class IntakeCoralCmd extends Command {
   public void execute() {
     if (m_coral.getBackCoralSensor() && !sensedCoral) {
       m_coral.setIntakeSpeedDuty(.13);
-      m_coral.setOuttakeSpeedDuty(.11);
+      m_coral.setOuttakeSpeedDuty(.12);
       sensedCoral = true;
     } 
 

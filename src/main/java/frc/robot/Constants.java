@@ -293,11 +293,18 @@ public final class Constants {
       new Transform3d(
         new Translation3d(Units.inchesToMeters(8), Units.inchesToMeters(-8), Units.inchesToMeters(19.5)),
         new Rotation3d(Math.toRadians(14.586), Math.toRadians(25), Math.toRadians(34)));
+
     public static final Transform3d frontRightCamera = // Front
       new Transform3d(
         new Translation3d(Units.inchesToMeters(8), Units.inchesToMeters(8), Units.inchesToMeters(19.5)),
         new Rotation3d(Math.toRadians(-14.586), Math.toRadians(25), Math.toRadians(-34)));
+    
+    public static final Transform3d centerCamera = 
+    new Transform3d(
+      new Translation3d(Units.inchesToMeters(8.5), Units.inchesToMeters(0), Units.inchesToMeters(8.5)), //TODO
+      new Rotation3d(Math.toRadians(0), Math.toRadians(0), Math.toRadians(0)));
   }
+
   public static class kAlgaeRemover {
     public static class kPivot {
       public static int removerPivotMotorCANID =12; // TODO: not set yet because remover is not built yet
