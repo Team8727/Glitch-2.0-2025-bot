@@ -25,6 +25,7 @@ import frc.robot.Constants.kSwerve;
 import frc.robot.Constants.kVision;
 import frc.robot.Robot;
 import frc.robot.commands.CoralCmds.DeployCoralCmd;
+import frc.robot.commands.CoralCmds.IntakeCoralCmd;
 import frc.robot.commands.ElevatorCmds.SetElevatorHeightCmd;
 import frc.robot.subsystems.Elevator.Coral.Coral;
 import frc.robot.subsystems.LEDs.LEDPatterns;
@@ -216,6 +217,7 @@ public class Autos extends SubsystemBase {
     autoChooser.addOption("Path MR_L4_F", "MR_L4_F()");
     autoChooser.addOption("bareMinimum", "bareMinimum()");
     autoChooser.addOption("MultiPathTest", "MultiPathTest()");
+    autoChooser.addOption("ML_L4_I_CPR_J", "ML_L4_I_CPR_J()");
   }
 
   /**
@@ -236,6 +238,8 @@ public class Autos extends SubsystemBase {
       bareMinimum().schedule();
     } else if(autoChooser.getSelected().equals("MultiPathTest()")) {
       MultiPathTest().schedule();
+    } else if(autoChooser.getSelected().equals("ML_L4_I_CPR_J()")) {
+      ML_L4_I_CPR_J().schedule();
     } else {
       System.out.println("something is very wrong if you see this");
     }
@@ -392,6 +396,22 @@ public class Autos extends SubsystemBase {
       followPath(paths.get("L-I")),
       followPath(paths.get("I-CPR")),
       followPath(paths.get("CPR-J")) 
+    );
+  }
+
+  private Command ML_L4_I_CPR_J() {
+    return new SequentialCommandGroup(
+      new InstantCommand(() -> setStartPose(paths.get("ML-I"))),
+      followPath(paths.get("ML-I")),
+      new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns),
+      new DeployCoralCmd(m_coral, m_ledSubsystem, m_elevator),
+      new SetElevatorHeightCmd(ElevatorPosition.L1, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns),
+      followPath(paths.get("I-CPR")),
+      new IntakeCoralCmd(m_coral, m_elevator, m_ledSubsystem),
+      followPath(paths.get("CPR-J")), 
+      new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns),
+      new DeployCoralCmd(m_coral, m_ledSubsystem, m_elevator),
+      new SetElevatorHeightCmd(ElevatorPosition.L1, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns)
     );
   }
 
