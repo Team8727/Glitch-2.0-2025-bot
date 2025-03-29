@@ -31,6 +31,7 @@ public class LEDSubsystem extends SubsystemBase {
   private LEDPattern firePattern;
   private boolean fireViews;
 
+
   // HACK: Flip blue and green channels on real robot until we figure out 
   // the root cause of the sim/real color discrepancy
   public static Color getColor(Color color) {
@@ -201,6 +202,7 @@ public class LEDSubsystem extends SubsystemBase {
         rightSide.getBufferView().setRGB(i, 0, 0, 0);
       }
     }
+
   }
 
   @Override
