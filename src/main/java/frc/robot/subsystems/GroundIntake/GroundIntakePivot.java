@@ -16,7 +16,7 @@ public class GroundIntakePivot extends Pivot {
   private static final SparkMaxConfig config = new SparkMaxConfig();
   static {
     config
-      .smartCurrentLimit(40)
+      .smartCurrentLimit(60)
       .idleMode(SparkMaxConfig.IdleMode.kBrake)
       .inverted(false)
       .closedLoop
