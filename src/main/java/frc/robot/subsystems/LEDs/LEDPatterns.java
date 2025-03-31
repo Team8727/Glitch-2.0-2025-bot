@@ -53,6 +53,14 @@ public class LEDPatterns {
   public static final LEDPattern green = LEDPattern.solid(LEDSubsystem.getColor(Color.kGreen));
 
   public static final LEDPattern blinkyGreen = LEDPattern.solid(LEDSubsystem.getColor(Color.kGreen)).blink(Second.of(0.1));
+  
+  public static final LEDPattern theCoolerGreen = LEDPattern.gradient(
+    GradientType.kDiscontinuous, 
+    LEDSubsystem.getColor(Color.kGreen),
+    LEDSubsystem.getColor(Color.kForestGreen),
+    LEDSubsystem.getColor(Color.kDarkGreen));
+    // .scrollAtRelativeSpeed(Percent.per(Second).of(25));
+  
   // Elevator progress bar pattern
   public final LEDPattern elevatorProgress = LEDPattern.gradient(
     GradientType.kDiscontinuous, 
@@ -79,6 +87,13 @@ public class LEDPatterns {
     LEDSubsystem.getColor(Color.kOrange),
     Color.kRed)
       .blink(Second.of(0.5));
+
+  public static final LEDPattern fire = LEDPattern.gradient(
+    GradientType.kDiscontinuous, 
+    Color.kWhite,
+    LEDSubsystem.getColor(Color.kYellow),
+    LEDSubsystem.getColor(Color.kOrange),
+    Color.kRed);
 
   public static enum enzoMap {
     NORMAL(Map.of(
