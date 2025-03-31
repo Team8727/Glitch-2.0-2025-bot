@@ -133,5 +133,5 @@ public class LEDPatterns {
 
   public LEDPatterns(Elevator elevator) {
     m_elevator = elevator;
-  } 
+  }
 }

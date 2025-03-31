@@ -24,7 +24,6 @@ import static edu.wpi.first.units.Units.Second;
 public class LEDSubsystem extends SubsystemBase {
   private final AddressableLED lightStrip;
   private final AddressableLEDBuffer stripBuffer;
-  public LEDPattern currentPattern = defaultPattern;
 
   // HACK: Flip blue and green channels on real robot until we figure out 
   // the root cause of the sim/real color discrepancy
@@ -59,7 +58,6 @@ public class LEDSubsystem extends SubsystemBase {
       this.pattern = pattern;
       this.durationSeconds = durationSeconds;
       this.elapsedSeconds = 0.0;
-      currentPattern = pattern;
     }
 
     /**
@@ -149,16 +147,28 @@ public class LEDSubsystem extends SubsystemBase {
     secretBuffer.setPattern(secretPattern, seconds);
   }
 
-  public void activateSecretPattern() {
-    secretBuffer.setPattern(LEDPatterns.blinkyGreen);
-  }
+  // public void activateSecretPattern() {
+  //   secretBuffer.setPattern(LEDPatterns.blinkyGreen);
+  // }
 
-  public void deactivateSecretPattern() {
-    secretBuffer.setPattern(defaultPattern); // TODO: might want to set this to whatever the other strips are set to
-  }
+  // public void deactivateSecretPattern() {
+  //   secretBuffer.setPattern(defaultPattern); // TODO: might want to set this to whatever the other strips are set to
+  // }
 
   public void enzoLEDS(enzoMap enzoMap, double seconds) {
     combinePatternsForDuration(enzoMap.getEnzoMap(), enzoMap.getEnzoMap(), defaultPattern, seconds);
+  }
+
+  // This doesn't work yet.
+  public void pixelatedGradient(Color color1, Color color2) {
+    for (int i = 0; i < 36 - 1; i ++) {
+      if ((Math.random() + (i/36)) > 1) {
+        stripBuffer.setRGB(i, (int) (color1.red * 255), (int) (color1.green * 255), (int) (color1.blue * 255));
+      } else {
+        stripBuffer.setRGB(i, (int) (color2.red * 255), (int) (color2.green * 255), (int) (color2.blue *255));
+      }
+    }
+
   }
 
   @Override
