@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.kConfigs;
 import frc.robot.Constants.kSwerve;
@@ -190,7 +191,11 @@ public class Robot extends TimedRobot {
     
     // m_ledSubsystem.setPattern(LEDPatterns.green);
 
+<<<<<<< HEAD
     m_ledSubsystem.fireAnimation(LEDPatterns.green, true);
+=======
+    m_ledSubsystem.fireAnimation(LEDPatterns.theCoolerGreen, true);
+>>>>>>> 6e6b486e98ecafa85bcde517d6a9a07cbfb63553
 
     // m_ledSubsystem.enzoLEDS(enzoMap.NORMAL, Math.random() * 15);
 
