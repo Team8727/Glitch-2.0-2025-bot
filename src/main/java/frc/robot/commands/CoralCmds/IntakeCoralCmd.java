@@ -68,7 +68,7 @@ public class IntakeCoralCmd extends Command {
   public void end(boolean interrupted) {
     m_coral.setIntakeSpeedDuty(0);
     m_coral.setOuttakeSpeedDuty(0);
-    m_ledSubsystem.setPattern(LEDSubsystem.defaultPattern);
+    m_ledSubsystem.setPatternForDuration(LEDSubsystem.defaultPattern, 0.5);
   }
 
   // Returns true when the command should end.

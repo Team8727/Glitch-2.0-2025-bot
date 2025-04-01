@@ -28,9 +28,11 @@ public class LEDSubsystem extends SubsystemBase {
   private final AddressableLED lightStrip;
   private final AddressableLEDBuffer stripBuffer;
   private boolean altLogic = false;
+  private boolean noiseLogic = false;
   private LEDPattern firePattern;
+  private LEDPattern noisePattern;
   private boolean fireViews;
-
+  private AddressableLEDBuffer fakeBuffer;
 
   // HACK: Flip blue and green channels on real robot until we figure out 
   // the root cause of the sim/real color discrepancy
@@ -99,6 +101,10 @@ public class LEDSubsystem extends SubsystemBase {
     public AddressableLEDBufferView getBufferView() {
       return this.bufferView;
     }
+
+    public int getLength() {
+      return this.bufferView.getLength();
+    }
   }
 
   private final Section leftSide;
@@ -160,21 +166,15 @@ public class LEDSubsystem extends SubsystemBase {
     secretBuffer.setPattern(secretPattern, seconds);
   }
 
-  // public void activateSecretPattern() {
-  //   secretBuffer.setPattern(LEDPatterns.blinkyGreen);
-  // }
-
-  // public void deactivateSecretPattern() {
-  //   secretBuffer.setPattern(defaultPattern); // TODO: might want to set this to whatever the other strips are set to
-  // }
-
   public void enzoLEDS(enzoMap enzoMap, double seconds) {
     combinePatternsForDuration(enzoMap.getEnzoMap(), enzoMap.getEnzoMap(), defaultPattern, seconds);
   }
 
-  // This works now!!!
+  // This uses sine waves and random number generation to create an interesting flickering fire pattern
+  // It is overlaid on top of another preexisting pattern, and can be used on the strip or a whole or just its sides.
   public void fireAnimation (LEDPattern pattern) {
     altLogic = true;
+    noiseLogic = false;
     firePattern = pattern;
     fireViews = false;
     pattern.applyTo(stripBuffer);
@@ -187,6 +187,7 @@ public class LEDSubsystem extends SubsystemBase {
 
   public void fireAnimation (LEDPattern pattern, boolean bufferViews) {
     altLogic = true;
+    noiseLogic = false;
     firePattern = pattern;
     fireViews = true;
     pattern.applyTo(leftSide.getBufferView());
@@ -202,16 +203,53 @@ public class LEDSubsystem extends SubsystemBase {
         rightSide.getBufferView().setRGB(i, 0, 0, 0);
       }
     }
+  }
 
+  // This activates a random noise function separately so that we can run the logic without having to deal with all this.
+  public void activateRandomNoise(LEDPattern pattern) {
+    altLogic = true;
+    noiseLogic = true;
+    noisePattern = pattern;
+    noisePattern.applyTo(stripBuffer);
+    fakeBuffer = new AddressableLEDBuffer(stripBuffer.getLength());
+    randomNoiseAnimation(noisePattern);
+  }
+
+  // This function creates a fun random noise overlay that took way too long to make.
+  // It, like the fire animation, uses LEDPatterns so you could do some cool stuff with it.
+  private void randomNoiseAnimation(LEDPattern pattern) {
+    altLogic = true;
+    noiseLogic = true;
+    int ledsOn = 0;
+    pattern.applyTo(fakeBuffer);
+    for (int i = 0; i < stripBuffer.getLength(); i ++) {
+      if(!(stripBuffer.getRed(i) == 0 && stripBuffer.getGreen(i) == 0 && stripBuffer.getBlue(i) == 0)) {
+        ledsOn += 1;
+      }
+    }
+    for (int i = 0; i < stripBuffer.getLength(); i ++) {
+      if ((ledsOn == 0) || Math.random() > 0.5) {
+        stripBuffer.setRGB(i, fakeBuffer.getRed(i), fakeBuffer.getGreen(i), fakeBuffer.getBlue(i));
+        ledsOn += 1;
+      }
+      if ((Math.random() * stripBuffer.getLength()) < (ledsOn) * 0.5) {
+        stripBuffer.setRGB(i, 0, 0, 0);
+        ledsOn -= 1;
+      }
+    }
   }
 
   @Override
   public void periodic() {
     if (altLogic) {
-      if (fireViews) {
-        fireAnimation(firePattern, fireViews);
+      if (noiseLogic) {
+        randomNoiseAnimation(noisePattern);
       } else {
-        fireAnimation(firePattern);
+        if (fireViews) {
+          fireAnimation(firePattern, fireViews);
+        } else {
+          fireAnimation(firePattern);
+        }
       }
     } else {
       final double deltaTimeSeconds = 0.02; // TODO: Is there a way to ensure this is accurate even with overruns?

@@ -44,7 +44,7 @@ public class SetElevatorHeightCmd extends Command {
     }
 
     if (m_scoreLevel != ElevatorPosition.L1) {
-      m_ledSubsystem.setPattern(m_ledPatterns.elevatorProgress);
+      m_ledSubsystem.setPatternForDuration(m_ledPatterns.elevatorProgress, 0.5);
     }
   }
 
