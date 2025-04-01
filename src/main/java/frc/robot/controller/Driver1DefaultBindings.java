@@ -101,7 +101,7 @@ public class Driver1DefaultBindings implements ControllerBindings {
       controller.povLeft().whileTrue(new IntakeCoralGroundCmd(groundIntakeRollers, groundIntakePivot, m_ledSubsytem));
       // Ground deploy coral
       controller.povRight().onTrue(new ScoreCoralGroundCmd(groundIntakePivot, groundIntakeRollers, m_ledSubsytem));
-    // -=-=-=-=-=-=- Elevator Commands -=-=-=-=-=-=- 
+    // -=-=-=-=-=-=- Elevator Commands -=-=-=-=-=-=-
       // Elevator L1
       controller.x().onTrue(new SetElevatorHeightCmd(ElevatorPosition.L1, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns).andThen(new PrintCommand("hihih")));
       // Elevator L2
@@ -114,12 +114,12 @@ public class Driver1DefaultBindings implements ControllerBindings {
       // Zero elevator (back button is the left small button on the controller near the top)
       controller.back().onTrue(new ZeroElevator(m_elevator));
 
-    // -=-=-=-=-=-=- Algae Commands -=-=-=-=-=-=- 
+    // -=-=-=-=-=-=- Algae Commands -=-=-=-=-=-=-
       // Remove Algae A2
       controller.povDown().whileTrue(new RemoveAlgaeCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers, ElevatorPosition.A3, m_elevator, m_ledSubsytem));
       // shoot algae
       controller.povUp().whileTrue(new weirdAlgaeShootCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers, m_elevator, m_ledSubsytem, m_ledPatterns, m_coral));
-    // -=-=-=-=-=-=-+-=-=-=-=-=-=-+-=-=-=-=-=-=- 
+    // -=-=-=-=-=-=-+-=-=-=-=-=-=-+-=-=-=-=-=-=-
   }
 
   @Override
