@@ -12,7 +12,6 @@ import frc.robot.commands.DriveCmds.SwerveJoystickCmd;
 import frc.robot.commands.ElevatorAlgaeCmds.RemoveAlgaeCmd;
 import frc.robot.commands.GroundCoralCmds.IntakeCoralGroundCmd;
 import frc.robot.commands.GroundCoralCmds.ScoreCoralGroundCmd;
-import frc.robot.commands.weirdAlgaeIntakeCmd;
 import frc.robot.commands.ElevatorAlgaeCmds.weirdAlgaeShootCmd;
 import frc.robot.commands.ElevatorCmds.SetElevatorHeightCmd;
 import frc.robot.commands.ElevatorCmds.ZeroElevator;
@@ -79,7 +78,7 @@ public class Driver1DefaultBindings implements ControllerBindings {
         controller::getLeftX,
         controller::getRightX));
 
-    // -=-=-=-=-=-=- Drive Commands -=-=-=-=-=-=- 
+    // -=-=-=-=-=-=- Drive Commands -=-=-=-=-=-=-
       // Zero heading
       controller.start().onTrue(new InstantCommand(m_poseEstimator::zeroHeading));
       // Auto align right
@@ -87,16 +86,16 @@ public class Driver1DefaultBindings implements ControllerBindings {
       // Auto align left
       controller.leftBumper().and(controller.leftTrigger().negate()).onTrue(new InstantCommand(() -> m_autos.alignToClosestSide(false))); // Align to closest side when POV left is pressed
 
-    // -=-=-=-=-=-=- Coral Commands -=-=-=-=-=-=- 
+    // -=-=-=-=-=-=- Coral Commands -=-=-=-=-=-=-
       // intake coral
       controller.leftTrigger().toggleOnTrue(new IntakeCoralCmd(m_coral, m_elevator, m_ledSubsytem));
       // deploy coral
       controller.rightTrigger().onTrue(new DeployCoralCmd(m_coral, m_ledSubsytem, m_elevator));
 
-      // reindex coral
-      controller.povRight().onTrue(new ReindexCoralCmd(m_coral, m_elevator, m_ledSubsytem));
-      // reject coral
-      controller.povLeft().onTrue(new RejectCoralCmd(m_coral));
+//      // reindex coral
+//      controller.povRight().onTrue(new ReindexCoralCmd(m_coral, m_elevator, m_ledSubsytem));
+//      // reject coral
+//      controller.povLeft().onTrue(new RejectCoralCmd(m_coral));
 
       // Ground intake coral
       controller.povLeft().whileTrue(new IntakeCoralGroundCmd(groundIntakeRollers, groundIntakePivot, m_ledSubsytem));
