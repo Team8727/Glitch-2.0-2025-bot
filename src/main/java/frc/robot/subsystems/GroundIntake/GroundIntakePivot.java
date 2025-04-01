@@ -8,19 +8,19 @@ import frc.robot.utilities.BaseSystems.Pivot;
 import static frc.robot.Constants.kAlgaeIntake.kAlgaeIntakePivot;
 
 public class GroundIntakePivot extends Pivot {
-  private static final double maxVelocity = 100;
-  private static final double maxAcceleration = 100;
+  private static final double maxVelocity = 10000;
+  private static final double maxAcceleration = 6000;
   private static final double zeroedAngelFromHorizontal = 100;
-  private static final double allowedError = 2;
+  private static final double allowedError = 1;
   private static final int CANID = kAlgaeIntakePivot.intakePivotMotorCANID;
   private static final SparkMaxConfig config = new SparkMaxConfig();
   static {
     config
       .smartCurrentLimit(60)
       .idleMode(SparkMaxConfig.IdleMode.kBrake)
-      .inverted(false)
       .closedLoop
-      .pid(0.5, 0, 0);
+      .feedbackSensor(ClosedLoopConfig.FeedbackSensor.kAbsoluteEncoder)
+      .pid(5, 0, 0);
   }
 
   public GroundIntakePivot() {

@@ -134,12 +134,10 @@ public abstract class Pivot extends SubsystemBase {
 
   // set pivot position
   private void setMotorFFAndPIDPosition(double Position) {
+    logger.logDouble("setposition",Position);
+    logger.logDouble("setpoint", Math.toRadians(Position * 360));
     motor.setPosition(
-      Position,
-      pivotFeedforward.calculateWithVelocities(
-        motor.getPosition() + (zeroedAngelFromHorizontal/360),//TODO: convert to radians per second
-        motor.getVelocity(),
-        setpoint.velocity));
+    Position);
   }
 
   /**
@@ -172,7 +170,9 @@ public abstract class Pivot extends SubsystemBase {
   // This method will be called once per scheduler run
   @Override
   public void periodic() {
-    logger.logDouble("Pivot Position", motor.getPosition() * 360);
+    logger.logDouble("Pivot Position", motor.getPosition());
+    logger.logDouble("Pivot Setpoint", setpoint.position);
+    logger.logDouble("Pivot Goal", goal.position);
 
     setpoint = profile.calculate(dt, setpoint, goal);
 

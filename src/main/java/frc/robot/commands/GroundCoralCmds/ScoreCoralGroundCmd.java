@@ -33,14 +33,11 @@ public class ScoreCoralGroundCmd extends Command {
   @Override
   public void initialize() {
     // Set the intake to score position, score the algae by running rollers, and then set the intake to home position.
-    intakePivot.setPosition(10);
-    intakeRollers.setSpeedDutyCycle(-1);
-    try {
-      this.wait(500);
-      this.cancel();
-    } catch (InterruptedException e) {
-      throw new RuntimeException(e);
-    }
+      intakePivot.setPositionCommand(10)
+        .andThen(new WaitCommand(.5))
+        .andThen(() -> intakeRollers.setSpeedDutyCycle(1))
+        .andThen(new WaitCommand(0.2))
+        .andThen(this::cancel).schedule();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -53,6 +50,7 @@ public class ScoreCoralGroundCmd extends Command {
   public void end(boolean interrupted) {
     // Go to home position (in robot) after scoring
     intakePivot.setPosition(0);
+    intakeRollers.setSpeedDutyCycle(0);
   }
 
   // Returns true when the command should end.

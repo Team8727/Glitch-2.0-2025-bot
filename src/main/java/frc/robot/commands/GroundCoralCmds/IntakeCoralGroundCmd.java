@@ -30,9 +30,8 @@ public class IntakeCoralGroundCmd extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println("moving");
-    intakePivot.setPosition(100);
-    intakeRollers.setSpeedDutyCycle(0.8);
+    intakePivot.setPosition(112);
+    intakeRollers.setSpeedDutyCycle(-0.4);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -43,8 +42,8 @@ public class IntakeCoralGroundCmd extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intakePivot.setPositionCommand(0)
-      .andThen(() -> intakeRollers.setSpeedDutyCycle(0.1))
+    intakePivot.setPositionCommand(3)
+      .andThen(() -> intakeRollers.setSpeedDutyCycle(-0.1))
     .schedule();
     // Go back to home position and stop rollers
   }
@@ -53,7 +52,8 @@ public class IntakeCoralGroundCmd extends Command {
   @Override
   public boolean isFinished() {
 
+    return false;
     // Finish when algae is detected
-    return intakeRollers.getPosition() > 30;
+//    return intakeRollers.getCurrent() > 30;
   }
 }
