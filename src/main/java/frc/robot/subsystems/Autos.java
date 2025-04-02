@@ -7,6 +7,9 @@ package frc.robot.subsystems;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 
+import com.pathplanner.lib.events.Event;
+import com.pathplanner.lib.events.EventTrigger;
+import com.pathplanner.lib.path.EventMarker;
 import org.json.simple.parser.ParseException;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -32,6 +35,7 @@ import frc.robot.subsystems.LEDs.LEDPatterns;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.utilities.NetworkTableLogger;
+import org.opencv.dnn.TextDetectionModel_EAST;
 
 import java.util.Arrays;
 import java.util.List;
@@ -178,7 +182,7 @@ public class Autos extends SubsystemBase {
     m_PoseEstimator = poseEstimator;
 
     loadPaths();
-    }
+   }
 
   /**
    * Loads the paths from the specified path files.
@@ -191,6 +195,12 @@ public class Autos extends SubsystemBase {
     loadPath("L-I");
     loadPath("R-F");
     loadPath("M-H test");
+
+    loadPath("L-J");
+    loadPath("J-CPR");
+    loadPath("CPR-K");
+    loadPath("K-CPR");
+    loadPath("CPR-L");
   }
 
   /**
@@ -211,13 +221,11 @@ public class Autos extends SubsystemBase {
    */
   public void setupAutoChooser() {
     autoChooser.setDefaultOption("Path M-L4-H", "M_L4_H()");
-    autoChooser.addOption("Path L-L4-I", "L_L4_I()");
+    autoChooser.addOption("Path L-L4-J", "L_L4_J()");
     autoChooser.addOption("Path R_L4_I", "R_L4_F()");
     autoChooser.addOption("Path ML_L4_I", "ML_L4_I()");
     autoChooser.addOption("Path MR_L4_F", "MR_L4_F()");
     autoChooser.addOption("bareMinimum", "bareMinimum()");
-    autoChooser.addOption("MultiPathTest", "MultiPathTest()");
-    autoChooser.addOption("ML_L4_I_CPR_J", "ML_L4_I_CPR_J()");
   }
 
   /**
@@ -226,8 +234,8 @@ public class Autos extends SubsystemBase {
   public void selectAuto() {
     if (autoChooser.getSelected().equals("M_L4_H()")) {
       M_L4_H().schedule();
-    } else if (autoChooser.getSelected().equals("L_L4_I()")) {
-      L_L4_I().schedule();
+    } else if (autoChooser.getSelected().equals("L_L4_J()")) {
+      L_L4_J().schedule();
     } else if (autoChooser.getSelected().equals("R_L4_F()")) {
       R_L4_F().schedule();
     } else if (autoChooser.getSelected().equals("MR_L4_F()")) {
@@ -236,10 +244,6 @@ public class Autos extends SubsystemBase {
       ML_L4_I().schedule();
     } else if (autoChooser.getSelected().equals("bareMinimum()")) {
       bareMinimum().schedule();
-    } else if(autoChooser.getSelected().equals("MultiPathTest()")) {
-      MultiPathTest().schedule();
-    } else if(autoChooser.getSelected().equals("ML_L4_I_CPR_J()")) {
-      ML_L4_I_CPR_J().schedule();
     } else {
       System.out.println("something is very wrong if you see this");
     }
@@ -390,31 +394,6 @@ public class Autos extends SubsystemBase {
     );
   }
 
-  private Command MultiPathTest() {
-    return new SequentialCommandGroup(
-      new InstantCommand(() -> setStartPose(paths.get("L-I"))),
-      followPath(paths.get("L-I")),
-      followPath(paths.get("I-CPR")),
-      followPath(paths.get("CPR-J")) 
-    );
-  }
-
-  private Command ML_L4_I_CPR_J() {
-    return new SequentialCommandGroup(
-      new InstantCommand(() -> setStartPose(paths.get("ML-I"))),
-      followPath(paths.get("ML-I")),
-      new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns),
-      new DeployCoralCmd(m_coral, m_ledSubsystem, m_elevator),
-      new SetElevatorHeightCmd(ElevatorPosition.L1, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns),
-      followPath(paths.get("I-CPR")),
-      new IntakeCoralCmd(m_coral, m_elevator, m_ledSubsystem),
-      followPath(paths.get("CPR-J")), 
-      new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns),
-      new DeployCoralCmd(m_coral, m_ledSubsystem, m_elevator),
-      new SetElevatorHeightCmd(ElevatorPosition.L1, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns)
-    );
-  }
-
   private SequentialCommandGroup M_L4_H() {
     return new SequentialCommandGroup(
       new InstantCommand(() -> setStartPose(paths.get("M-H test"))),
@@ -425,12 +404,35 @@ public class Autos extends SubsystemBase {
     );
   }
 
-  private SequentialCommandGroup L_L4_I() {
+  private SequentialCommandGroup L_L4_J() {
     return new SequentialCommandGroup(
-      new InstantCommand(() -> setStartPose(paths.get("L-I"))),
-      followPath(paths.get("L-I")),
-      new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns),
-      new WaitCommand(.6),
+      new InstantCommand(() -> setStartPose(paths.get("L-J"))),
+      new ParallelCommandGroup(
+        new SequentialCommandGroup(
+          new WaitCommand(.4),
+          new SetElevatorHeightCmd(ElevatorPosition.L1, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns),
+          new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns)),
+        followPath(paths.get("L-J"))),
+      new DeployCoralCmd(m_coral, m_ledSubsystem, m_elevator),
+      new ParallelCommandGroup(
+        new SetElevatorHeightCmd(ElevatorPosition.L1, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns),
+        followPath(paths.get("J-CPR"))),
+      new IntakeCoralCmd(m_coral, m_elevator, m_ledSubsystem),
+      new ParallelCommandGroup(
+        new SequentialCommandGroup(
+          new WaitCommand(1),
+          new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns)),
+        followPath(paths.get("CPR-K"))),
+      new DeployCoralCmd(m_coral, m_ledSubsystem, m_elevator),
+      new ParallelCommandGroup(
+        new SetElevatorHeightCmd(ElevatorPosition.L1, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns),
+        followPath(paths.get("K-CPR"))),
+      new IntakeCoralCmd(m_coral, m_elevator, m_ledSubsystem),
+      new ParallelCommandGroup(
+        new SequentialCommandGroup(
+          new WaitCommand(.9),
+          new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns)),
+        followPath(paths.get("CPR-L"))),
       new DeployCoralCmd(m_coral, m_ledSubsystem, m_elevator)
     );
   }
@@ -460,16 +462,14 @@ public class Autos extends SubsystemBase {
       new InstantCommand(() -> setStartPose(paths.get("ML-I"))),
       followPath(paths.get("ML-I")),
       new PrintCommand("ML-I"),
+      new SetElevatorHeightCmd(ElevatorPosition.L1, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns),
       new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns),
       new WaitCommand(.6),
       new DeployCoralCmd(m_coral, m_ledSubsystem, m_elevator),
-      new PrintCommand("hi"),
-      new SetElevatorHeightCmd(ElevatorPosition.L3, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns),
-      new WaitCommand(.5),
       new SetElevatorHeightCmd(ElevatorPosition.L1, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns),
       new WaitCommand(.2),
       followPath(paths.get("I-CPR")),
-      new IntakeCoralCmd(m_coral, m_elevator, m_ledSubsystem).withTimeout(1.5),
+      new IntakeCoralCmd(m_coral, m_elevator, m_ledSubsystem),
       followPath(paths.get("CPR-J")),
       new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns),
       new WaitCommand(.5),

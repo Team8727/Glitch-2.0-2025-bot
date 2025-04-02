@@ -46,7 +46,7 @@ public class LEDPatterns {
 
   // Green to purple gradient pattern
   public static final LEDPattern ace =
-      LEDPattern.gradient(GradientType.kContinuous, LEDSubsystem.getColor(Color.kGreen), LEDSubsystem.getColor(Color.kPurple))
+      LEDPattern.gradient(GradientType.kContinuous, LEDSubsystem.getColor(Color.kPurple), LEDSubsystem.getColor(Color.kGreen))
           .scrollAtRelativeSpeed(
             Percent.per(Second).of(15));
 
@@ -60,6 +60,12 @@ public class LEDPatterns {
     LEDSubsystem.getColor(Color.kForestGreen),
     LEDSubsystem.getColor(Color.kDarkGreen));
     // .scrollAtRelativeSpeed(Percent.per(Second).of(25));
+
+  public static final LEDPattern darkGreen = LEDPattern.gradient(
+    GradientType.kDiscontinuous,
+    LEDSubsystem.getColor(Color.kGreen),
+    LEDSubsystem.getColor(Color.kDarkGreen)
+  );
   
   // Elevator progress bar pattern
   public final LEDPattern elevatorProgress = LEDPattern.gradient(

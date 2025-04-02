@@ -273,10 +273,9 @@ public class PoseEstimator extends SubsystemBase {
   @Override
   public void periodic() {
       // camera 3 pose estimation
-     addVisionMeasurement(frontRightCamera, PoseEstimatorFrontLeft);
+     addVisionMeasurement(frontLeftCamera, PoseEstimatorFrontLeft);
       // camera 4 pose estimation
-     addVisionMeasurement(frontLeftCamera, PoseEstimatorFrontRight);
-
+     addVisionMeasurement(frontRightCamera, PoseEstimatorFrontRight);
       // center camera pose estimation
      addVisionMeasurement(centerCamera, PoseEstimatorCenter);
 

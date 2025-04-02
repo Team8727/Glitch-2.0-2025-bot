@@ -94,8 +94,8 @@ public class Driver1DefaultBindings implements ControllerBindings {
 
 //      // reindex coral
 //      controller.povRight().onTrue(new ReindexCoralCmd(m_coral, m_elevator, m_ledSubsytem));
-//      // reject coral
-//      controller.povLeft().onTrue(new RejectCoralCmd(m_coral));
+      // reject coral
+      controller.povRight().onTrue(new RejectCoralCmd(m_coral));
 
       // Ground intake coral
       controller.povLeft().whileTrue(new IntakeCoralGroundCmd(groundIntakeRollers, groundIntakePivot, m_ledSubsytem));
@@ -116,9 +116,9 @@ public class Driver1DefaultBindings implements ControllerBindings {
 
     // -=-=-=-=-=-=- Algae Commands -=-=-=-=-=-=-
       // Remove Algae A2
-      controller.povDown().whileTrue(new RemoveAlgaeCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers, ElevatorPosition.A3, m_elevator, m_ledSubsytem));
+      controller.povDown().whileTrue(new RemoveAlgaeCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers, ElevatorPosition.A2, m_elevator, m_ledSubsytem));
       // shoot algae
-      controller.povUp().whileTrue(new weirdAlgaeShootCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers, m_elevator, m_ledSubsytem, m_ledPatterns, m_coral));
+      controller.povUp().whileTrue(new RemoveAlgaeCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers, ElevatorPosition.A3, m_elevator, m_ledSubsytem));
     // -=-=-=-=-=-=-+-=-=-=-=-=-=-+-=-=-=-=-=-=-
   }
 

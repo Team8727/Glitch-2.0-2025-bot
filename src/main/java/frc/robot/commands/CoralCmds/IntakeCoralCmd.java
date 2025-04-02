@@ -17,6 +17,8 @@ public class IntakeCoralCmd extends Command {
   private final Elevator m_elevator;
   private final LEDSubsystem m_ledSubsystem;
   boolean sensedCoral = false;
+  boolean end = false;
+
   /** Creates a new IntakeCoral. */
   public IntakeCoralCmd(Coral coral, Elevator elevator, LEDSubsystem ledSubsystem) {
     m_coral = coral;
@@ -58,7 +60,7 @@ public class IntakeCoralCmd extends Command {
       m_coral.setIntakeSpeedDuty(0);
       m_coral.holdPosition();
       sensedCoral = false;
-      this.cancel();
+      end = true;
     }
 
   }
@@ -69,11 +71,12 @@ public class IntakeCoralCmd extends Command {
     m_coral.setIntakeSpeedDuty(0);
     m_coral.setOuttakeSpeedDuty(0);
     m_ledSubsystem.setPattern(LEDSubsystem.defaultPattern);
+    end = false;
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return end;
   }
 }

@@ -183,7 +183,7 @@ public class Robot extends TimedRobot {
     
     // m_ledSubsystem.setPattern(LEDPatterns.green);
 
-    m_ledSubsystem.fireAnimation(LEDPatterns.green, true);
+    m_ledSubsystem.fireAnimation(LEDPatterns.darkGreen, true);
 
     // m_ledSubsystem.enzoLEDS(enzoMap.NORMAL, Math.random() * 15);
 

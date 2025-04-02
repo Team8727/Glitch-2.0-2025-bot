@@ -33,9 +33,9 @@ public class ScoreCoralGroundCmd extends Command {
   @Override
   public void initialize() {
     // Set the intake to score position, score the algae by running rollers, and then set the intake to home position.
-      intakePivot.setPositionCommand(10)
-        .andThen(new WaitCommand(.5))
-        .andThen(() -> intakeRollers.setSpeedDutyCycle(1))
+      intakePivot.setPositionCommand(12)
+        .andThen(new WaitCommand(.2))
+        .andThen(() -> intakeRollers.setSpeedDutyCycle(.3))
         .andThen(new WaitCommand(0.2))
         .andThen(this::cancel).schedule();
   }
