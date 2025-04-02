@@ -7,12 +7,9 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathfindingCommand;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -21,19 +18,14 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.kConfigs;
 import frc.robot.Constants.kSwerve;
-import frc.robot.Constants.kVision;
-import frc.robot.Constants.kAllianceInfo.RobotAlliance;
-import frc.robot.subsystems.AlgaeIntake.AlgaeIntakePivot;
-import frc.robot.subsystems.AlgaeIntake.AlgaeIntakeRollers;
-import frc.robot.subsystems.AlgaeIntake.TestPivot;
 import frc.robot.subsystems.Autos;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
-import frc.robot.subsystems.Elevator.AlgaeRemover.RollerTest;
 import frc.robot.subsystems.Elevator.Coral.Coral;
+import frc.robot.subsystems.GroundIntake.GroundIntakePivot;
+import frc.robot.subsystems.GroundIntake.GroundIntakeRollers;
 import frc.robot.subsystems.LEDs.LEDPatterns;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
-import frc.robot.subsystems.LEDs.LEDPatterns.enzoMap;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.PoseEstimator;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -59,8 +51,8 @@ public class Robot extends TimedRobot {
   private final AlgaeRemoverRollers m_AlgeaRemoverRollers = new AlgaeRemoverRollers();
   private final AlgaeRemoverPivot m_AlgaeRemoverPivot = new AlgaeRemoverPivot();
   private final Coral m_coral = new Coral();
-  private final AlgaeIntakePivot m_AlgaeIntakePivot = new AlgaeIntakePivot();
-  private final AlgaeIntakeRollers m_AlgaeIntakeRollers = new AlgaeIntakeRollers();
+  private final GroundIntakePivot groundIntakePivot = new GroundIntakePivot();
+  private final GroundIntakeRollers groundIntakeRollers = new GroundIntakeRollers();
   private final Autos m_Autos = new Autos(m_ledSubsystem, m_ledPatterns, m_coral, m_elevator, m_PoseEstimator);
 
   /**
@@ -110,8 +102,8 @@ public class Robot extends TimedRobot {
         new RobotContainer(
             m_SwerveSubsystem,
             m_PoseEstimator,
-            m_AlgaeIntakePivot,
-            m_AlgaeIntakeRollers,
+            groundIntakePivot,
+            groundIntakeRollers,
             m_AlgaeRemoverPivot,
             m_AlgeaRemoverRollers,
             m_coral,
@@ -191,7 +183,7 @@ public class Robot extends TimedRobot {
     
     // m_ledSubsystem.setPattern(LEDPatterns.green);
 
-    m_ledSubsystem.fireAnimation(LEDPatterns.green, true);
+    m_ledSubsystem.fireAnimation(LEDPatterns.darkGreen, true);
 
     // m_ledSubsystem.enzoLEDS(enzoMap.NORMAL, Math.random() * 15);
 

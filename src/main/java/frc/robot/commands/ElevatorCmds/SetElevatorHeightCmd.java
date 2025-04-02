@@ -19,7 +19,6 @@ public class SetElevatorHeightCmd extends Command {
   private final LEDSubsystem m_ledSubsystem;
   private final LEDPatterns m_ledPatterns;
   private final Coral m_coral;
-  private boolean endCmd = false; // flag to indicate when the command should end
 
   /** Creates a new SetEvevatorHeightCmd. */
   public SetElevatorHeightCmd(ElevatorPosition scoreLevel, Elevator elevator, Coral coral, LEDSubsystem ledSubsystem, LEDPatterns ledPatterns) {
@@ -44,30 +43,24 @@ public class SetElevatorHeightCmd extends Command {
     }
 
     if (m_scoreLevel != ElevatorPosition.L1) {
-      m_ledSubsystem.setPattern(m_ledPatterns.elevatorProgress);
+      m_ledSubsystem.setPatternForDuration(m_ledPatterns.elevatorProgress, 0.5);
     }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_elevator.m_setpoint.position == m_scoreLevel.getOutputRotations()) {
-      endCmd = true; // set the endCmd to true when the elevator reaches the desired height
-    }
   }
 
   @Override 
   public void end(boolean interrupted) {
     System.out.println("SetElevatorHeightCmd ended");
-    endCmd = false; // reset the endCmd flag when the command ends
-
-    // m_ledSubsystem.resetToDefaultPattern();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     // return false;
-    return endCmd;
+    return m_elevator.m_setpoint.position == m_scoreLevel.getOutputRotations();
   }
 }

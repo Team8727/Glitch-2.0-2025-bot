@@ -4,12 +4,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.CoralCmds.ReindexCoralCmd;
 import frc.robot.commands.CoralCmds.RejectCoralCmd;
-import frc.robot.subsystems.AlgaeIntake.AlgaeIntakePivot;
-import frc.robot.subsystems.AlgaeIntake.TestPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
-import frc.robot.subsystems.Elevator.AlgaeRemover.RollerTest;
+import frc.robot.subsystems.GroundIntake.GroundIntakePivot;
+import frc.robot.subsystems.GroundIntake.GroundIntakeRollers;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.AlgaeIntake.AlgaeIntakeRollers;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.Coral.Coral;
@@ -22,8 +20,8 @@ import frc.robot.subsystems.PoseEstimator;
 public class Driver2DefaultBindings implements ControllerBindings {
   private final SwerveSubsystem m_SwerveSubsystem;
   private final PoseEstimator m_poseEstimator;
-  private final AlgaeIntakePivot m_AlgaeIntakePivot;
-  private final AlgaeIntakeRollers m_AlgaeIntakeRollers;
+  private final GroundIntakePivot groundIntakePivot;
+  private final GroundIntakeRollers groundIntakeRollers;
   private final Coral m_coral;
   private final Elevator m_elevator;
   private final LEDSubsystem m_ledSubsytem;
@@ -33,8 +31,8 @@ public class Driver2DefaultBindings implements ControllerBindings {
   public Driver2DefaultBindings(
     SwerveSubsystem swerveSubsystem,
     PoseEstimator poseEstimator,
-    AlgaeIntakePivot AlgaeIntakePivot,
-    AlgaeIntakeRollers AlgaeIntakeRollers,
+    GroundIntakePivot groundIntakePivot,
+    GroundIntakeRollers groundIntakeRollers,
     Coral coral,
     Elevator elevator,
     LEDSubsystem ledSubsystem,
@@ -42,8 +40,8 @@ public class Driver2DefaultBindings implements ControllerBindings {
     AlgaeRemoverRollers algaeRemoverRollers) {
     m_SwerveSubsystem = swerveSubsystem;
     m_poseEstimator = poseEstimator;
-    m_AlgaeIntakePivot = AlgaeIntakePivot;
-    m_AlgaeIntakeRollers = AlgaeIntakeRollers;
+    this.groundIntakePivot = groundIntakePivot;
+    this.groundIntakeRollers = groundIntakeRollers;
     m_coral = coral;
     m_elevator = elevator;
     m_ledSubsytem = ledSubsystem;

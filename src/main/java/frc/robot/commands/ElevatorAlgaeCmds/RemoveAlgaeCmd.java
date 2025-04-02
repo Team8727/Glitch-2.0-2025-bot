@@ -9,9 +9,6 @@ import frc.robot.Constants.kAlgaeRemover.kPivot.RemoverPositions;
 import frc.robot.Constants.kElevator.ElevatorPosition;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
-import frc.robot.subsystems.Elevator.AlgaeRemover.RollerTest;
-import frc.robot.subsystems.Elevator.Coral.Coral;
-import frc.robot.subsystems.LEDs.LEDPatterns;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
 import frc.robot.subsystems.Elevator.Elevator;
 
@@ -22,16 +19,14 @@ public class RemoveAlgaeCmd extends Command {
   private final ElevatorPosition m_setPos;
   private final Elevator m_elevator;
   private final LEDSubsystem m_ledSubsystem;
-  private final Coral m_coral;
 
   /** Creates a new removeAlgae. */
-  public RemoveAlgaeCmd(AlgaeRemoverPivot algaeRemoverPivot, AlgaeRemoverRollers algaeRemoverRollers, ElevatorPosition setPos, Elevator elevator, LEDSubsystem ledSubsystem, Coral coral) {
+  public RemoveAlgaeCmd(AlgaeRemoverPivot algaeRemoverPivot, AlgaeRemoverRollers algaeRemoverRollers, ElevatorPosition setPos, Elevator elevator, LEDSubsystem ledSubsystem) {
     m_pivot = algaeRemoverPivot;
     m_rollers = algaeRemoverRollers;
     m_setPos = setPos;
     m_elevator = elevator;
     m_ledSubsystem = ledSubsystem;
-    m_coral = coral;
 
     addRequirements(algaeRemoverPivot, algaeRemoverRollers, elevator); // Add the required subsystems here
   }
@@ -40,10 +35,8 @@ public class RemoveAlgaeCmd extends Command {
   @Override
   public void initialize() {
     if (m_elevator.getElevatorSetPosition() == m_setPos) {
-      System.out.println("test");
       m_pivot.setPositionTrapazoidal(RemoverPositions.RaisedL2); // TODO: set positions
       m_rollers.setRemoverRollerSpeed(.5); // TODO: set speed
-      m_ledSubsystem.combinePatternsForDuration(LEDPatterns.blue, LEDPatterns.ace, LEDPatterns.green, 2);
     } else {
       m_elevator.setElevatorHeightMotionProfile(m_setPos);
       this.cancel();

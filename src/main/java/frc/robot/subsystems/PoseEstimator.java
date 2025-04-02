@@ -39,9 +39,12 @@ public class PoseEstimator extends SubsystemBase {
 
   private final PhotonCamera frontRightCamera = new PhotonCamera("frontRight");
   private final PhotonCamera frontLeftCamera = new PhotonCamera("frontLeft");
+  private final PhotonCamera centerCamera = new PhotonCamera("center");
 
   private PhotonCameraSim cameraSimFrontRight;
   private PhotonCameraSim cameraSimFrontLeft;
+  private PhotonCameraSim cameraSimCenter;
+
 
   private SimCameraProperties cameraProp;
 
@@ -84,6 +87,7 @@ public class PoseEstimator extends SubsystemBase {
 
       cameraSimFrontRight = new PhotonCameraSim(frontRightCamera, cameraProp);
       cameraSimFrontLeft = new PhotonCameraSim(frontLeftCamera, cameraProp);
+      cameraSimCenter = new PhotonCameraSim(centerCamera, cameraProp);
 
       // this slows down loop time a lot
       // cameraSimFrontRight.enableDrawWireframe(true);
@@ -91,6 +95,8 @@ public class PoseEstimator extends SubsystemBase {
 
       visionSim.addCamera(cameraSimFrontRight, kVision.frontRightCamera);
       visionSim.addCamera(cameraSimFrontLeft, kVision.frontLeftCamera);
+      visionSim.addCamera(cameraSimCenter, kVision.centerCamera);
+
     }
     resetStartPose();
   }
@@ -106,6 +112,11 @@ public class PoseEstimator extends SubsystemBase {
           kVision.aprilTagFieldLayout,
           PoseStrategy.CLOSEST_TO_REFERENCE_POSE,
           kVision.frontRightCamera);
+  PhotonPoseEstimator PoseEstimatorCenter =
+      new PhotonPoseEstimator(
+          kVision.aprilTagFieldLayout,
+          PoseStrategy.CLOSEST_TO_REFERENCE_POSE,
+          kVision.centerCamera);
 
 
   /**
@@ -248,9 +259,11 @@ public class PoseEstimator extends SubsystemBase {
     visionSim.update(m_SwervePoseEstimator.getEstimatedPosition());
     networkTableLogger.logPose3d("cam front", visionSim.getCameraPose(cameraSimFrontRight).orElse(new Pose3d()));
     networkTableLogger.logPose3d("cam back up", visionSim.getCameraPose(cameraSimFrontLeft).orElse(new Pose3d()));
-    m_SwervePoseEstimator.addVisionMeasurement(visionSim.getRobotPose().toPose2d(), RobotController.getFPGATime());
+    networkTableLogger.logPose3d("cam center", visionSim.getCameraPose(cameraSimCenter).orElse(new Pose3d()));
     networkTableLogger.logField2d("Vision Debug Field", visionDebugField);
 
+    // Changed second parameter of .addVisionMeasurement() to use `Timer.getFPGATimestamp()` which is in seconds (what this method wants) rather than the previous `RobotController.getFPGATime()` which is in microseconds
+    m_SwervePoseEstimator.addVisionMeasurement(visionSim.getRobotPose().toPose2d(), Timer.getFPGATimestamp());
     m_SwerveSubsystem.applySimHeading();
   }
 
@@ -260,9 +273,11 @@ public class PoseEstimator extends SubsystemBase {
   @Override
   public void periodic() {
       // camera 3 pose estimation
-     addVisionMeasurement(frontRightCamera, PoseEstimatorFrontLeft);
+     addVisionMeasurement(frontLeftCamera, PoseEstimatorFrontLeft);
       // camera 4 pose estimation
-     addVisionMeasurement(frontLeftCamera, PoseEstimatorFrontRight);
+     addVisionMeasurement(frontRightCamera, PoseEstimatorFrontRight);
+      // center camera pose estimation
+     addVisionMeasurement(centerCamera, PoseEstimatorCenter);
 
     // gyro update
     m_SwervePoseEstimator.updateWithTime(
