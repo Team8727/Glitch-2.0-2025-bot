@@ -45,7 +45,7 @@ public class LEDPatterns {
 
   // Green to purple gradient pattern
   public static final LEDPattern ace =
-      LEDPattern.gradient(GradientType.kContinuous, LEDSubsystem.getColor(Color.kGreen), LEDSubsystem.getColor(Color.kPurple))
+      LEDPattern.gradient(GradientType.kContinuous, LEDSubsystem.getColor(Color.kPurple), LEDSubsystem.getColor(Color.kGreen))
           .scrollAtRelativeSpeed(
             Percent.per(Second).of(15));
 

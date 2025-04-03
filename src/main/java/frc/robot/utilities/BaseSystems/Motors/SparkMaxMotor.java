@@ -57,6 +57,13 @@ public class SparkMaxMotor implements Motor{
   }
 
   @Override
+  public void setPosition(double position) {
+    motorController.setReference(
+      position,
+      SparkBase.ControlType.kPosition);
+  }
+
+  @Override
   public double getPosition() {
     if (hasAbsoluteEncoder) {
       return motor.getAbsoluteEncoder().getPosition();

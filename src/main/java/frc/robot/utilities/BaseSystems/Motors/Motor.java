@@ -23,6 +23,13 @@ public interface Motor {
   void setPosition(double position, double feedforward);
 
   /**
+   * Sets the motor to a given position.
+   *
+   * @param position The position to set the motor to.
+   */
+  void setPosition(double position);
+
+  /**
    * Gets the current position of the motor.
    *
    * @return The current position of the motor.

@@ -22,7 +22,8 @@ public class LEDSubsystem extends SubsystemBase {
   private LEDPattern firePattern;
   private LEDPattern noisePattern;
   private boolean fireViews;
-  private AddressableLEDBuffer fakeBuffer;
+  private boolean skipUpdate = false;
+
 
   // HACK: Flip blue and green channels on real robot until we figure out 
   // the root cause of the sim/real color discrepancy
@@ -176,22 +177,26 @@ public class LEDSubsystem extends SubsystemBase {
   }
 
   public void fireAnimation (LEDPattern pattern, boolean bufferViews) {
-    altLogic = true;
-    noiseLogic = false;
-    firePattern = pattern;
-    fireViews = true;
-    pattern.applyTo(leftSide.getBufferView());
-    pattern.applyTo(rightSide.getBufferView());
-    LEDPattern.solid(Color.kBlack).applyTo(secretBuffer.getBufferView());
-    for (int i = 0; i < 14; i ++) {
-      if ((1.5 * (Math.sin(Math.random())) + (i/14.0)) > 1.3) {
-        leftSide.getBufferView().setRGB(i, 0, 0, 0);
+    if (!skipUpdate) {
+      altLogic = true;
+      firePattern = pattern;
+      fireViews = true;
+      pattern.applyTo(leftSide.getBufferView());
+      pattern.applyTo(rightSide.getBufferView());
+      LEDPattern.solid(Color.kBlack).applyTo(secretBuffer.getBufferView());
+      for (int i = 0; i < leftSide.getLength(); i++) {
+        if ((1.5 * (Math.sin(Math.random())) + (i / 14.0)) > 1.3) {
+          leftSide.getBufferView().setRGB(i, 0, 0, 0);
+        }
       }
-    }
-    for (int i = 0; i < 16; i++) {
-      if ((1.5 * (Math.sin(Math.random())) + (i/16.0)) > 1.3) {
-        rightSide.getBufferView().setRGB(i, 0, 0, 0);
+      for (int i = 0; i < rightSide.getLength(); i++) {
+        if ((1.5 * (Math.sin(Math.random())) + (i / 16.0)) > 1.3) {
+          rightSide.getBufferView().setRGB(i, 0, 0, 0);
+        }
       }
+      skipUpdate = true;
+    } else {
+      skipUpdate = false;
     }
   }
 

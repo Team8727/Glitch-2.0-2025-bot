@@ -22,7 +22,8 @@ public class RejectCoralCmd extends Command {
   @Override
   public void initialize() {
     new Thread(() -> {
-      m_coral.setIntakeSpeedDuty(-.4);
+      m_coral.setIntakeSpeedDuty(-1);
+      m_coral.setOuttakeSpeedDuty(1);
       try {
         Thread.sleep(500);
       } catch (InterruptedException e) {
@@ -30,6 +31,7 @@ public class RejectCoralCmd extends Command {
         e.printStackTrace();
       }
       m_coral.setIntakeSpeedDuty(0);
+      m_coral.setOuttakeSpeedDuty(0);
       this.cancel();
       Thread.currentThread().interrupt();
     }).start();

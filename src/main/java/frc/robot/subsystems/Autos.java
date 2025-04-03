@@ -25,6 +25,7 @@ import frc.robot.Constants.kSwerve;
 import frc.robot.Constants.kVision;
 import frc.robot.Robot;
 import frc.robot.commands.CoralCmds.DeployCoralCmd;
+import frc.robot.commands.CoralCmds.IntakeCoralCmd;
 import frc.robot.commands.ElevatorCmds.SetElevatorHeightCmd;
 import frc.robot.subsystems.Elevator.Coral.Coral;
 import frc.robot.subsystems.LEDs.LEDPatterns;
@@ -50,11 +51,11 @@ public class Autos extends SubsystemBase {
    * Each enum value contains the zone name, point, right and left poses, and distance to side.
    */
   public enum ReefScorePoints {
-    
+
     // Marked by zone as depicted below:
-    //  
-    //   ___________________Blue Alliance__________________ ... _____ 
-    //            |  ⟋                        | |     | |        ⟍  | 
+    //
+    //   ___________________Blue Alliance__________________ ... _____
+    //            |  ⟋                        | |     | |        ⟍  |
     //   _________|⟋         K-⟋  ⟍-J        | |     | |          ⟍|
     //            |        L-⟋      ⟍-I      | |     | |            |
     //   Alliance |       A |         | H     | |Barge| |            |
@@ -69,33 +70,33 @@ public class Autos extends SubsystemBase {
       GetScorePose(new Rotation2d(Math.toRadians(180)), 0, false), // left score location
       0), // distance to side
 
-    C_D("C-D", 
+    C_D("C-D",
       new Translation2d(4.07, 3.3), // side point
       GetScorePose(new Rotation2d(Math.toRadians(-120)), 0, true), // right score location
       GetScorePose(new Rotation2d(Math.toRadians(-120)), 0, false), // left score location
       0),  // distance to side
 
-    E_F("E-F", 
-      new Translation2d(4.9, 3.3), 
+    E_F("E-F",
+      new Translation2d(4.9, 3.3),
       GetScorePose(new Rotation2d(Math.toRadians(-60)), 0, true), // right score location
       GetScorePose(new Rotation2d(Math.toRadians(-60)), 0, false), // left score location
       0),  // Zone E-F
 
-    G_H("G-H", 
-      new Translation2d(5.35, 4.02), 
+    G_H("G-H",
+      new Translation2d(5.35, 4.02),
       GetScorePose(new Rotation2d(Math.toRadians(0)), 0, true), // right score location
       GetScorePose(new Rotation2d(Math.toRadians(0)), 0, false), // left score location
       0),  // Zone G-H
 
-    I_J("I-J", 
-      new Translation2d(4.9, 4.75), 
+    I_J("I-J",
+      new Translation2d(4.9, 4.75),
       GetScorePose(new Rotation2d(Math.toRadians(60)), 0, true), // right score location
       GetScorePose(new Rotation2d(Math.toRadians(60)), 0, false), // left score location
       0),  // Zone I-J
 
-    K_L("K-L", 
-      new Translation2d(4.07, 4.75), 
-      GetScorePose(new Rotation2d(Math.toRadians(120)), 0, true), // right score location 
+    K_L("K-L",
+      new Translation2d(4.07, 4.75),
+      GetScorePose(new Rotation2d(Math.toRadians(120)), 0, true), // right score location
       GetScorePose(new Rotation2d(Math.toRadians(120)), 0, false), // left score location
       0);  // Zone K-L
 
@@ -105,7 +106,7 @@ public class Autos extends SubsystemBase {
     private final Pose2d leftPose;
 
     // Getting translations and setting them to objects to avoid making new lists in `this.findClosestPoint()`
-    private static List<Translation2d> translation2ds = 
+    private static List<Translation2d> translation2ds =
       Arrays.asList(new Translation2d[] {
           A_B.point, C_D.point, E_F.point, G_H.point, I_J.point, K_L.point});
 
@@ -120,7 +121,7 @@ public class Autos extends SubsystemBase {
     }
 
     /**
-     * Finds the ReefScorePoint with the closest Translation2d to the provided robot pose. 
+     * Finds the ReefScorePoint with the closest Translation2d to the provided robot pose.
      * Requires RobotAlliance value to determine if it needs to flip the alliance for red alliance
      * @param robotAlliance the alliance of this match/practice
      * @param robotPose the current robot pose on the field
@@ -146,7 +147,7 @@ public class Autos extends SubsystemBase {
       // Return closest ReefScorePoint point
       return closestScorePoint;
     }
-    
+
     public ReefScorePoints getClosestPoint() {
       return closestScorePoint;
     }
@@ -177,7 +178,7 @@ public class Autos extends SubsystemBase {
     m_PoseEstimator = poseEstimator;
 
     loadPaths();
-    }
+   }
 
   /**
    * Loads the paths from the specified path files.
@@ -190,6 +191,12 @@ public class Autos extends SubsystemBase {
     loadPath("L-I");
     loadPath("R-F");
     loadPath("M-H test");
+
+    loadPath("L-J");
+    loadPath("J-CPR");
+    loadPath("CPR-K");
+    loadPath("K-CPR");
+    loadPath("CPR-L");
   }
 
   /**
@@ -210,12 +217,11 @@ public class Autos extends SubsystemBase {
    */
   public void setupAutoChooser() {
     autoChooser.setDefaultOption("Path M-L4-H", "M_L4_H()");
-    autoChooser.addOption("Path L-L4-I", "L_L4_I()");
+    autoChooser.addOption("Path L-L4-J", "L_L4_J()");
     autoChooser.addOption("Path R_L4_I", "R_L4_F()");
     autoChooser.addOption("Path ML_L4_I", "ML_L4_I()");
     autoChooser.addOption("Path MR_L4_F", "MR_L4_F()");
     autoChooser.addOption("bareMinimum", "bareMinimum()");
-    autoChooser.addOption("MultiPathTest", "MultiPathTest()");
   }
 
   /**
@@ -224,8 +230,8 @@ public class Autos extends SubsystemBase {
   public void selectAuto() {
     if (autoChooser.getSelected().equals("M_L4_H()")) {
       M_L4_H().schedule();
-    } else if (autoChooser.getSelected().equals("L_L4_I()")) {
-      L_L4_I().schedule();
+    } else if (autoChooser.getSelected().equals("L_L4_J()")) {
+      L_L4_J().schedule();
     } else if (autoChooser.getSelected().equals("R_L4_F()")) {
       R_L4_F().schedule();
     } else if (autoChooser.getSelected().equals("MR_L4_F()")) {
@@ -234,8 +240,6 @@ public class Autos extends SubsystemBase {
       ML_L4_I().schedule();
     } else if (autoChooser.getSelected().equals("bareMinimum()")) {
       bareMinimum().schedule();
-    } else if(autoChooser.getSelected().equals("MultiPathTest()")) {
-      MultiPathTest().schedule();
     } else {
       System.out.println("something is very wrong if you see this");
     }
@@ -309,7 +313,7 @@ public class Autos extends SubsystemBase {
   }
 
   /**
-   * Calculates the scoring pose based on the given rotation, distance from the reef, 
+   * Calculates the scoring pose based on the given rotation, distance from the reef,
    * and whether the scoring is to the right or left side.
    *
    * @param rotation The rotation of the robot in radians.
@@ -323,19 +327,19 @@ public class Autos extends SubsystemBase {
     if (!right) {
       verticalOffset = -verticalOffset; // flip the offset for the left side
     }
-    Pose2d baseScoreLocation = 
+    Pose2d baseScoreLocation =
       new Pose2d(
         reef.plus(
           new Translation2d(
             0.67 + kSwerve.width + distanceFromReef,
-            verticalOffset)), 
+            verticalOffset)),
         new Rotation2d(Math.toRadians(180)));
       return baseScoreLocation.rotateAround(reef, rotation);
   }
-  
+
   /**
    * Finds the closest ReefScorePoints location to the robot's current position.
-   * This method calculates the distance from the robot to each defined ReefScorePoints 
+   * This method calculates the distance from the robot to each defined ReefScorePoints
    * and determines which point has the minimum distance.
    *
    * @return The ReefScorePoints enum value representing the closest reef side
@@ -386,15 +390,6 @@ public class Autos extends SubsystemBase {
     );
   }
 
-  private Command MultiPathTest() {
-    return new SequentialCommandGroup(
-      new InstantCommand(() -> setStartPose(paths.get("L-I"))),
-      followPath(paths.get("L-I")),
-      followPath(paths.get("I-CPR")),
-      followPath(paths.get("CPR-J")) 
-    );
-  }
-
   private SequentialCommandGroup M_L4_H() {
     return new SequentialCommandGroup(
       new InstantCommand(() -> setStartPose(paths.get("M-H test"))),
@@ -405,12 +400,35 @@ public class Autos extends SubsystemBase {
     );
   }
 
-  private SequentialCommandGroup L_L4_I() {
+  private SequentialCommandGroup L_L4_J() {
     return new SequentialCommandGroup(
-      new InstantCommand(() -> setStartPose(paths.get("L-I"))),
-      followPath(paths.get("L-I")),
-      new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns),
-      new WaitCommand(.6),
+      new InstantCommand(() -> setStartPose(paths.get("L-J"))),
+      new ParallelCommandGroup(
+        new SequentialCommandGroup(
+          new WaitCommand(.4),
+          new SetElevatorHeightCmd(ElevatorPosition.L1, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns),
+          new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns)),
+        followPath(paths.get("L-J"))),
+      new DeployCoralCmd(m_coral, m_ledSubsystem, m_elevator),
+      new ParallelCommandGroup(
+        new SetElevatorHeightCmd(ElevatorPosition.L1, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns),
+        followPath(paths.get("J-CPR"))),
+      new IntakeCoralCmd(m_coral, m_elevator, m_ledSubsystem),
+      new ParallelCommandGroup(
+        new SequentialCommandGroup(
+          new WaitCommand(1),
+          new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns)),
+        followPath(paths.get("CPR-K"))),
+      new DeployCoralCmd(m_coral, m_ledSubsystem, m_elevator),
+      new ParallelCommandGroup(
+        new SetElevatorHeightCmd(ElevatorPosition.L1, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns),
+        followPath(paths.get("K-CPR"))),
+      new IntakeCoralCmd(m_coral, m_elevator, m_ledSubsystem),
+      new ParallelCommandGroup(
+        new SequentialCommandGroup(
+          new WaitCommand(.9),
+          new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns)),
+        followPath(paths.get("CPR-L"))),
       new DeployCoralCmd(m_coral, m_ledSubsystem, m_elevator)
     );
   }
@@ -439,21 +457,19 @@ public class Autos extends SubsystemBase {
     return new SequentialCommandGroup(
       new InstantCommand(() -> setStartPose(paths.get("ML-I"))),
       followPath(paths.get("ML-I")),
+      new PrintCommand("ML-I"),
+      new SetElevatorHeightCmd(ElevatorPosition.L1, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns),
       new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns),
       new WaitCommand(.6),
       new DeployCoralCmd(m_coral, m_ledSubsystem, m_elevator),
-      new SetElevatorHeightCmd(ElevatorPosition.L3, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns),
-      new WaitCommand(.5),
       new SetElevatorHeightCmd(ElevatorPosition.L1, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns),
-      new WaitCommand(.2)
-      // new InstantCommand(() -> setStartPose(paths.get("I-CPR"))),
-      // followPath(paths.get("I-CPR")),
-      // new IntakeCoralCmd(m_coral, m_elevator, m_ledSubsystem).withTimeout(1.5),
-      // new InstantCommand(() -> setStartPose(paths.get("CPR-J"))),
-      // followPath(paths.get("CPR-J")),
-      // new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsystem),
-      // new WaitCommand(.5),
-      // new DeployCoralCmd(m_coral, m_ledSubsystem, m_elevator)
+      new WaitCommand(.2),
+      followPath(paths.get("I-CPR")),
+      new IntakeCoralCmd(m_coral, m_elevator, m_ledSubsystem),
+      followPath(paths.get("CPR-J")),
+      new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns),
+      new WaitCommand(.5),
+      new DeployCoralCmd(m_coral, m_ledSubsystem, m_elevator)
     );
   }
 }
