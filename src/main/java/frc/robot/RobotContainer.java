@@ -86,7 +86,7 @@ public class RobotContainer {
         m_Autos
       )
     );
-    
+
     m_assistController.applyBindings(
       new Driver2DefaultBindings(
         m_SwerveSubsystem,

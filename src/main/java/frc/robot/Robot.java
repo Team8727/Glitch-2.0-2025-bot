@@ -180,7 +180,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     CommandScheduler.getInstance().cancelAll();
-    
+
     m_ledSubsystem.fireAnimation(LEDPatterns.green, true);
 
     // This makes sure that the autonomous stops running when

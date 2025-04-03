@@ -4,15 +4,27 @@
 
 package frc.robot.subsystems.LEDs;
 
+import edu.wpi.first.units.measure.Frequency;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.AddressableLEDBufferView;
 import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj.LEDPattern.GradientType;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.kElevator;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.LEDs.LEDPatterns.enzoMap;
+
+import java.security.KeyFactory;
+import java.util.List;
+import java.util.Map;
+
+import static edu.wpi.first.units.Units.Percent;
+import static edu.wpi.first.units.Units.Second;
 
 public class LEDSubsystem extends SubsystemBase {
   private final AddressableLED lightStrip;
@@ -75,6 +87,7 @@ public class LEDSubsystem extends SubsystemBase {
      * Applies the current pattern to the buffer view.
      * @param deltaTimeSeconds The time since the last update in seconds.
      */
+
     public void update(double deltaTimeSeconds, LEDPattern firePattern) {
       if (durationSeconds != infiniteDurationSeconds) {
         elapsedSeconds += deltaTimeSeconds;
@@ -93,7 +106,6 @@ public class LEDSubsystem extends SubsystemBase {
     public AddressableLEDBufferView getBufferView() {
       return this.bufferView;
     }
-
     public int getLength() {
       return this.bufferView.getLength();
     }
@@ -186,11 +198,13 @@ public class LEDSubsystem extends SubsystemBase {
       pattern.applyTo(leftSide.getBufferView());
       pattern.applyTo(rightSide.getBufferView());
       LEDPattern.solid(Color.kBlack).applyTo(secretBuffer.getBufferView());
+      
       for (int i = 0; i < leftSide.getLength(); i++) {
         if ((1.5 * (Math.sin(Math.random())) + (i / 14.0)) > 1.3) {
           leftSide.getBufferView().setRGB(i, 0, 0, 0);
         }
       }
+      
       for (int i = 0; i < rightSide.getLength(); i++) {
         if ((1.5 * (Math.sin(Math.random())) + (i / 16.0)) > 1.3) {
           rightSide.getBufferView().setRGB(i, 0, 0, 0);

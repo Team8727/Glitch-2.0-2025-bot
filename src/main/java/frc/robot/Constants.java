@@ -298,8 +298,8 @@ public final class Constants {
       new Transform3d(
         new Translation3d(Units.inchesToMeters(8), Units.inchesToMeters(8), Units.inchesToMeters(19.5)),
         new Rotation3d(Math.toRadians(-14.586), Math.toRadians(25), Math.toRadians(-34)));
-    
-    public static final Transform3d centerCamera = 
+
+    public static final Transform3d centerCamera =
     new Transform3d(
       new Translation3d(Units.inchesToMeters(8.5), Units.inchesToMeters(0), Units.inchesToMeters(8.5)), //TODO
       new Rotation3d(Math.toRadians(0), Math.toRadians(0), Math.toRadians(0)));
@@ -421,7 +421,7 @@ public final class Constants {
       }
     }
   }
-  
+
   public static class CustomCommands {
     public static Command waitCommand(double seconds, Runnable command) {
       return Commands.runOnce(() -> {

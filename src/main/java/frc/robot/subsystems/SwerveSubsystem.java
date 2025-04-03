@@ -72,11 +72,11 @@ public class SwerveSubsystem extends SubsystemBase {
 
   /**
    * Get the current positions of the swerve modules
-   * 
+   *
    * @return the positions of the swerve modules
    */
   public SwerveModulePosition[] getModulePositions() {
-    // Update the cache 
+    // Update the cache
     // (OPTIMIZATION: we could rate-limit this if needed)
     for (int i = 0; i < cachedModulePositions.length; ++i) {
       cachedModulePositions[i] = modules[i].getPositon();
@@ -87,11 +87,11 @@ public class SwerveSubsystem extends SubsystemBase {
 
   /**
    * Get the current states of the swerve modules
-   * 
+   *
    * @return the states of the swerve modules
    */
   public SwerveModuleState[] getModuleStates() {
-    // Update the cache 
+    // Update the cache
     // (OPTIMIZATION: we could rate-limit this if needed)
     for (int i = 0; i < cachedModuleStates.length; ++i) {
       cachedModuleStates[i] = modules[i].getState();
@@ -100,9 +100,9 @@ public class SwerveSubsystem extends SubsystemBase {
     return cachedModuleStates.clone();
   }
 
-  /** 
+  /**
    * Get the current chassis speeds
-   * 
+   *
    * @return the chassis speeds
    */
   public ChassisSpeeds getChassisSpeeds() {
@@ -120,7 +120,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
   /**
    * Get the heading of the robot
-   * 
+   *
    * @return the heading of the robot
    */
   public Rotation2d getHeading() {
@@ -154,7 +154,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   /**
-   * Set the chassis speeds of the robot, using robot-relative speeds 
+   * Set the chassis speeds of the robot, using robot-relative speeds
    * @param robotRelativeSpeeds the robot-relative speeds
    */
   public void setChassisSpeeds(ChassisSpeeds robotRelativeSpeeds) {
@@ -167,7 +167,6 @@ public class SwerveSubsystem extends SubsystemBase {
 
   private void setModuleStates(SwerveModuleState[] desiredState) {
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredState, kModule.maxWheelSpeed);
-    
     networkTableLogger.logSwerveModuleState("Desired Swerve Module States", desiredState);
 
     for (int i = 0; i < modules.length; ++i) {
