@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.LEDPattern.GradientType;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.Constants.kElevator;
 import frc.robot.subsystems.Elevator.Elevator;
-import frc.robot.subsystems.LEDs.LEDSubsystem;
 
 /** Add your docs here. */
 public class LEDPatterns {
@@ -59,7 +58,6 @@ public class LEDPatterns {
     LEDSubsystem.getColor(Color.kGreen),
     LEDSubsystem.getColor(Color.kForestGreen),
     LEDSubsystem.getColor(Color.kDarkGreen));
-    // .scrollAtRelativeSpeed(Percent.per(Second).of(25));
   
   // Elevator progress bar pattern
   public final LEDPattern elevatorProgress = LEDPattern.gradient(
