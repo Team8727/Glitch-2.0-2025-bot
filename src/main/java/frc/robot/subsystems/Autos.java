@@ -188,8 +188,6 @@ public class Autos extends SubsystemBase {
     loadPath("I-CPR");
     loadPath("CPR-J");
     loadPath("MR-F");
-    loadPath("L-I");
-    loadPath("R-F");
     loadPath("M-H test");
 
     loadPath("L-J");
@@ -197,6 +195,12 @@ public class Autos extends SubsystemBase {
     loadPath("CPR-K");
     loadPath("K-CPR");
     loadPath("CPR-L");
+
+    loadPath("R-E");
+    loadPath("E-CPR");
+    loadPath("CPR-D");
+    loadPath("D-CPR");
+    loadPath("CPR-C");
   }
 
   /**
@@ -218,7 +222,7 @@ public class Autos extends SubsystemBase {
   public void setupAutoChooser() {
     autoChooser.setDefaultOption("Path M-L4-H", "M_L4_H()");
     autoChooser.addOption("Path L-L4-J", "L_L4_J()");
-    autoChooser.addOption("Path R_L4_I", "R_L4_F()");
+    autoChooser.addOption("Path R_L4_E", "R_L4_E()");
     autoChooser.addOption("Path ML_L4_I", "ML_L4_I()");
     autoChooser.addOption("Path MR_L4_F", "MR_L4_F()");
     autoChooser.addOption("bareMinimum", "bareMinimum()");
@@ -232,8 +236,8 @@ public class Autos extends SubsystemBase {
       M_L4_H().schedule();
     } else if (autoChooser.getSelected().equals("L_L4_J()")) {
       L_L4_J().schedule();
-    } else if (autoChooser.getSelected().equals("R_L4_F()")) {
-      R_L4_F().schedule();
+    } else if (autoChooser.getSelected().equals("R_L4_E()")) {
+      R_L4_E().schedule();
     } else if (autoChooser.getSelected().equals("MR_L4_F()")) {
       MR_L4_F().schedule();
     } else if (autoChooser.getSelected().equals("ML_L4_I()")) {
@@ -433,12 +437,35 @@ public class Autos extends SubsystemBase {
     );
   }
 
-  private SequentialCommandGroup R_L4_F() {
+  private SequentialCommandGroup R_L4_E() {
     return new SequentialCommandGroup(
-      new InstantCommand(() -> setStartPose(paths.get("R-F"))),
-      followPath(paths.get("R-F")),
-      new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns),
-      new WaitCommand(.6),
+      new InstantCommand(() -> setStartPose(paths.get("R-E"))),
+      new ParallelCommandGroup(
+        new SequentialCommandGroup(
+          new WaitCommand(.4),
+          new SetElevatorHeightCmd(ElevatorPosition.L1, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns),
+          new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns)),
+        followPath(paths.get("R-E"))),
+      new DeployCoralCmd(m_coral, m_ledSubsystem, m_elevator),
+      new ParallelCommandGroup(
+        new SetElevatorHeightCmd(ElevatorPosition.L1, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns),
+        followPath(paths.get("E-CPR"))),
+      new IntakeCoralCmd(m_coral, m_elevator, m_ledSubsystem),
+      new ParallelCommandGroup(
+        new SequentialCommandGroup(
+          new WaitCommand(1),
+          new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns)),
+        followPath(paths.get("CPR-D"))),
+      new DeployCoralCmd(m_coral, m_ledSubsystem, m_elevator),
+      new ParallelCommandGroup(
+        new SetElevatorHeightCmd(ElevatorPosition.L1, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns),
+        followPath(paths.get("D-CPR"))),
+      new IntakeCoralCmd(m_coral, m_elevator, m_ledSubsystem),
+      new ParallelCommandGroup(
+        new SequentialCommandGroup(
+          new WaitCommand(.9),
+          new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsystem, m_ledPatterns)),
+        followPath(paths.get("CPR-C"))),
       new DeployCoralCmd(m_coral, m_ledSubsystem, m_elevator)
     );
   }
