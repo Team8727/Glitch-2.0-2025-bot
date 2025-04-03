@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.LEDPattern.GradientType;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.kElevator;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.LEDs.LEDPatterns.enzoMap;
@@ -28,7 +30,9 @@ public class LEDSubsystem extends SubsystemBase {
   private final AddressableLED lightStrip;
   private final AddressableLEDBuffer stripBuffer;
   private boolean altLogic = false;
+  private boolean noiseLogic = false;
   private LEDPattern firePattern;
+  private LEDPattern noisePattern;
   private boolean fireViews;
   private boolean skipUpdate = false;
 
@@ -82,14 +86,15 @@ public class LEDSubsystem extends SubsystemBase {
      * Applies the current pattern to the buffer view.
      * @param deltaTimeSeconds The time since the last update in seconds.
      */
-    public void update(double deltaTimeSeconds) {
+
+    public void update(double deltaTimeSeconds, LEDPattern firePattern) {
       if (durationSeconds != infiniteDurationSeconds) {
         elapsedSeconds += deltaTimeSeconds;
 
         if (elapsedSeconds >= durationSeconds) {
           // pattern = defaultPattern;
           pattern = LEDPattern.kOff;
-          fireAnimation(LEDPatterns.theCoolerGreen, true);
+          fireAnimation(firePattern, true);
           durationSeconds = infiniteDurationSeconds;
           elapsedSeconds = 0.0;
         }
@@ -99,6 +104,9 @@ public class LEDSubsystem extends SubsystemBase {
 
     public AddressableLEDBufferView getBufferView() {
       return this.bufferView;
+    }
+    public int getLength() {
+      return this.bufferView.getLength();
     }
   }
 
@@ -161,21 +169,15 @@ public class LEDSubsystem extends SubsystemBase {
     secretBuffer.setPattern(secretPattern, seconds);
   }
 
-  // public void activateSecretPattern() {
-  //   secretBuffer.setPattern(LEDPatterns.blinkyGreen);
-  // }
-
-  // public void deactivateSecretPattern() {
-  //   secretBuffer.setPattern(defaultPattern); // TODO: might want to set this to whatever the other strips are set to
-  // }
-
   public void enzoLEDS(enzoMap enzoMap, double seconds) {
     combinePatternsForDuration(enzoMap.getEnzoMap(), enzoMap.getEnzoMap(), defaultPattern, seconds);
   }
 
-  // This works now!!!
+  // This uses sine waves and random number generation to create an interesting flickering fire pattern
+  // It is overlaid on top of another preexisting pattern, and can be used on the strip or a whole or just its sides.
   public void fireAnimation (LEDPattern pattern) {
     altLogic = true;
+    noiseLogic = false;
     firePattern = pattern;
     fireViews = false;
     pattern.applyTo(stripBuffer);
@@ -194,12 +196,14 @@ public class LEDSubsystem extends SubsystemBase {
       pattern.applyTo(leftSide.getBufferView());
       pattern.applyTo(rightSide.getBufferView());
       LEDPattern.solid(Color.kBlack).applyTo(secretBuffer.getBufferView());
-      for (int i = 0; i < 14; i++) {
+      
+      for (int i = 0; i < leftSide.getLength(); i++) {
         if ((1.5 * (Math.sin(Math.random())) + (i / 14.0)) > 1.3) {
           leftSide.getBufferView().setRGB(i, 0, 0, 0);
         }
       }
-      for (int i = 0; i < 16; i++) {
+      
+      for (int i = 0; i < rightSide.getLength(); i++) {
         if ((1.5 * (Math.sin(Math.random())) + (i / 16.0)) > 1.3) {
           rightSide.getBufferView().setRGB(i, 0, 0, 0);
         }
@@ -210,19 +214,57 @@ public class LEDSubsystem extends SubsystemBase {
     }
   }
 
+  // This activates a random noise function separately so that we can run the logic without having to deal with all this.
+  public void activateRandomNoise(LEDPattern pattern) {
+    altLogic = true;
+    noiseLogic = true;
+    noisePattern = pattern;
+    noisePattern.applyTo(stripBuffer);
+    fakeBuffer = new AddressableLEDBuffer(stripBuffer.getLength());
+    randomNoiseAnimation(noisePattern);
+  }
+
+  // This function creates a fun random noise overlay that took way too long to make.
+  // It, like the fire animation, uses LEDPatterns so you could do some cool stuff with it.
+  private void randomNoiseAnimation(LEDPattern pattern) {
+    altLogic = true;
+    noiseLogic = true;
+    int ledsOn = 0;
+    pattern.applyTo(fakeBuffer);
+    for (int i = 0; i < stripBuffer.getLength(); i ++) {
+      if(!(stripBuffer.getRed(i) == 0 && stripBuffer.getGreen(i) == 0 && stripBuffer.getBlue(i) == 0)) {
+        ledsOn += 1;
+      }
+    }
+    for (int i = 0; i < stripBuffer.getLength(); i ++) {
+      if ((ledsOn == 0) || Math.random() > 0.5) {
+        stripBuffer.setRGB(i, fakeBuffer.getRed(i), fakeBuffer.getGreen(i), fakeBuffer.getBlue(i));
+        ledsOn += 1;
+      }
+      if ((Math.random() * stripBuffer.getLength()) < (ledsOn) * 0.5) {
+        stripBuffer.setRGB(i, 0, 0, 0);
+        ledsOn -= 1;
+      }
+    }
+  }
+
   @Override
   public void periodic() {
     if (altLogic) {
-      if (fireViews) {
-        fireAnimation(firePattern, fireViews);
+      if (noiseLogic) {
+        randomNoiseAnimation(noisePattern);
       } else {
-        fireAnimation(firePattern);
+        if (fireViews) {
+          fireAnimation(firePattern, fireViews);
+        } else {
+          fireAnimation(firePattern);
+        }
       }
     } else {
       final double deltaTimeSeconds = 0.02; // TODO: Is there a way to ensure this is accurate even with overruns?
-      leftSide.update(deltaTimeSeconds);
-      rightSide.update(deltaTimeSeconds);
-      secretBuffer.update(deltaTimeSeconds);
+      leftSide.update(deltaTimeSeconds, firePattern);
+      rightSide.update(deltaTimeSeconds, firePattern);
+      secretBuffer.update(deltaTimeSeconds, firePattern);
     }
     lightStrip.setData(stripBuffer);
   }

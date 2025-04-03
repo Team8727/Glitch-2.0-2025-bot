@@ -154,7 +154,6 @@ public class PoseEstimator extends SubsystemBase {
     // m_SwerveSubsystem.navX.setAngleAdjustment(pose2d.getRotation().getDegrees());
     m_SwervePoseEstimator.resetPose(pose2d);
     // System.out.println(m_SwervePoseEstimator.getEstimatedPosition().getRotation().getDegrees());
-
     if (Robot.isSimulation()) {
       m_SwerveSubsystem.setNextSimHeading(pose2d.getRotation().getRadians());
       m_SwerveSubsystem.applySimHeading();

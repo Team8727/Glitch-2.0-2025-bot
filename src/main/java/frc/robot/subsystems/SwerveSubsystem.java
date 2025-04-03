@@ -167,7 +167,6 @@ public class SwerveSubsystem extends SubsystemBase {
 
   private void setModuleStates(SwerveModuleState[] desiredState) {
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredState, kModule.maxWheelSpeed);
-
     networkTableLogger.logSwerveModuleState("Desired Swerve Module States", desiredState);
 
     for (int i = 0; i < modules.length; ++i) {
