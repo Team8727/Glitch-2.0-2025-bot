@@ -33,6 +33,7 @@ public class ScoreCoralGroundCmd extends Command {
   @Override
   public void initialize() {
     // Set the intake to score position, score the algae by running rollers, and then set the intake to home position.
+    m_ledSubsystem.activateRandomNoise(LEDPatterns.coralPickup);
       intakePivot.setPositionCommand(12)
         .andThen(new WaitCommand(.2))
         .andThen(() -> intakeRollers.setSpeedDutyCycle(.3))
@@ -56,6 +57,7 @@ public class ScoreCoralGroundCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    m_ledSubsystem.setPatternForDuration(LEDPatterns.coralPickup.reversed(), 0.5);
     return false;
   }
 }

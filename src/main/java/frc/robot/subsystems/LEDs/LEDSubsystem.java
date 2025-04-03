@@ -4,27 +4,15 @@
 
 package frc.robot.subsystems.LEDs;
 
-import edu.wpi.first.units.measure.Frequency;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.AddressableLEDBufferView;
 import edu.wpi.first.wpilibj.LEDPattern;
-import edu.wpi.first.wpilibj.LEDPattern.GradientType;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.kElevator;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.LEDs.LEDPatterns.enzoMap;
-
-import java.security.KeyFactory;
-import java.util.List;
-import java.util.Map;
-
-import static edu.wpi.first.units.Units.Percent;
-import static edu.wpi.first.units.Units.Second;
 
 public class LEDSubsystem extends SubsystemBase {
   private final AddressableLED lightStrip;

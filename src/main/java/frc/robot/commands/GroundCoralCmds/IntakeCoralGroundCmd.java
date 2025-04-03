@@ -32,6 +32,7 @@ public class IntakeCoralGroundCmd extends Command {
   public void initialize() {
     intakePivot.setPosition(110);
     intakeRollers.setSpeedDutyCycle(-1);
+    ledSubsystem.activateRandomNoise(LEDPatterns.coralPickup.reversed());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -51,7 +52,7 @@ public class IntakeCoralGroundCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-
+    ledSubsystem.setPatternForDuration(LEDPatterns.coralPickup, 0.5);;
     return false;
     // Finish when algae is detected
 //    return intakeRollers.getCurrent() > 30;
