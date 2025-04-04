@@ -31,10 +31,11 @@ public class LEDSubsystem extends SubsystemBase {
   private final AddressableLEDBuffer stripBuffer;
   private boolean altLogic = false;
   private boolean noiseLogic = false;
-  private LEDPattern firePattern;
+  private LEDPattern firePattern = LEDPatterns.theCoolerGreen;
   private LEDPattern noisePattern;
   private boolean fireViews;
   private boolean skipUpdate = false;
+  private AddressableLEDBuffer fakeBuffer;
 
 
   // HACK: Flip blue and green channels on real robot until we figure out 
@@ -189,7 +190,7 @@ public class LEDSubsystem extends SubsystemBase {
   }
 
   public void fireAnimation (LEDPattern pattern, boolean bufferViews) {
-    if (!skipUpdate) {
+    if (skipUpdate) {
       altLogic = true;
       firePattern = pattern;
       fireViews = true;
@@ -208,9 +209,9 @@ public class LEDSubsystem extends SubsystemBase {
           rightSide.getBufferView().setRGB(i, 0, 0, 0);
         }
       }
-      skipUpdate = true;
-    } else {
       skipUpdate = false;
+    } else {
+      skipUpdate = true;
     }
   }
 

@@ -153,6 +153,9 @@ public abstract class Pivot extends SubsystemBase {
       Position / 360);
   }
 
+  public void setDutyCycle(double speed) {
+    motor.setDutyCycle(speed);
+  }
 
   /**
    * Checks if the pivot is at the setpoint.

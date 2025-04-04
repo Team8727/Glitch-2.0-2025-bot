@@ -42,7 +42,7 @@ public class IntakeCoralGroundCmd extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intakePivot.setPositionCommand(3)
+    intakePivot.setPositionCommand(5)
       .andThen(() -> intakeRollers.setSpeedDutyCycle(-0.1))
     .schedule();
 //    // Go back to home position and stop rollers

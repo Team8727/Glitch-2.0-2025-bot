@@ -39,6 +39,9 @@ public class GroundIntakePivot extends Pivot {
   @Override
   public void periodic() {
     super.periodic();
+    if ((getPosition() * 360) > 300) {
+      setDutyCycle(.2);
+    }
     // Add any additional periodic logic here
 
   }

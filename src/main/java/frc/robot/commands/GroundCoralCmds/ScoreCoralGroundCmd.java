@@ -49,7 +49,7 @@ public class ScoreCoralGroundCmd extends Command {
   @Override
   public void end(boolean interrupted) {
     // Go to home position (in robot) after scoring
-    intakePivot.setPosition(0);
+    intakePivot.setPosition(5);
     intakeRollers.setSpeedDutyCycle(0);
   }
 
