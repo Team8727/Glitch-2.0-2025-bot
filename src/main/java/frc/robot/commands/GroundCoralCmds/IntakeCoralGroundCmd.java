@@ -31,7 +31,7 @@ public class IntakeCoralGroundCmd extends Command {
   @Override
   public void initialize() {
     intakePivot.setPosition(110);
-    intakeRollers.setSpeedDutyCycle(-1);
+    intakeRollers.setSpeedDutyCycle(-.8);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

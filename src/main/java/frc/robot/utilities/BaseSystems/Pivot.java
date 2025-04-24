@@ -1,7 +1,10 @@
 package frc.robot.utilities.BaseSystems;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -13,20 +16,12 @@ public abstract class Pivot extends SubsystemBase {
 
   private final Motor motor;
 
-  private final TrapezoidProfile profile;
-  private TrapezoidProfile.State goal = new TrapezoidProfile.State(0, 0);
-  private TrapezoidProfile.State setpoint = new TrapezoidProfile.State(0, 0);
-
+  private final ProfiledPIDController pidController;
   private final ArmFeedforward pivotFeedforward;
 
   public final NetworkTableLogger logger;
 
-  private final double dt;
   private final double zeroedAngelFromHorizontal;
-
-  private final double allowedError;
-
-  private final boolean useFF;
 
   /**
    * Creates a new Pivot.
@@ -40,7 +35,6 @@ public abstract class Pivot extends SubsystemBase {
    * @param kg                        The gravity gain of the pivot
    * @param kv                        The velocity gain of the pivot
    * @param ka                        The acceleration gain of the pivot
-   * @param dt                        The time step for the profile
    */
   public Pivot(
     Motor motor,
@@ -48,27 +42,23 @@ public abstract class Pivot extends SubsystemBase {
     double maxVelocity,
     double maxAcceleration,
     double allowedError,
+    double kp,
+    double ki,
+    double kd,
     double ks,
     double kg,
     double kv,
-    double ka,
-    double dt) {
+    double ka) {
     logger = new NetworkTableLogger(this.getName());
 
-    profile = new TrapezoidProfile(
-      new TrapezoidProfile.Constraints(maxVelocity, maxAcceleration));
-
-    pivotFeedforward = new ArmFeedforward(ks, kg, kv, ka, dt);
-    this.dt = dt;
+    pidController = new ProfiledPIDController(kp, ki, kd, new TrapezoidProfile.Constraints(maxVelocity, maxAcceleration));
+    pivotFeedforward = new ArmFeedforward(ks, kg, kv, ka, 0.02);
 
     this.zeroedAngelFromHorizontal = zeroedAngelFromHorizontal;
 
     this.motor = motor;
 
-    this.allowedError = allowedError / 360;
-
-    // use feedforward if any of the gains are not 0
-    useFF = ks + kg + kv + ka != 0;
+    pidController.setTolerance(allowedError);
   }
 
   /**
@@ -79,10 +69,6 @@ public abstract class Pivot extends SubsystemBase {
    * @param maxVelocity               The maximum velocity of the pivot
    * @param maxAcceleration           The maximum acceleration of the pivot
    * @param allowedError              The allowed error for the pivot in degrees
-   * @param ks                        The static gain of the pivot
-   * @param kg                        The gravity gain of the pivot
-   * @param kv                        The velocity gain of the pivot
-   * @param ka                        The acceleration gain of the pivot
    */
   public Pivot(
     Motor motor,
@@ -90,29 +76,10 @@ public abstract class Pivot extends SubsystemBase {
     double maxVelocity,
     double maxAcceleration,
     double allowedError,
-    double ks,
-    double kg,
-    double kv,
-    double ka) {
-    this(motor, zeroedAngelFromHorizontal, maxVelocity, allowedError, maxAcceleration, ks, kg, kv, ka, 0.02);
-  }
-
-  /**
-   * Creates a new Pivot.
-   *
-   * @param motor                     The motor to use for the pivot.
-   * @param zeroedAngelFromHorizontal The angle from horizontal to zero the pivot at
-   * @param maxVelocity               The maximum velocity of the pivot
-   * @param maxAcceleration           The maximum acceleration of the pivot
-   * @param allowedError              The allowed error for the pivot in degrees
-   */
-  public Pivot(
-    Motor motor,
-    double zeroedAngelFromHorizontal,
-    double maxVelocity,
-    double maxAcceleration,
-    double allowedError) {
-    this(motor, zeroedAngelFromHorizontal, maxVelocity, maxAcceleration, allowedError, 0, 0, 0, 0);
+    double kp,
+    double ki,
+    double kd) {
+    this(motor, zeroedAngelFromHorizontal, maxVelocity, maxAcceleration, allowedError, kp, ki, kd, 0, 0, 0, 0);
   }
 
   /**
@@ -121,9 +88,7 @@ public abstract class Pivot extends SubsystemBase {
    * @param angleDegrees The angle in degrees to set the pivot to.
    */
   public void setPosition(double angleDegrees) {
-    double position = angleDegrees;
-    goal = new TrapezoidProfile.State(position, 0);
-    setpoint = new TrapezoidProfile.State(position, 0);
+    pidController.setGoal(angleDegrees);
   }
 
   /**
@@ -138,19 +103,14 @@ public abstract class Pivot extends SubsystemBase {
   }
 
   // set pivot position
-  private void setMotorFFAndPIDPosition(double Position, double nextVelocity) {
-    motor.setPosition(
-      Position / 360,
-      pivotFeedforward.calculateWithVelocities(
+  private void goToSetpoint() {
+    motor.setVoltageToDuty(
+      pidController.calculate(motor.getPosition() * 360)
+    + pivotFeedforward.calculateWithVelocities(
         zeroedAngelFromHorizontal - (motor.getPosition() * 360),
         motor.getVelocity(),
-        nextVelocity));
-  }
-
-  // set pivot position
-  public void setMotorPIDPosition(double Position) {
-    motor.setPosition(
-      Position / 360);
+        pidController.getSetpoint().velocity)
+    );
   }
 
   public void setDutyCycle(double speed) {
@@ -163,7 +123,7 @@ public abstract class Pivot extends SubsystemBase {
    * @return True if the pivot is within 0.01 units of the goal position, false otherwise.
    */
   public boolean isAtSetpoint() {
-    return Math.abs(motor.getPosition() - goal.position) < allowedError;
+    return pidController.atSetpoint();
   }
 
   /**
@@ -188,15 +148,9 @@ public abstract class Pivot extends SubsystemBase {
   @Override
   public void periodic() {
     logger.logDouble("Pivot Position", motor.getPosition());
-    logger.logDouble("Pivot Setpoint", setpoint.position);
-    logger.logDouble("Pivot Goal", goal.position);
+    logger.logDouble("Pivot Setpoint", pidController.getSetpoint().position);
+    logger.logDouble("Pivot Goal", pidController.getGoal().position);
 
-    setpoint = profile.calculate(dt, setpoint, goal);
-
-    if (useFF) {
-      setMotorFFAndPIDPosition(setpoint.position, setpoint.velocity);
-    } else {
-      setMotorPIDPosition(setpoint.position);
-    }
+    goToSetpoint();
   }
 }

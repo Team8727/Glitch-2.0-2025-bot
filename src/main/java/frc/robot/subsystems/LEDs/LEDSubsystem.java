@@ -190,7 +190,7 @@ public class LEDSubsystem extends SubsystemBase {
   }
 
   public void fireAnimation (LEDPattern pattern, boolean bufferViews) {
-    if (skipUpdate) {
+    if (!skipUpdate) {
       altLogic = true;
       firePattern = pattern;
       fireViews = true;
@@ -209,9 +209,9 @@ public class LEDSubsystem extends SubsystemBase {
           rightSide.getBufferView().setRGB(i, 0, 0, 0);
         }
       }
-      skipUpdate = false;
-    } else {
       skipUpdate = true;
+    } else {
+      skipUpdate = false;
     }
   }
 

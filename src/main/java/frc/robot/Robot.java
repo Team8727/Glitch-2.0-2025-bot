@@ -74,9 +74,9 @@ public class Robot extends TimedRobot {
           //         poselist, 
           //         new TrajectoryConfig(10, 5))); //TODO: get this from pathplanner somehow
           // });
-          if (Robot.isRedAlliance()) {
-            chassisSpeeds = new ChassisSpeeds(-chassisSpeeds.vxMetersPerSecond, -chassisSpeeds.vyMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
-          }
+//          if (Robot.isRedAlliance()) {
+//            chassisSpeeds = new ChassisSpeeds(-chassisSpeeds.vxMetersPerSecond, -chassisSpeeds.vyMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
+//          }
           logger.logChassisSpeeds("speeds", chassisSpeeds);
           m_SwerveSubsystem.setChassisSpeeds(chassisSpeeds);
         },
@@ -183,7 +183,7 @@ public class Robot extends TimedRobot {
 
     // m_ledSubsystem.setPattern(LEDPatterns.green);
 
-    m_ledSubsystem.fireAnimation(LEDPatterns.darkGreen, true);
+    m_ledSubsystem.fireAnimation(LEDPatterns.theCoolerGreen, true);
 
     // m_ledSubsystem.enzoLEDS(enzoMap.NORMAL, Math.random() * 15);
 

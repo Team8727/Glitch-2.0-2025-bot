@@ -123,6 +123,10 @@ public class Coral extends SubsystemBase {
       ControlType.kPosition);
   }
 
+  public void setSpeed(double speed) {
+    frontMotor.getClosedLoopController().setReference(speed, ControlType.kVelocity);
+  }
+
   @Override
   public void periodic() {
     // if (getFrontCoralSensor() && !elevatorUp) {
@@ -133,6 +137,7 @@ public class Coral extends SubsystemBase {
     // This method will be called once per scheduler run
 
     // PLEASE NEVER CHANGE THIS
+    logger.logBoolean("Back Coral Sensor", getBackCoralSensor());
     logger.logBoolean("Front Coral Sensor", getFrontCoralSensor());
   }
 }

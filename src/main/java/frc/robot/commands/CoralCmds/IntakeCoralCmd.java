@@ -4,7 +4,7 @@
 
 package frc.robot.commands.CoralCmds;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Constants.kElevator;
 import frc.robot.subsystems.Elevator.Coral.Coral;
 import frc.robot.subsystems.LEDs.LEDPatterns;
@@ -52,13 +52,14 @@ public class IntakeCoralCmd extends Command {
   public void execute() {
     if (m_coral.getBackCoralSensor() && !sensedCoral) {
       m_coral.setIntakeSpeedDuty(.13);
-      m_coral.setOuttakeSpeedDuty(.12);
+      m_coral.setOuttakeSpeedDuty(.1);
       sensedCoral = true;
     } 
 
     if (!m_coral.getBackCoralSensor() && sensedCoral) {
       m_coral.setIntakeSpeedDuty(0);
-      m_coral.holdPosition();
+      m_coral.setOuttakeSpeedDuty(0);
+//      m_coral.holdPosition();
       sensedCoral = false;
       end = true;
     }
@@ -68,10 +69,10 @@ public class IntakeCoralCmd extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_coral.setIntakeSpeedDuty(0);
-    m_coral.setOuttakeSpeedDuty(0);
+//    m_coral.setIntakeSpeedDuty(0);
+//    m_coral.setOuttakeSpeedDuty(0);
     end = false;
-    m_ledSubsystem.setPatternForDuration(LEDSubsystem.defaultPattern, 0.5);
+//    m_ledSubsystem.setPatternForDuration(LEDSubsystem.defaultPattern, 0.5);
   }
 
   // Returns true when the command should end.

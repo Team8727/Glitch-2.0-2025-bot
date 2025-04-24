@@ -112,7 +112,7 @@ public class Driver1DefaultBindings implements ControllerBindings {
       controller.y().onTrue(new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
 
       // Zero elevator (back button is the left small button on the controller near the top)
-      controller.back().onTrue(new ZeroElevator(m_elevator));
+      controller.rightStick().and(controller.leftStick()).onTrue(new ZeroElevator(m_elevator));
 
     // -=-=-=-=-=-=- Algae Commands -=-=-=-=-=-=-
       // Remove Algae A2

@@ -33,6 +33,7 @@ public class GroundIntakePivot extends Pivot {
       maxVelocity,
       maxAcceleration,
       allowedError);
+    setPosition(3);
   }
 
   /** This method will be called once per scheduler run */
@@ -40,7 +41,7 @@ public class GroundIntakePivot extends Pivot {
   public void periodic() {
     super.periodic();
     if ((getPosition() * 360) > 300) {
-      setDutyCycle(.2);
+      setDutyCycle(.05);
     }
     // Add any additional periodic logic here
 
