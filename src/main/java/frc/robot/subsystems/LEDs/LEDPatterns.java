@@ -58,8 +58,8 @@ public class LEDPatterns {
     GradientType.kDiscontinuous, 
     LEDSubsystem.getColor(Color.kGreen),
     LEDSubsystem.getColor(Color.kForestGreen),
-    LEDSubsystem.getColor(Color.kDarkGreen));
-    // .scrollAtRelativeSpeed(Percent.per(Second).of(25));
+    LEDSubsystem.getColor(Color.kDarkGreen))
+    .scrollAtRelativeSpeed(Percent.per(Second).of(25 * Math.sin(Math.random() * 3)));
 
   public static final LEDPattern darkGreen = LEDPattern.gradient(
     GradientType.kDiscontinuous,

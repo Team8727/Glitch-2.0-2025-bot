@@ -51,7 +51,7 @@ public class IntakeCoralGroundCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-
+    ledSubsystem.setPatternForDuration(LEDPatterns.coralPickup, 0.5);;
     return false;
     // Finish when algae is detected
 //    return intakeRollers.getCurrent() > 30;
