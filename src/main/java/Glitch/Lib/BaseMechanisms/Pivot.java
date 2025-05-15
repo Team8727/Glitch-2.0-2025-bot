@@ -37,7 +37,6 @@ public abstract class Pivot extends SubsystemBase {
    * @param kg                        The gravity gain of the pivot
    * @param kv                        The velocity gain of the pivot
    * @param ka                        The acceleration gain of the pivot
-   * @param dt                        The time step for the profile
    */
   public Pivot(
     Motor motor,

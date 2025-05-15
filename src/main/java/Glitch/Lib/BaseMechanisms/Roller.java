@@ -15,8 +15,7 @@ public abstract class Roller extends SubsystemBase {
   /**
    * Creates a new Roller.
    *
-   * @param config The configuration for the SparkMax motor
-   * @param CANID The CAN ID of the motor
+   * @param motor The motor to use for the pivot.
    */
   public Roller(
       Motor motor) {

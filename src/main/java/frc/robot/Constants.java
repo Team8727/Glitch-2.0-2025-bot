@@ -80,8 +80,6 @@ public final class Constants {
         1);
   }
 
-  public static int configurationSetRetries = 5;
-
   public static class kOI {
     public static double translationDeadzone = 0.08;
     public static double rotationDeadzone = 0.08;

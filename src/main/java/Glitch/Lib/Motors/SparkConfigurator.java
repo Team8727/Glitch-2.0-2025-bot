@@ -14,6 +14,7 @@ import frc.robot.Constants;
 import java.util.Set;
 
 public class SparkConfigurator {
+  private static final int configurationSetRetries = 5;
   // Frame speeds in ms
   private static final int FAST = 10;
   private static final int NORMAL = 20;
@@ -96,7 +97,7 @@ public class SparkConfigurator {
     }
 
     for (int i = 0; i < 7; i++) {
-      for (int j = 0; j < Constants.configurationSetRetries; j++) {
+      for (int j = 0; j < configurationSetRetries; j++) {
 
         // NEW FOR 2025
         configLogging(spark, config, status, i);
@@ -126,7 +127,7 @@ public class SparkConfigurator {
     // status6 Absolute Encoder Velocity
 
     for (int i = 0; i < 7; i++) {
-      for (int j = 0; j < Constants.configurationSetRetries; j++) {
+      for (int j = 0; j < configurationSetRetries; j++) {
         // NEW FOR 2025
         configLogging(spark, config, status, i);
         // OLD//spark.setPeriodicFramePeriod(PeriodicFrame.values()[i], status[i]);
