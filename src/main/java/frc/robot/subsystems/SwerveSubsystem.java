@@ -11,7 +11,7 @@ import frc.robot.Constants.kSwerve;
 import frc.robot.Constants.kSwerve.kModule;
 import frc.robot.Robot;
 import frc.robot.utilities.MAXSwerve;
-import frc.robot.utilities.NetworkTableLogger;
+import Glitch.Lib.NetworkTableLogger;
 
 public class SwerveSubsystem extends SubsystemBase {
   // Swerve modules

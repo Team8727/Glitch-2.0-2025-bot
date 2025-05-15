@@ -1,4 +1,4 @@
-package frc.robot.controller;
+package Glitch.Lib.Controller;
 
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 

@@ -19,12 +19,12 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.kAlgaeRemover;
 import frc.robot.Constants.kAlgaeRemover.kPivot.RemoverPositions;
-import frc.robot.utilities.NetworkTableLogger;
-import frc.robot.utilities.SparkConfigurator.LogData;
+import Glitch.Lib.NetworkTableLogger;
+import Glitch.Lib.Motors.SparkConfigurator.LogData;
 
 import java.util.Set;
 
-import static frc.robot.utilities.SparkConfigurator.getSparkMax;
+import static Glitch.Lib.Motors.SparkConfigurator.getSparkMax;
 
 public class AlgaeRemoverPivot extends SubsystemBase {
   private final SparkMax removerPivotMotor;

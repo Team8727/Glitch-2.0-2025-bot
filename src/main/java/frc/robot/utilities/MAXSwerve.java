@@ -20,13 +20,13 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.Constants.kSwerve.kModule;
-import frc.robot.utilities.SparkConfigurator.LogData;
-import frc.robot.utilities.SparkConfigurator.Sensors;
+import Glitch.Lib.Motors.SparkConfigurator.LogData;
+import Glitch.Lib.Motors.SparkConfigurator.Sensors;
 
 import java.util.Set;
 
-import static frc.robot.utilities.SparkConfigurator.getSparkFlex;
-import static frc.robot.utilities.SparkConfigurator.getSparkMax;
+import static Glitch.Lib.Motors.SparkConfigurator.getSparkFlex;
+import static Glitch.Lib.Motors.SparkConfigurator.getSparkMax;
 
 public class MAXSwerve {
   private SwerveModuleState targetState = new SwerveModuleState();

@@ -118,18 +118,6 @@ public final class Constants {
       public static final double minimumDriveSpeed = 4; // Will be divided by 20:  this/20
     }
 
-    // Operator interface constants
-    public static class Teleop {
-      public static double translationGain = 1;
-      public static double rotationGain = 0.7;
-
-      public static boolean closedLoop = false;
-    }
-
-    // NavX
-    public static boolean invertGyro = false;
-    public static Port navxPort = Port.kMXP;
-
     // Swerve uses ccw+ angular quanities and a coordinate plane with 0,0 at the robot's center
     // , forward is +x, and a module order based on the quadrant system (front left is first)
     // BL        FL
@@ -146,10 +134,10 @@ public final class Constants {
 
     public static final SwerveDriveKinematics kinematics =
         new SwerveDriveKinematics(
-            new Translation2d(length / 2, width / 2), // front left
-            new Translation2d(length / 2, -width / 2), // front right
-            new Translation2d(-length / 2, width / 2), // back left
-            new Translation2d(-length / 2, -width / 2)); // back right
+            new Translation2d(length / 2, width / 2), // front right
+            new Translation2d(length / 2, -width / 2), // front left
+            new Translation2d(-length / 2, width / 2), // back right
+            new Translation2d(-length / 2, -width / 2)); // back left
 
     // Module angular offsets (rad)
     public static class Offsets {
@@ -216,31 +204,15 @@ public final class Constants {
         public static final double maxOutput = 1;
       }
 
-      // Motor configs
-      public static final IdleMode drivingMotorIdleMode = IdleMode.kBrake;
-      public static final IdleMode steeringMotorIdleMode = IdleMode.kBrake;
-
       public static final int driveSmartCurrentLimit = 50; // amps
       public static final int driveMaxCurrent = 80; // amps
-      public static final int steerSmartCurrentLimit = 20; // amps
-      public static final int steerMaxCurrent = 35; // amps
 
       // Physical dimensions/values
       public static final double wheelDiameter = 0.97 * Units.inchesToMeters(3);
-      public static final double wheelCircumference = wheelDiameter * Math.PI; // meters
       public static final double driveMotorReduction = (45.0 * 22) / (drivePinionTeeth * 15);
-      public static final double steerMotorReduction = 9424.0 / 203.0;
 
       // Motor physics
       public static final double neoFreeSpeed = 5820.0 / 60; // rot/s
-      public static final double neoFreeCurrent = 1.7; // amps
-      public static final double neoStallTorque = 3.28; // Nm
-      public static final double neoStallCurrent = 181; // amps
-
-      public static final double neo550FreeSpeed = 11710.0 / 60;
-      public static final double neo550FreeCurrent = 1.1;
-      public static final double neo550StallTorque = 1.08;
-      public static final double neo550StallCurrent = 111;
 
       public static final double maxWheelSpeed =
           (neoFreeSpeed / driveMotorReduction) * (wheelDiameter * Math.PI); // m/s
@@ -274,11 +246,6 @@ public final class Constants {
 
   public static class kVision {
     // Vision
-
-    public static class kPoses {
-      public static final Pose2d blueFrontLeft =
-          new Pose2d(6.05, 3.81, Rotation2d.fromDegrees(180)); // x,y in meters
-    }
 
     public static final AprilTagFieldLayout aprilTagFieldLayout =
     AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark);
@@ -350,31 +317,10 @@ public final class Constants {
             return degrees; 
           }
       }
-
-      public TrapezoidProfile pivotMotionProfile = new TrapezoidProfile(
-        new TrapezoidProfile.Constraints(10, 20));
-
-      public static int intakePivotEncoderChannelA =
-          10; // TODO: not set yet because intake is not built yet
-      public static int intakePivotEncoderChannelB =
-          11; // TODO: not set yet because intake is not built yet
-      public static double encoderPulsesPerRevolution = 2048; // Maybe?
-
-      public static double gearRatio = 4; // TODO: This is probably what it is, but either set using document in Glitch Drive, or ask CAD.
-
-      public static double idleAlgaeIntakeVoltage = 0; // TODO: set as needed when testing
-
-      public static final int motorCurrentLimit = 35;
     }
 
     public static class kAlgaeIntakeRollers {
       public static int rollerMotorCANID = 16; // TODO: not set yet because intake is not built yet
-
-      public static int sensorChannel = 0; // TODO: not set yet because intake is not built yet
-
-      public static int intakeSpeed = 11; // TODO: not set yet because intake is not built yet
-      public static int scoreVoltage = -11; // TODO: not final yet because intake is not built yet
-      public static int outtakeSpeed = -5; // TODO: not set yet because intake is not built yet
     }
   }
 
@@ -383,23 +329,12 @@ public final class Constants {
         15; // TODO: not set yet because intake is not built yet
     public static int outtakeRollerMotorCANID =
         14; // TODO: not set yet because intake is not built yet
-
-    public static double intakeSpeed = .2; // TODO: not set yet because intake is not built yet
-    public static double outtakeSpeed = .75;// TODO: not set yet because intake is not built yet
-
-    public static double coraldeploySpeedL1 = 0.5; // TODO: not set yet because intake is not built yet
-    public static double coraldeploySpeedL2 = 0.5; // TODO: not set yet because intake is not built yet
-    public static double coraldeploySpeedL3 = 0.5; // TODO: not set yet because intake is not built yet
-    public static double coraldeploySpeedL4 = 0.5; // TODO: not set yet because intake is not built yet
   }
 
   public static class kElevator {
     // elevator calculations https://www.desmos.com/calculator/suqtj7vxc7
     public static int elevatorMotorRCANID = 10; // TODO: not set yet because elevator is not built yet
     public static int elevatorMotorLCANID = 11; // TODO: not set yet because elevator is not built yet
-
-    public static int limitSwitchDIO = 3; // TODO: not set yet because elevator is not built yet
-    public static double gearRatio = 5;
 
     public enum ElevatorPosition {
       HOME(0), // TODO: SET WITH ACTUAL VALUES
@@ -419,23 +354,6 @@ public final class Constants {
       public double getOutputRotations() {
         return rotations;
       }
-    }
-  }
-
-  public static class CustomCommands {
-    public static Command waitCommand(double seconds, Runnable command) {
-      return Commands.runOnce(() -> {
-        new Thread(() -> {
-          try {
-            Thread.sleep((long) (seconds * 1000));
-            new InstantCommand(command).schedule();
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          } finally {
-            Thread.currentThread().interrupt();
-          }
-        }).start();
-      });
     }
   }
 }

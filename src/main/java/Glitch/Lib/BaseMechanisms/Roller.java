@@ -1,19 +1,10 @@
-package frc.robot.utilities.BaseSystems;
+package Glitch.Lib.BaseMechanisms;
 
-import static frc.robot.utilities.SparkConfigurator.getSparkMax;
+import static Glitch.Lib.Motors.SparkConfigurator.getSparkMax;
 
-import com.revrobotics.spark.SparkBase;
-import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkLowLevel;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.utilities.BaseSystems.Motors.Motor;
-import frc.robot.utilities.BaseSystems.Motors.SparkMaxMotor;
-import frc.robot.utilities.NetworkTableLogger;
-import frc.robot.utilities.SparkConfigurator;
-
-import java.util.Set;
+import Glitch.Lib.Motors.Motor;
+import Glitch.Lib.NetworkTableLogger;
 
 public abstract class Roller extends SubsystemBase {
 
@@ -85,5 +76,12 @@ public abstract class Roller extends SubsystemBase {
    */
   public double getCurrent() {
     return motor.getCurrent();
+  }
+
+  // This method will be called once per scheduler run
+  @Override
+  public void periodic() {
+    logger.logDouble("position", motor.getPosition());
+    logger.logDouble("velocity", motor.getVelocity());
   }
 }

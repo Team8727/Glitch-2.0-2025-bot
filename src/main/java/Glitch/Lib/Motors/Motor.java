@@ -1,4 +1,4 @@
-package frc.robot.utilities.BaseSystems.Motors;
+package Glitch.Lib.Motors;
 
 public interface Motor {
   /**

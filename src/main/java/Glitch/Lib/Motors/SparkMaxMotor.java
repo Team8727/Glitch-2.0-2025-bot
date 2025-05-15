@@ -1,14 +1,13 @@
-package frc.robot.utilities.BaseSystems.Motors;
+package Glitch.Lib.Motors;
 
 import com.revrobotics.spark.*;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import frc.robot.utilities.SparkConfigurator;
 
 
 import java.util.Set;
 
-import static frc.robot.utilities.SparkConfigurator.getSparkMax;
+import static Glitch.Lib.Motors.SparkConfigurator.getSparkMax;
 
 public class SparkMaxMotor implements Motor{
   private final SparkMax motor;

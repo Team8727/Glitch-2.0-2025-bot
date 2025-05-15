@@ -24,14 +24,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.kConfigs;
 import frc.robot.Constants.kElevator;
-import frc.robot.utilities.NetworkTableLogger;
-import frc.robot.utilities.SparkConfigurator.LogData;
+import Glitch.Lib.NetworkTableLogger;
+import Glitch.Lib.Motors.SparkConfigurator.LogData;
 
 import java.util.Set;
 
 import static edu.wpi.first.units.Units.Volt;
-import static frc.robot.utilities.SparkConfigurator.getFollowerMax;
-import static frc.robot.utilities.SparkConfigurator.getSparkMax;
+import static Glitch.Lib.Motors.SparkConfigurator.getFollowerMax;
+import static Glitch.Lib.Motors.SparkConfigurator.getSparkMax;
 public class Elevator extends SubsystemBase {
 
   private final SparkMax elevatorMotorR;

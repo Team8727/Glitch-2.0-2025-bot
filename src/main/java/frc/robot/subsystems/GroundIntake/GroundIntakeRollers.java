@@ -1,13 +1,10 @@
 package frc.robot.subsystems.GroundIntake;
 
 import com.revrobotics.spark.config.ClosedLoopConfig;
-import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import frc.robot.Constants;
-import frc.robot.utilities.BaseSystems.Motors.SparkMaxMotor;
-import frc.robot.utilities.BaseSystems.Roller;
-
-import static frc.robot.Constants.kAlgaeRemover.kRollers;
+import Glitch.Lib.Motors.SparkMaxMotor;
+import Glitch.Lib.BaseMechanisms.Roller;
 
 public class GroundIntakeRollers extends Roller {
 

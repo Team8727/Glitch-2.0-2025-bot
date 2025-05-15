@@ -31,7 +31,7 @@ import frc.robot.subsystems.Elevator.Coral.Coral;
 import frc.robot.subsystems.LEDs.LEDPatterns;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
 import frc.robot.subsystems.Elevator.Elevator;
-import frc.robot.utilities.NetworkTableLogger;
+import Glitch.Lib.NetworkTableLogger;
 
 import java.util.Arrays;
 import java.util.List;

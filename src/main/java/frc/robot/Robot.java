@@ -7,14 +7,12 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathfindingCommand;
 
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.kConfigs;
 import frc.robot.Constants.kSwerve;
@@ -29,7 +27,7 @@ import frc.robot.subsystems.LEDs.LEDSubsystem;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.PoseEstimator;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.utilities.NetworkTableLogger;
+import Glitch.Lib.NetworkTableLogger;
 import org.littletonrobotics.urcl.URCL;
 
 import java.util.Optional;

@@ -9,7 +9,7 @@ import frc.robot.Constants.kOI;
 import frc.robot.Constants.kSwerve;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.Elevator.Elevator;
-import frc.robot.utilities.NetworkTableLogger;
+import Glitch.Lib.NetworkTableLogger;
 
 import java.util.function.Supplier;
 

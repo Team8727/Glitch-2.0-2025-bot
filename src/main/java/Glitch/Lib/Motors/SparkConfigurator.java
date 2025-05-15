@@ -1,4 +1,4 @@
-package frc.robot.utilities;
+package Glitch.Lib.Motors;
 
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkBase.PersistMode;

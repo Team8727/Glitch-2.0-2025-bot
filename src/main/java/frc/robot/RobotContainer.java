@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-import frc.robot.controller.Controller;
+import Glitch.Lib.Controller.Controller;
 import frc.robot.controller.Driver1DefaultBindings;
 import frc.robot.controller.Driver2DefaultBindings;
 import frc.robot.subsystems.Autos;

@@ -1,16 +1,13 @@
-package frc.robot.utilities.BaseSystems;
+package Glitch.Lib.BaseMechanisms;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import frc.robot.utilities.BaseSystems.Motors.Motor;
-import frc.robot.utilities.NetworkTableLogger;
+import Glitch.Lib.Motors.Motor;
+import Glitch.Lib.NetworkTableLogger;
 
 public abstract class Pivot extends SubsystemBase {
 
@@ -143,16 +140,16 @@ public abstract class Pivot extends SubsystemBase {
    *
    * @return The current applied to the motor.
    */
-  public double getAppliedCurrent() {
+  public double getCurrent() {
     return motor.getCurrent();
   }
 
   // This method will be called once per scheduler run
   @Override
   public void periodic() {
-    logger.logDouble("Pivot Position", motor.getPosition());
-    logger.logDouble("Pivot Setpoint", setpoint.position);
-    logger.logDouble("Pivot Goal", goal.position);
+    logger.logDouble("position", motor.getPosition());
+    logger.logDouble("setpoint", setpoint.position);
+    logger.logDouble("goal", goal.position);
 
     setpoint = profile.calculate(0.02, setpoint, goal);
 

@@ -2,8 +2,8 @@ package frc.robot.subsystems.GroundIntake;
 
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import frc.robot.utilities.BaseSystems.Motors.SparkMaxMotor;
-import frc.robot.utilities.BaseSystems.Pivot;
+import Glitch.Lib.Motors.SparkMaxMotor;
+import Glitch.Lib.BaseMechanisms.Pivot;
 
 import static frc.robot.Constants.kAlgaeIntake.kAlgaeIntakePivot;
 

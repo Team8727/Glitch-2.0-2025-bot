@@ -1,5 +1,6 @@
 package frc.robot.controller;
 
+import Glitch.Lib.Controller.ControllerBindings;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.CoralCmds.ReindexCoralCmd;
