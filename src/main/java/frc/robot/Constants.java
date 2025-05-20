@@ -80,11 +80,6 @@ public final class Constants {
         1);
   }
 
-  public static class kOI {
-    public static double translationDeadzone = 0.08;
-    public static double rotationDeadzone = 0.08;
-  }
-
   public static class kAllianceInfo {
     public enum RobotAlliance {
       RED_ALLIANCE,
@@ -147,11 +142,6 @@ public final class Constants {
 
     // Controller PID values for x/y translation, and z rotation
     public static class Auton {
-      public static final double angP = 4;
-      public static final double angD = 0;
-
-      public static final double maxAccel = 0.4;
-      public static final double maxVel = 0.4;
       public static final double maxAngAccel = 0.4 * kSwerve.maxAngAccel;
       public static final double maxAngVel = 0.4 * kSwerve.maxAngSpeed;
 
@@ -159,24 +149,6 @@ public final class Constants {
 
       public static final double maxOnTheFlyVel = 2;
       public static final double maxOnTheFlyAcc = 2;
-
-      public static final HolonomicDriveController controller =
-          new HolonomicDriveController(
-              new PIDController(Auton.transP, 0.0, 0.0),
-              new PIDController(angP, 0.0, angD),
-              new ProfiledPIDController(
-                  0,
-                  0,
-                  0, // TODO: tune this also figure out what it is
-                  new Constraints(maxVel, maxAccel)));
-
-      public static final PathFollowingController pathFollowController =
-          new PPHolonomicDriveController(
-              new PIDConstants(Auton.transP, 0, 0), new PIDConstants(angP, 0, angD));
-
-      public static final PathConstraints constraints =
-          new PathConstraints(
-              Auton.maxOnTheFlyVel, Auton.maxOnTheFlyAcc, Auton.maxAngVel, Auton.maxAngAccel);
     }
 
     public static class kModule {
@@ -242,37 +214,9 @@ public final class Constants {
     }
   }
 
-  public static class kVision {
-    // Vision
-
-    public static final AprilTagFieldLayout aprilTagFieldLayout =
-    AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark);
-
-    public static final Translation2d fieldCenter = new Translation2d(8.770, 4.026); // meters
-    // y   x     z
-    // 8   7     22
-    // -8  7     22
-    // -8  6.625 19.5
-    //  8  6.625 19.5
-    public static final Transform3d frontLeftCamera = // Left Rear
-      new Transform3d(
-        new Translation3d(Units.inchesToMeters(8), Units.inchesToMeters(-8), Units.inchesToMeters(19.5)),
-        new Rotation3d(Math.toRadians(14.586), Math.toRadians(25), Math.toRadians(34)));
-
-    public static final Transform3d frontRightCamera = // Front
-      new Transform3d(
-        new Translation3d(Units.inchesToMeters(8), Units.inchesToMeters(8), Units.inchesToMeters(19.5)),
-        new Rotation3d(Math.toRadians(-14.586), Math.toRadians(25), Math.toRadians(-34)));
-
-    public static final Transform3d centerCamera =
-    new Transform3d(
-      new Translation3d(Units.inchesToMeters(8.5), Units.inchesToMeters(0), Units.inchesToMeters(8.5)), //TODO
-      new Rotation3d(Math.toRadians(0), Math.toRadians(0), Math.toRadians(0)));
-  }
-
   public static class kAlgaeRemover {
     public static class kPivot {
-      public static int removerPivotMotorCANID =12; // TODO: not set yet because remover is not built yet
+      public static int removerPivotMotorCANID = 12; // TODO: not set yet because remover is not built yet
 
       public enum RemoverPositions {
         Fling(110),
@@ -290,11 +234,6 @@ public final class Constants {
           return degrees;
         }
       }
-}
-
-    public static class kRollers {
-      public static int removerRollerMotorCANID =
-          13; // TODO: not set yet because remover is not built yet
     }
   }
 
@@ -320,13 +259,6 @@ public final class Constants {
     public static class kAlgaeIntakeRollers {
       public static int rollerMotorCANID = 16; // TODO: not set yet because intake is not built yet
     }
-  }
-
-  public static class kCoral {
-    public static int intakeRollerMotorCANID =
-        15; // TODO: not set yet because intake is not built yet
-    public static int outtakeRollerMotorCANID =
-        14; // TODO: not set yet because intake is not built yet
   }
 
   public static class kElevator {

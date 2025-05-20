@@ -7,6 +7,9 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathfindingCommand;
 
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.controllers.PathFollowingController;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -69,7 +72,7 @@ public class Robot extends TimedRobot {
           //   m_PoseEstimatior.field2d.getObject("Trajectory")
           //     .setTrajectory(
           //       TrajectoryGenerator.generateTrajectory(
-          //         poselist, 
+          //         poselist,
           //         new TrajectoryConfig(10, 5))); //TODO: get this from pathplanner somehow
           // });
 //          if (Robot.isRedAlliance()) {
@@ -78,7 +81,15 @@ public class Robot extends TimedRobot {
           logger.logChassisSpeeds("speeds", chassisSpeeds);
           m_SwerveSubsystem.setChassisSpeeds(chassisSpeeds);
         },
-        kSwerve.Auton.pathFollowController, 
+        new PPHolonomicDriveController(
+          new PIDConstants(
+            kSwerve.Auton.transP,
+            0,
+            0),
+          new PIDConstants(
+            4,
+            0,
+            0)),
         kConfigs.robotConfig,
         () -> { // to flip path
           // Boolean supplier that controls when the path will be mirrored for the red alliance

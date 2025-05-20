@@ -13,7 +13,6 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.kCoral;
 import Glitch.Lib.NetworkTableLogger;
 import Glitch.Lib.Motors.SparkConfigurator.LogData;
 
@@ -35,7 +34,7 @@ public class Coral extends SubsystemBase {
   public Coral() {
     backMotor =
         getSparkMax(
-            kCoral.intakeRollerMotorCANID,
+            15,
             SparkLowLevel.MotorType.kBrushless,
             false,
             Set.of(),
@@ -58,7 +57,7 @@ public class Coral extends SubsystemBase {
 
     frontMotor =
         getSparkMax(
-            kCoral.outtakeRollerMotorCANID,
+            14,
             SparkLowLevel.MotorType.kBrushless,
             false,
             Set.of(),

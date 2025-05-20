@@ -5,7 +5,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.Constants.kElevator;
-import frc.robot.Constants.kOI;
 import frc.robot.Constants.kSwerve;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.Elevator.Elevator;
@@ -14,6 +13,9 @@ import Glitch.Lib.NetworkTableLogger;
 import java.util.function.Supplier;
 
 public class SwerveJoystickCmd extends Command {
+
+  private final double translationDeadzone = 0.08;
+  private final double rotationDeadzone = 0.08;
 
   private final SwerveSubsystem m_SwerveSubsystem;
   private final Elevator m_Elevator;
@@ -46,9 +48,9 @@ public class SwerveJoystickCmd extends Command {
     double turningSpeed = m_turningSpdFunction.get();
 
     // apply deadband
-    xSpeed = MathUtil.applyDeadband(xSpeed, kOI.translationDeadzone);
-    ySpeed = MathUtil.applyDeadband(ySpeed, kOI.translationDeadzone);
-    turningSpeed = MathUtil.applyDeadband(turningSpeed, kOI.rotationDeadzone);
+    xSpeed = MathUtil.applyDeadband(xSpeed, translationDeadzone);
+    ySpeed = MathUtil.applyDeadband(ySpeed, translationDeadzone);
+    turningSpeed = MathUtil.applyDeadband(turningSpeed, rotationDeadzone);
 
 
     // get elevator height for anti-tipping

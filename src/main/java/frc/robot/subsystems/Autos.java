@@ -22,7 +22,6 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Constants.kAllianceInfo.RobotAlliance;
 import frc.robot.Constants.kElevator.ElevatorPosition;
 import frc.robot.Constants.kSwerve;
-import frc.robot.Constants.kVision;
 import frc.robot.Robot;
 import frc.robot.commands.CoralCmds.DeployCoralCmd;
 import frc.robot.commands.CoralCmds.IntakeCoralCmd;
@@ -45,6 +44,8 @@ public class Autos extends SubsystemBase {
   private final PoseEstimator m_PoseEstimator;
   private final SendableChooser<String> autoChooser = new SendableChooser<>();
   private final NetworkTableLogger logger = new NetworkTableLogger(this.getName());
+
+  private static final Translation2d fieldCenter = new Translation2d(8.770, 4.026); // meters
 
   /**
    * Enum representing the scoring points on the reef.
@@ -133,7 +134,7 @@ public class Autos extends SubsystemBase {
           // Find the closest translation point from the robot's current position and get the point with that component
           if (robotAlliance == RobotAlliance.RED_ALLIANCE) {
             if (aScorePoint.point == robotPose.getTranslation()
-                .rotateAround(kVision.fieldCenter, new Rotation2d(Math.toRadians(180)))
+                .rotateAround(fieldCenter, new Rotation2d(Math.toRadians(180)))
                 .nearest(translation2ds)) {
               closestScorePoint = aScorePoint;
               break;
@@ -313,7 +314,7 @@ public class Autos extends SubsystemBase {
     ReefScorePoints closest = findClosestSide();
     Pose2d goalPose = right ? closest.getRightPose() : closest.getLeftPose();
     if (Robot.isRedAlliance()) {
-      goalPose = goalPose.rotateAround(kVision.fieldCenter, new Rotation2d(Math.toRadians(180)));
+      goalPose = goalPose.rotateAround(fieldCenter, new Rotation2d(Math.toRadians(180)));
     }
     align(goalPose).schedule();
   }

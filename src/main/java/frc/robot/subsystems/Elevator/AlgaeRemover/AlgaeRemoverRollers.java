@@ -28,7 +28,7 @@ public class AlgaeRemoverRollers extends SubsystemBase {
   public AlgaeRemoverRollers() {
     removerRollerMotor =
         getSparkMax(
-            kAlgaeRemover.kRollers.removerRollerMotorCANID,
+            13,
             SparkLowLevel.MotorType.kBrushless,
             false,
             Set.of(),

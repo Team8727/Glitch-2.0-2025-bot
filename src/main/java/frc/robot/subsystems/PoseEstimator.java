@@ -4,15 +4,15 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.kSwerve;
-import frc.robot.Constants.kVision;
 import frc.robot.Robot;
 import Glitch.Lib.NetworkTableLogger;
 import org.photonvision.EstimatedRobotPose;
@@ -34,16 +34,34 @@ public class PoseEstimator extends SubsystemBase {
   final SwerveDrivePoseEstimator m_SwervePoseEstimator;
   final NetworkTableLogger networkTableLogger = new NetworkTableLogger(this.getName().toString());
 
+  private final AprilTagFieldLayout aprilTagFieldLayout =
+    AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark);
+
+
   private VisionSystemSim visionSim;
 
   private final PhotonCamera frontRightCamera = new PhotonCamera("frontRight");
   private final PhotonCamera frontLeftCamera = new PhotonCamera("frontLeft");
   private final PhotonCamera centerCamera = new PhotonCamera("center");
 
+  private final Transform3d frontLeftCameraPos = // Left Rear
+    new Transform3d(
+      new Translation3d(Units.inchesToMeters(8), Units.inchesToMeters(-8), Units.inchesToMeters(19.5)),
+      new Rotation3d(Math.toRadians(14.586), Math.toRadians(25), Math.toRadians(34)));
+
+  private final Transform3d frontRightCameraPos = // Front
+    new Transform3d(
+      new Translation3d(Units.inchesToMeters(8), Units.inchesToMeters(8), Units.inchesToMeters(19.5)),
+      new Rotation3d(Math.toRadians(-14.586), Math.toRadians(25), Math.toRadians(-34)));
+
+  private final Transform3d centerCameraPos =
+    new Transform3d(
+      new Translation3d(Units.inchesToMeters(8.5), Units.inchesToMeters(0), Units.inchesToMeters(8.5)), //TODO
+      new Rotation3d(Math.toRadians(0), Math.toRadians(0), Math.toRadians(0)));
+
   private PhotonCameraSim cameraSimFrontRight;
   private PhotonCameraSim cameraSimFrontLeft;
   private PhotonCameraSim cameraSimCenter;
-
 
   private SimCameraProperties cameraProp;
 
@@ -73,7 +91,7 @@ public class PoseEstimator extends SubsystemBase {
       cameraProp = new SimCameraProperties();
       visionDebugField = visionSim.getDebugField();
       
-      visionSim.addAprilTags(kVision.aprilTagFieldLayout);
+      visionSim.addAprilTags(aprilTagFieldLayout);
       // A 640 x 480 camera with a 100 degree diagonal FOV.
       cameraProp.setCalibration(640, 480, Rotation2d.fromDegrees(70));
       // Approximate detection noise with average and standard deviation error in pixels.
@@ -92,9 +110,9 @@ public class PoseEstimator extends SubsystemBase {
       // cameraSimFrontRight.enableDrawWireframe(true);
       // cameraSimFrontLeft.enableDrawWireframe(true);
 
-      visionSim.addCamera(cameraSimFrontRight, kVision.frontRightCamera);
-      visionSim.addCamera(cameraSimFrontLeft, kVision.frontLeftCamera);
-      visionSim.addCamera(cameraSimCenter, kVision.centerCamera);
+      visionSim.addCamera(cameraSimFrontRight, frontRightCameraPos);
+      visionSim.addCamera(cameraSimFrontLeft, frontLeftCameraPos);
+      visionSim.addCamera(cameraSimCenter, centerCameraPos);
 
     }
     resetStartPose();
@@ -103,19 +121,19 @@ public class PoseEstimator extends SubsystemBase {
   // photon pose estimators
   PhotonPoseEstimator PoseEstimatorFrontLeft =
       new PhotonPoseEstimator(
-          kVision.aprilTagFieldLayout,
+          aprilTagFieldLayout,
           PoseStrategy.CLOSEST_TO_REFERENCE_POSE,
-          kVision.frontLeftCamera);
+          frontLeftCameraPos);
   PhotonPoseEstimator PoseEstimatorFrontRight =
       new PhotonPoseEstimator(
-          kVision.aprilTagFieldLayout,
+          aprilTagFieldLayout,
           PoseStrategy.CLOSEST_TO_REFERENCE_POSE,
-          kVision.frontRightCamera);
+          frontRightCameraPos);
   PhotonPoseEstimator PoseEstimatorCenter =
       new PhotonPoseEstimator(
-          kVision.aprilTagFieldLayout,
+          aprilTagFieldLayout,
           PoseStrategy.CLOSEST_TO_REFERENCE_POSE,
-          kVision.centerCamera);
+          centerCameraPos);
 
 
   /**
@@ -132,13 +150,13 @@ public class PoseEstimator extends SubsystemBase {
     if (hasTargets) {
       // find best target
       PhotonTrackedTarget target = result.getBestTarget();
-      if (kVision.aprilTagFieldLayout.getTagPose(target.getFiducialId()).isPresent()) {
+      if (aprilTagFieldLayout.getTagPose(target.getFiducialId()).isPresent()) {
         // estimate field to robot pose
         pose3d =
             PhotonUtils.estimateFieldToRobotAprilTag(
                 target.getBestCameraToTarget(),
-                kVision.aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(),
-                kVision.frontLeftCamera);
+                aprilTagFieldLayout.getTagPose(target.getFiducialId()).get(),
+                frontLeftCameraPos);
       }
     }
     return pose3d.toPose2d();
