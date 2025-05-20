@@ -5,10 +5,21 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import Glitch.Lib.Motors.SparkMaxMotor;
 import Glitch.Lib.BaseMechanisms.Pivot;
 
-import static frc.robot.Constants.kAlgaeIntake.kAlgaeIntakePivot;
-
 public class GroundIntakePivot extends Pivot {
-  private static final int CANID = kAlgaeIntakePivot.intakePivotMotorCANID;
+  public enum IntakePosition {
+    HOME(20),
+    SCORE(20),
+    DOWN(90);
+
+    private final double degrees;
+    private IntakePosition(double degrees) { this.degrees = degrees; }
+
+    public double getIntakePositionDegrees() {
+      return degrees;
+    }
+  }
+
+  private static final int CANID = 17;
   private static final SparkMaxConfig config = new SparkMaxConfig();
   static {
     config

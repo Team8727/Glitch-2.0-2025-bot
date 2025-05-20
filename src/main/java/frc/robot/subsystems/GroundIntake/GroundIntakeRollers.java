@@ -8,7 +8,7 @@ import Glitch.Lib.BaseMechanisms.Roller;
 
 public class GroundIntakeRollers extends Roller {
 
-  private static final int CANID = Constants.kAlgaeIntake.kAlgaeIntakeRollers.rollerMotorCANID;
+  private static final int CANID = 16;
   private static final SparkMaxConfig config = new SparkMaxConfig();
   static {
     config

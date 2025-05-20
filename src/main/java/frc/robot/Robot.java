@@ -83,7 +83,7 @@ public class Robot extends TimedRobot {
         },
         new PPHolonomicDriveController(
           new PIDConstants(
-            kSwerve.Auton.transP,
+            8,
             0,
             0),
           new PIDConstants(

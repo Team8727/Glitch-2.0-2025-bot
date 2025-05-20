@@ -40,8 +40,8 @@ public class PoseEstimator extends SubsystemBase {
 
   private VisionSystemSim visionSim;
 
-  private final PhotonCamera frontRightCamera = new PhotonCamera("frontRight");
-  private final PhotonCamera frontLeftCamera = new PhotonCamera("frontLeft");
+  private final PhotonCamera frontRightCamera = new PhotonCamera("frontRightOffset");
+  private final PhotonCamera frontLeftCamera = new PhotonCamera("frontLeftOffset");
   private final PhotonCamera centerCamera = new PhotonCamera("center");
 
   private final Transform3d frontLeftCameraPos = // Left Rear

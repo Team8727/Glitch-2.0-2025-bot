@@ -6,7 +6,6 @@ package frc.robot.commands.CoralCmds;
 
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.kElevator.ElevatorPosition;
 import frc.robot.subsystems.Elevator.Coral.Coral;
 import frc.robot.subsystems.LEDs.LEDPatterns;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
@@ -16,7 +15,7 @@ import frc.robot.subsystems.Elevator.Elevator;
 public class DeployCoralCmd extends Command {
   private final Coral m_coral;
   private final LEDSubsystem m_ledSubsytem;
-  private ElevatorPosition m_elevatorPosition;
+  private Elevator.ElevatorPosition m_elevatorPosition;
   private boolean isFinished = false;
 
   /** Creates a new coralDeployer. */

@@ -4,7 +4,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.robot.Constants.kElevator;
 import frc.robot.Constants.kSwerve;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.Elevator.Elevator;
@@ -14,8 +13,15 @@ import java.util.function.Supplier;
 
 public class SwerveJoystickCmd extends Command {
 
+  // Deadzone values
   private final double translationDeadzone = 0.08;
   private final double rotationDeadzone = 0.08;
+
+  // Maximum speeds
+  private final double maxTransSpeed = 5;
+  private final double maxAngSpeed = 3 * Math.PI;
+  private final double minimumDriveSpeed = 4;
+
 
   private final SwerveSubsystem m_SwerveSubsystem;
   private final Elevator m_Elevator;
@@ -55,12 +61,12 @@ public class SwerveJoystickCmd extends Command {
 
     // get elevator height for anti-tipping
     double elevatorHeight = m_Elevator.getElevatorHeight();
-    double driveSpeedConversionFactor = (kElevator.ElevatorPosition.L4.getOutputRotations() - (elevatorHeight - kSwerve.DriveSpeedScaling.minimumDriveSpeed)) / kElevator.ElevatorPosition.L4.getOutputRotations();
-    xSpeed = -(xSpeed * kSwerve.maxTransSpeed
+    double driveSpeedConversionFactor = (Elevator.ElevatorPosition.L4.getOutputRotations() - (elevatorHeight - minimumDriveSpeed)) / Elevator.ElevatorPosition.L4.getOutputRotations();
+    xSpeed = -(xSpeed * maxTransSpeed
      * driveSpeedConversionFactor);  // Scaling to elevator height
-    ySpeed = -(ySpeed * kSwerve.maxTransSpeed
+    ySpeed = -(ySpeed * maxTransSpeed
      * driveSpeedConversionFactor);  // Scaling to elevator height
-    turningSpeed = -(turningSpeed * kSwerve.maxAngSpeed
+    turningSpeed = -(turningSpeed * maxAngSpeed
      * driveSpeedConversionFactor);  // Scaling to elevator height
 
     // set chassis speed

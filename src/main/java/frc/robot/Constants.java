@@ -93,63 +93,12 @@ public final class Constants {
     public static double width = Units.inchesToMeters(22.52);
     public static double length = width;
 
-    // Speed & accel limits (m/s, rad/s, m/s^2 & rad/s^2)
-    // public static double maxTransSpeed = 5;//5
-    // public static double maxAngSpeed = 3 * Math.PI;//3
-
-    // public static double maxTransAccel = 1.35 * 9.81;//1.35
-    // public static double maxAngAccel = 10 * 2 * Math.PI;//10
-
-    // test speeds
-    public static final double maxTransSpeed = 5; // 5
-    public static final double maxAngSpeed = 3 * Math.PI; // 3
-
-    public static final double maxTransAccel = 1.35 * 9.81; // 1.35
-    public static final  double maxAngAccel = 10 * 2 * Math.PI; // 10
-
-    public static class DriveSpeedScaling {
-      public static final double minimumDriveSpeed = 4; // Will be divided by 20:  this/20
-    }
-
-    // Swerve uses ccw+ angular quanities and a coordinate plane with 0,0 at the robot's center
-    // , forward is +x, and a module order based on the quadrant system (front left is first)
-    // BL        FL
-    //       C
-    // BR        FR
-    // NOTE: Make sure ModuleLocation and the order of the modules in the kinematics match
-    public enum ModuleLocation {
-      FRONT_LEFT,
-      FRONT_RIGHT,
-      BACK_LEFT,
-      BACK_RIGHT
-    }
-    public static final int kNumModules = kSwerve.ModuleLocation.values().length;
-
     public static final SwerveDriveKinematics kinematics =
         new SwerveDriveKinematics(
             new Translation2d(length / 2, width / 2), // front right
             new Translation2d(length / 2, -width / 2), // front left
             new Translation2d(-length / 2, width / 2), // back right
             new Translation2d(-length / 2, -width / 2)); // back left
-
-    // Module angular offsets (rad)
-    public static class Offsets {
-      public static double frontLeft = Math.PI / 2;
-      public static double backLeft = -Math.PI;
-      public static double backRight = -Math.PI / 2;
-      public static double frontRight = 0;
-    }
-
-    // Controller PID values for x/y translation, and z rotation
-    public static class Auton {
-      public static final double maxAngAccel = 0.4 * kSwerve.maxAngAccel;
-      public static final double maxAngVel = 0.4 * kSwerve.maxAngSpeed;
-
-      public static final double transP = 8;
-
-      public static final double maxOnTheFlyVel = 2;
-      public static final double maxOnTheFlyAcc = 2;
-    }
 
     public static class kModule {
       // The MAXSwerve module can be configured with one of three pinion gears: 12T, 13T, or 14T.
@@ -199,91 +148,6 @@ public final class Constants {
       public static final double steeringEncoderPositionPIDMinInput = 0; // radians
       public static final double steeringEncoderPositionPIDMaxInput =
           steeringEncoderPositionFactor; // radians
-    }
-
-    // Motor CAN IDs
-    public static class CANID {
-      public static int frontLeftDrive = 9; //
-      public static int frontLeftSteer = 8; //
-      public static int backLeftDrive = 3; //
-      public static int backLeftSteer = 2; //
-      public static int backRightDrive = 5; //
-      public static int backRightSteer = 4; //
-      public static int frontRightDrive = 7; //
-      public static int frontRightSteer = 6; //
-    }
-  }
-
-  public static class kAlgaeRemover {
-    public static class kPivot {
-      public static int removerPivotMotorCANID = 12; // TODO: not set yet because remover is not built yet
-
-      public enum RemoverPositions {
-        Fling(110),
-        Grab(70),
-        RaisedL2(80), // TODO: SET WITH ACTUAL VALUES
-        Stowed(18); // TODO: SET WITH ACTUAL VALUES
-      
-        private final double degrees;
-        
-        private RemoverPositions(double degrees) {
-          this.degrees = degrees;
-        }
-  
-        public double getDegrees() {
-          return degrees;
-        }
-      }
-    }
-  }
-
-  public static class kAlgaeIntake {
-    public static class kAlgaeIntakePivot {
-      public static int intakePivotMotorCANID =
-          17; // TODO: not set yet because intake is not built yet
-
-      public enum IntakePosition {
-          HOME(20), 
-          SCORE(20), 
-          DOWN(90); // TODO: SET WITH ACTUAL VALUES
-
-          private final double degrees;
-          private IntakePosition(double degrees) { this.degrees = degrees; }
-
-          public double getIntakePositionDegrees() { 
-            return degrees; 
-          }
-      }
-    }
-
-    public static class kAlgaeIntakeRollers {
-      public static int rollerMotorCANID = 16; // TODO: not set yet because intake is not built yet
-    }
-  }
-
-  public static class kElevator {
-    // elevator calculations https://www.desmos.com/calculator/suqtj7vxc7
-    public static int elevatorMotorRCANID = 10; // TODO: not set yet because elevator is not built yet
-    public static int elevatorMotorLCANID = 11; // TODO: not set yet because elevator is not built yet
-
-    public enum ElevatorPosition {
-      HOME(0), // TODO: SET WITH ACTUAL VALUES
-      L1(1.1), // TODO: SET WITH ACTUAL VALUES
-      L2(8.23663),// TODO: SET WITH ACTUAL VALUES
-      L3(20.43877), // TODO: SET WITH ACTUAL VALUES
-      L4(39.53888), // TODO: SET WITH ACTUAL VALUES
-      A2(13.5), // TODO: SET WITH ACTUAL VALUES
-      A3(25.5); // TODO: SET WITH ACTUAL VALUES
-    
-      private final double rotations;
-      
-      private ElevatorPosition(double rotations) {
-        this.rotations = rotations;
-      }
-
-      public double getOutputRotations() {
-        return rotations;
-      }
     }
   }
 }

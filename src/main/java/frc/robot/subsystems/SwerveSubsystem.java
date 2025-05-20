@@ -14,10 +14,40 @@ import frc.robot.utilities.MAXSwerve;
 import Glitch.Lib.NetworkTableLogger;
 
 public class SwerveSubsystem extends SubsystemBase {
+  // Swerve uses ccw+ angular quanities and a coordinate plane with 0,0 at the robot's center
+  // , forward is +x, and a module order based on the quadrant system (front left is first)
+  // BL        FL
+  //       C
+  // BR        FR
+  // NOTE: Make sure ModuleLocation and the order of the modules in the kinematics match
+  private enum ModuleLocation {
+    FRONT_LEFT,
+    FRONT_RIGHT,
+    BACK_LEFT,
+    BACK_RIGHT
+  }
+  private final int kNumModules = ModuleLocation.values().length;
+
+  // Module angular offsets (rad)
+  public static double frontLeftOffset = Math.PI / 2;
+  public static double backLeftOffset = -Math.PI;
+  public static double backRightOffset = -Math.PI / 2;
+  public static double frontRightOffset = 0;
+
   // Swerve modules
-  private final MAXSwerve[] modules = new MAXSwerve[kSwerve.kNumModules];
-  private final SwerveModulePosition[] cachedModulePositions = new SwerveModulePosition[kSwerve.kNumModules];
-  private final SwerveModuleState[] cachedModuleStates = new SwerveModuleState[kSwerve.kNumModules];
+  private final MAXSwerve[] modules = new MAXSwerve[kNumModules];
+  private final SwerveModulePosition[] cachedModulePositions = new SwerveModulePosition[kNumModules];
+  private final SwerveModuleState[] cachedModuleStates = new SwerveModuleState[kNumModules];
+
+  // Motor CAN IDs
+  private static int frontLeftDriveID = 9; //
+  private static int frontLeftSteerID = 8; //
+  private static int backLeftDriveID = 3; //
+  private static int backLeftSteerID = 2; //
+  private static int backRightDriveID = 5; //
+  private static int backRightSteerID = 4; //
+  private static int frontRightDriveID = 7; //
+  private static int frontRightSteerID = 6; //
 
   // Gyro
   private final AHRS navX = new AHRS(AHRS.NavXComType.kMXP_SPI);
@@ -64,10 +94,10 @@ public class SwerveSubsystem extends SubsystemBase {
 
   // Call this if you ever need to re-initialize the swerve modules
   private void initSwerveModules() {
-    modules[kSwerve.ModuleLocation.FRONT_LEFT.ordinal()] = new MAXSwerve(kSwerve.CANID.frontLeftDrive, kSwerve.CANID.frontLeftSteer, kSwerve.Offsets.frontLeft);
-    modules[kSwerve.ModuleLocation.FRONT_RIGHT.ordinal()] = new MAXSwerve(kSwerve.CANID.frontRightDrive, kSwerve.CANID.frontRightSteer, kSwerve.Offsets.frontRight);
-    modules[kSwerve.ModuleLocation.BACK_LEFT.ordinal()] = new MAXSwerve(kSwerve.CANID.backLeftDrive, kSwerve.CANID.backLeftSteer, kSwerve.Offsets.backLeft);
-    modules[kSwerve.ModuleLocation.BACK_RIGHT.ordinal()] = new MAXSwerve(kSwerve.CANID.backRightDrive, kSwerve.CANID.backRightSteer, kSwerve.Offsets.backRight);
+    modules[ModuleLocation.FRONT_LEFT.ordinal()] = new MAXSwerve(frontLeftDriveID, frontLeftSteerID, frontLeftOffset);
+    modules[ModuleLocation.FRONT_RIGHT.ordinal()] = new MAXSwerve(frontRightDriveID, frontRightSteerID, frontRightOffset);
+    modules[ModuleLocation.BACK_LEFT.ordinal()] = new MAXSwerve(backLeftDriveID, backLeftSteerID, backLeftOffset);
+    modules[ModuleLocation.BACK_RIGHT.ordinal()] = new MAXSwerve(backRightDriveID, backRightSteerID, backRightOffset);
   }
 
   /**

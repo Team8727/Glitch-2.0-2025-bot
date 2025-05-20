@@ -5,7 +5,6 @@
 package frc.robot.commands.CoralCmds;
 
 import edu.wpi.first.wpilibj2.command.*;
-import frc.robot.Constants.kElevator;
 import frc.robot.subsystems.Elevator.Coral.Coral;
 import frc.robot.subsystems.LEDs.LEDPatterns;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
@@ -31,7 +30,7 @@ public class IntakeCoralCmd extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (m_elevator.getElevatorSetPosition() != kElevator.ElevatorPosition.L1) {
+    if (m_elevator.getElevatorSetPosition() != Elevator.ElevatorPosition.L1) {
       System.out.println("go to L1");
       this.cancel();
     } else {

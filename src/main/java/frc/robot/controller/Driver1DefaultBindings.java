@@ -4,7 +4,6 @@ import Glitch.Lib.Controller.ControllerBindings;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.kElevator.ElevatorPosition;
 import frc.robot.commands.CoralCmds.DeployCoralCmd;
 import frc.robot.commands.CoralCmds.IntakeCoralCmd;
 import frc.robot.commands.CoralCmds.RejectCoralCmd;
@@ -102,22 +101,22 @@ public class Driver1DefaultBindings implements ControllerBindings {
       controller.povRight().onTrue(new ScoreCoralGroundCmd(groundIntakePivot, groundIntakeRollers, m_ledSubsytem));
     // -=-=-=-=-=-=- Elevator Commands -=-=-=-=-=-=-
       // Elevator L1
-      controller.x().onTrue(new SetElevatorHeightCmd(ElevatorPosition.L1, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns).andThen(new PrintCommand("hihih")));
+      controller.x().onTrue(new SetElevatorHeightCmd(Elevator.ElevatorPosition.L1, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns).andThen(new PrintCommand("hihih")));
       // Elevator L2
-      controller.a().onTrue(new SetElevatorHeightCmd(ElevatorPosition.L2, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
+      controller.a().onTrue(new SetElevatorHeightCmd(Elevator.ElevatorPosition.L2, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
       // Elevator L3
-      controller.b().onTrue(new SetElevatorHeightCmd(ElevatorPosition.L3, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
+      controller.b().onTrue(new SetElevatorHeightCmd(Elevator.ElevatorPosition.L3, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
       // Elevator L4
-      controller.y().onTrue(new SetElevatorHeightCmd(ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
+      controller.y().onTrue(new SetElevatorHeightCmd(Elevator.ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
 
       // Zero elevator (back button is the left small button on the controller near the top)
       controller.back().onTrue(new ZeroElevator(m_elevator));
 
     // -=-=-=-=-=-=- Algae Commands -=-=-=-=-=-=-
       // Remove Algae A2
-      controller.povDown().whileTrue(new RemoveAlgaeCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers, ElevatorPosition.A2, m_elevator, m_ledSubsytem));
+      controller.povDown().whileTrue(new RemoveAlgaeCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers, Elevator.ElevatorPosition.A2, m_elevator, m_ledSubsytem));
       // shoot algae
-      controller.povUp().whileTrue(new RemoveAlgaeCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers, ElevatorPosition.A3, m_elevator, m_ledSubsytem));
+      controller.povUp().whileTrue(new RemoveAlgaeCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers, Elevator.ElevatorPosition.A3, m_elevator, m_ledSubsytem));
     // -=-=-=-=-=-=-+-=-=-=-=-=-=-+-=-=-=-=-=-=-
   }
 
