@@ -34,8 +34,7 @@ public class ScoreCoralGroundCmd extends Command {
     // Set the intake to score position, score the algae by running rollers, and then set the intake to home position.
     m_ledSubsystem.activateRandomNoise(LEDPatterns.coralPickup);
       intakePivot.setPositionCommand(12)
-        .andThen(new WaitCommand(.1))
-        .andThen(() -> intakeRollers.setSpeedDutyCycle(.3))
+        .andThen(() -> intakeRollers.setSpeedDutyCycle(.7))
         .andThen(new WaitCommand(0.2))
         .andThen(this::cancel).schedule();
   }

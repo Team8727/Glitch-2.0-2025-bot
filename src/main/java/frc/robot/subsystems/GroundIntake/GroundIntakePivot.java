@@ -35,10 +35,10 @@ public class GroundIntakePivot extends Pivot {
         CANID,
         ClosedLoopConfig.FeedbackSensor.kAbsoluteEncoder),
       100,
-      1000,
-      100,
+      100000,
+      5000,
       1);
-    setPosition(60);
+    setPosition(5);
   }
 
   /** This method will be called once per scheduler run */

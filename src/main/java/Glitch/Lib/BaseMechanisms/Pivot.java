@@ -104,7 +104,7 @@ public abstract class Pivot extends SubsystemBase {
   // set pivot position
   private void goToSetpoint() {
     motor.setPosition(
-      setpoint.position,
+      setpoint.position / 360,
       pivotFeedforward.calculateWithVelocities(
         zeroedAngelFromHorizontal - (motor.getPosition() * 360),
         motor.getVelocity(),
@@ -146,7 +146,7 @@ public abstract class Pivot extends SubsystemBase {
   // This method will be called once per scheduler run
   @Override
   public void periodic() {
-    logger.logDouble("position", motor.getPosition());
+    logger.logDouble("position", motor.getPosition()*360);
     logger.logDouble("setpoint", setpoint.position);
     logger.logDouble("goal", goal.position);
 
