@@ -41,35 +41,6 @@ import java.io.IOException;
 public final class Constants {
   public static class kConfigs {
 
-    public static RobotConfig robotConfig; 
-    static {
-      try {
-        robotConfig = RobotConfig.fromGUISettings();
-      } catch (IOException | ParseException e) {
-        e.printStackTrace();
-        System.out.println("Failed to load robot config from GUI settings, using default values");
-        // Default configuration if fromGUISettings fails or is not valid
-        robotConfig = new RobotConfig(
-            65, // TODO: find real value
-            5.22, // TODO: find real value
-            new ModuleConfig(
-                .0371,
-                4.55,
-                1.4, // TODO: find real value
-                new DCMotor(
-                    12, 
-                    3.6, 
-                    211, 
-                    3.6, 
-                    710.42, // TODO: probably wrong
-                    1),
-                5.08,
-                50,
-                1),
-            kSwerve.kinematics.getModules());
-      }
-    }
-
     public static final DCMotor neoMotor = 
       new DCMotor(
         12,

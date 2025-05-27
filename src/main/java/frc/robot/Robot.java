@@ -32,8 +32,10 @@ import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.PoseEstimator;
 import frc.robot.subsystems.SwerveSubsystem;
 import Glitch.Lib.NetworkTableLogger;
+import org.json.simple.parser.ParseException;
 import org.littletonrobotics.urcl.URCL;
 
+import java.io.IOException;
 import java.util.Optional;
 
 /**
@@ -63,48 +65,56 @@ public class Robot extends TimedRobot {
    */
   public Robot() {
 
-    AutoBuilder.configure(
-        m_PoseEstimator::get2dPose,
-        m_PoseEstimator::resetPoseToPose2d,
-        m_SwerveSubsystem::getChassisSpeeds,
-        (chassisSpeeds, driveff) -> { // drive command
-          System.out.println("aligning");
-          // PathPlannerLogging.setLogActivePathCallback((poselist) -> {
-          //   m_PoseEstimatior.field2d.getObject("Trajectory")
-          //     .setTrajectory(
-          //       TrajectoryGenerator.generateTrajectory(
-          //         poselist,
-          //         new TrajectoryConfig(10, 5))); //TODO: get this from pathplanner somehow
-          // });
-//          if (Robot.isRedAlliance()) {
-//            chassisSpeeds = new ChassisSpeeds(-chassisSpeeds.vxMetersPerSecond, -chassisSpeeds.vyMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
-//          }
-          logger.logChassisSpeeds("speeds", chassisSpeeds);
-          m_SwerveSubsystem.setChassisSpeeds(chassisSpeeds);
-        },
-        new PPHolonomicDriveController(
-          new PIDConstants(
-            8,
-            0,
-            0),
-          new PIDConstants(
-            4,
-            0,
-            0)),
-        kConfigs.robotConfig,
-        () -> { // to flip path
-          // Boolean supplier that controls when the path will be mirrored for the red alliance
-          // This will flip the path being followed to the red side of the field.
-          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-          Optional<Alliance> alliance = DriverStation.getAlliance();
+    try {
+      AutoBuilder.configure(
+          m_PoseEstimator::get2dPose,
+          m_PoseEstimator::resetPoseToPose2d,
+          m_SwerveSubsystem::getChassisSpeeds,
+          (chassisSpeeds, driveff) -> { // drive command
+            System.out.println("aligning");
+            // PathPlannerLogging.setLogActivePathCallback((poselist) -> {
+            //   m_PoseEstimatior.field2d.getObject("Trajectory")
+            //     .setTrajectory(
+            //       TrajectoryGenerator.generateTrajectory(
+            //         poselist,
+            //         new TrajectoryConfig(10, 5))); //TODO: get this from pathplanner somehow
+            // });
+  //          if (Robot.isRedAlliance()) {
+  //            chassisSpeeds = new ChassisSpeeds(-chassisSpeeds.vxMetersPerSecond, -chassisSpeeds.vyMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
+  //          }
+            logger.logChassisSpeeds("speeds", chassisSpeeds);
+            m_SwerveSubsystem.setChassisSpeeds(chassisSpeeds);
+          },
+          new PPHolonomicDriveController(
+            new PIDConstants(
+              8,
+              0,
+              0),
+            new PIDConstants(
+              4,
+              0,
+              0)),
+        RobotConfig.fromGUISettings(),
+          () -> { // to flip path
+            // Boolean supplier that controls when the path will be mirrored for the red alliance
+            // This will flip the path being followed to the red side of the field.
+            // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+            Optional<Alliance> alliance = DriverStation.getAlliance();
 
-          if (alliance.isPresent()) {
-            return alliance.get() == DriverStation.Alliance.Red;
-          }
-          return false;
-        },
-        m_SwerveSubsystem,
-      m_PoseEstimator);
+            if (alliance.isPresent()) {
+              return alliance.get() == Alliance.Red;
+            }
+            return false;
+          },
+          m_SwerveSubsystem,
+        m_PoseEstimator);
+    } catch (IOException e) {
+      System.out.println("ERROR: Could not load pathplanner config");
+      throw new RuntimeException(e);
+    } catch (ParseException e) {
+      System.out.println("ERROR: Could not parse pathplanner config");
+      throw new RuntimeException(e);
+    }
 
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
