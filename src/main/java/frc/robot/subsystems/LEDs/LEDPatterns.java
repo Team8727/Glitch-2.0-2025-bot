@@ -14,9 +14,11 @@ import edu.wpi.first.wpilibj.LEDPattern.GradientType;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.Constants.kElevator;
 import frc.robot.subsystems.Elevator.Elevator;
-import frc.robot.subsystems.LEDs.LEDSubsystem;
 
-/** Add your docs here. */
+/** 
+ * This class contains all the premade LED patterns used in the robot.
+ * Feel free to add more!
+ */
 public class LEDPatterns {
     Elevator m_elevator;
       // Define LED Patterns
@@ -67,8 +69,12 @@ public class LEDPatterns {
     LEDSubsystem.getColor(Color.kDarkGreen)
   );
   
-  // Elevator progress bar pattern
-  public final LEDPattern elevatorProgress = LEDPattern.gradient(
+  /** 
+  * Elevator progress bar pattern
+  * IMPORTANT: This will only work if you provided an Elevator object to the constructor of this class.
+  * ALSO IMPORTANT: This pattern was based off of the elevator for the 2025 bot so it will take tinkering to get to work for your bot.
+  */ 
+  public final LEDPattern elevatorProgress = m_elevator == null ? null : LEDPattern.gradient(
     GradientType.kDiscontinuous, 
     LEDSubsystem.getColor(Color.kGreen), 
     LEDSubsystem.getColor(Color.kYellow), 
@@ -152,6 +158,17 @@ public class LEDPatterns {
     }
   }
 
+  /**
+  * Creates a new LEDPatterns.
+  * This version of LEDPatterns just won't have the elevator progress bar.
+  */
+  public LEDPatterns() {}
+
+  /** 
+  * Creates a new LEDPatterns. 
+  * @param elevator This parameter is used for a specific LED pattern that displays the elevator's progress. It is not used for any other patterns.
+  * This class does use other values from the elevator, including some in Constants.kElevator, but they aren't necessary for anything other than the elevator pattern.
+  */
   public LEDPatterns(Elevator elevator) {
     m_elevator = elevator;
   }
