@@ -1,6 +1,7 @@
 package frc.robot.controller;
 
 import Glitch.Lib.Controller.ControllerBindings;
+import Glitch.Lib.Swerve.Swerve;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.CoralCmds.ReindexCoralCmd;
@@ -13,13 +14,12 @@ import frc.robot.subsystems.GroundIntake.GroundIntakePivot;
 import frc.robot.subsystems.GroundIntake.GroundIntakeRollers;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
 import frc.robot.subsystems.PoseEstimator;
-import frc.robot.subsystems.SwerveSubsystem;
 
 /**
  * Default teleop controller bindings for the robot.
  */
 public class Driver2DefaultBindings implements ControllerBindings {
-  private final SwerveSubsystem m_SwerveSubsystem;
+  private final Swerve m_Swerve;
   private final PoseEstimator m_poseEstimator;
   private final GroundIntakePivot groundIntakePivot;
   private final GroundIntakeRollers groundIntakeRollers;
@@ -30,7 +30,7 @@ public class Driver2DefaultBindings implements ControllerBindings {
   private final AlgaeRemoverRollers m_AlgaeRemoverRollers;
 
   public Driver2DefaultBindings(
-    SwerveSubsystem swerveSubsystem,
+    Swerve swerve,
     PoseEstimator poseEstimator,
     GroundIntakePivot groundIntakePivot,
     GroundIntakeRollers groundIntakeRollers,
@@ -39,7 +39,7 @@ public class Driver2DefaultBindings implements ControllerBindings {
     LEDSubsystem ledSubsystem,
     AlgaeRemoverPivot algaeRemoverPivot,
     AlgaeRemoverRollers algaeRemoverRollers) {
-    m_SwerveSubsystem = swerveSubsystem;
+    m_Swerve = swerve;
     m_poseEstimator = poseEstimator;
     this.groundIntakePivot = groundIntakePivot;
     this.groundIntakeRollers = groundIntakeRollers;
@@ -93,6 +93,6 @@ public class Driver2DefaultBindings implements ControllerBindings {
 
   @Override
   public void unbind(CommandXboxController controller) {
-    m_SwerveSubsystem.removeDefaultCommand();
+    m_Swerve.removeDefaultCommand();
 }
 }

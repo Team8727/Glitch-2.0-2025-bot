@@ -27,7 +27,7 @@ import frc.robot.subsystems.GroundIntake.GroundIntakeRollers;
 import frc.robot.subsystems.LEDs.LEDPatterns;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
 import frc.robot.subsystems.PoseEstimator;
-import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.SwerveSubsytem;
 import org.json.simple.parser.ParseException;
 import org.littletonrobotics.urcl.URCL;
 
@@ -42,8 +42,8 @@ import java.util.Optional;
 public class Robot extends TimedRobot {
 
   private final RobotContainer m_robotContainer;
-  private final SwerveSubsystem m_SwerveSubsystem = new SwerveSubsystem();
-  private final PoseEstimator m_PoseEstimator = new PoseEstimator(m_SwerveSubsystem);
+  private final SwerveSubsytem swerveSubsytem = new SwerveSubsytem();
+  private final PoseEstimator m_PoseEstimator = new PoseEstimator(swerveSubsytem);
   private final Elevator m_elevator = new Elevator();
   private final LEDSubsystem m_ledSubsystem = new LEDSubsystem(m_elevator);
   private final LEDPatterns m_ledPatterns = new LEDPatterns(m_elevator);
@@ -65,7 +65,7 @@ public class Robot extends TimedRobot {
       AutoBuilder.configure(
           m_PoseEstimator::get2dPose,
           m_PoseEstimator::resetPoseToPose2d,
-          m_SwerveSubsystem::getChassisSpeeds,
+          swerveSubsytem::getChassisSpeeds,
           (chassisSpeeds, driveff) -> { // drive command
             System.out.println("aligning");
             // PathPlannerLogging.setLogActivePathCallback((poselist) -> {
@@ -79,7 +79,7 @@ public class Robot extends TimedRobot {
   //            chassisSpeeds = new ChassisSpeeds(-chassisSpeeds.vxMetersPerSecond, -chassisSpeeds.vyMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
   //          }
             logger.logChassisSpeeds("speeds", chassisSpeeds);
-            m_SwerveSubsystem.setChassisSpeeds(chassisSpeeds);
+            swerveSubsytem.setChassisSpeeds(chassisSpeeds);
           },
           new PPHolonomicDriveController(
             new PIDConstants(
@@ -102,7 +102,7 @@ public class Robot extends TimedRobot {
             }
             return false;
           },
-          m_SwerveSubsystem,
+        swerveSubsytem,
         m_PoseEstimator);
     } catch (IOException e) {
       System.out.println("ERROR: Could not load pathplanner config");
@@ -116,7 +116,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer =
         new RobotContainer(
-            m_SwerveSubsystem,
+          swerveSubsytem,
             m_PoseEstimator,
             groundIntakePivot,
             groundIntakeRollers,

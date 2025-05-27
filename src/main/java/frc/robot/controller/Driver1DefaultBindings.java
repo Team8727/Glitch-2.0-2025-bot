@@ -1,6 +1,7 @@
 package frc.robot.controller;
 
 import Glitch.Lib.Controller.ControllerBindings;
+import Glitch.Lib.Swerve.Swerve;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -23,13 +24,12 @@ import frc.robot.subsystems.GroundIntake.GroundIntakeRollers;
 import frc.robot.subsystems.LEDs.LEDPatterns;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
 import frc.robot.subsystems.PoseEstimator;
-import frc.robot.subsystems.SwerveSubsystem;
 
 /**
  * Default teleop controller bindings for the robot.
  */
 public class Driver1DefaultBindings implements ControllerBindings {
-  private final SwerveSubsystem m_SwerveSubsystem;
+  private final Swerve m_Swerve;
   private final PoseEstimator m_poseEstimator;
   private final GroundIntakePivot groundIntakePivot;
   private final GroundIntakeRollers groundIntakeRollers;
@@ -42,7 +42,7 @@ public class Driver1DefaultBindings implements ControllerBindings {
   private final Autos m_autos;
 
   public Driver1DefaultBindings(
-    SwerveSubsystem swerveSubsystem,
+    Swerve swerve,
     PoseEstimator poseEstimator,
     GroundIntakePivot groundIntakePivot,
     GroundIntakeRollers groundIntakeRollers,
@@ -53,7 +53,7 @@ public class Driver1DefaultBindings implements ControllerBindings {
     AlgaeRemoverPivot algaeRemoverPivot,
     AlgaeRemoverRollers algaeRemoverRollers,
     Autos autos) {
-    m_SwerveSubsystem = swerveSubsystem;
+    m_Swerve = swerve;
     m_poseEstimator = poseEstimator;
     this.groundIntakePivot = groundIntakePivot;
     this.groundIntakeRollers = groundIntakeRollers;
@@ -68,9 +68,9 @@ public class Driver1DefaultBindings implements ControllerBindings {
 
   @Override
   public void bind(CommandXboxController controller) {
-    m_SwerveSubsystem.setDefaultCommand(
+    m_Swerve.setDefaultCommand(
       new SwerveJoystickCmd(
-        m_SwerveSubsystem,
+        m_Swerve,
         m_elevator,
         controller::getLeftY,
         controller::getLeftX,
@@ -122,7 +122,7 @@ public class Driver1DefaultBindings implements ControllerBindings {
 
   @Override
   public void unbind(CommandXboxController controller) {
-    m_SwerveSubsystem.removeDefaultCommand();
+    m_Swerve.removeDefaultCommand();
 }
 
 }
