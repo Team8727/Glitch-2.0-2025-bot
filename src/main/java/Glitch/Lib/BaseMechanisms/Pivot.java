@@ -1,13 +1,13 @@
 package Glitch.Lib.BaseMechanisms;
 
+import Glitch.Lib.Motors.Motor;
+import Glitch.Lib.NetworkTableLogger;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import Glitch.Lib.Motors.Motor;
-import Glitch.Lib.NetworkTableLogger;
 
 public abstract class Pivot extends SubsystemBase {
 
@@ -104,7 +104,7 @@ public abstract class Pivot extends SubsystemBase {
   // set pivot position
   private void goToSetpoint() {
     motor.setPosition(
-      setpoint.position,
+      setpoint.position / 360,
       pivotFeedforward.calculateWithVelocities(
         zeroedAngelFromHorizontal - (motor.getPosition() * 360),
         motor.getVelocity(),
@@ -146,7 +146,7 @@ public abstract class Pivot extends SubsystemBase {
   // This method will be called once per scheduler run
   @Override
   public void periodic() {
-    logger.logDouble("position", motor.getPosition());
+    logger.logDouble("position", motor.getPosition()*360);
     logger.logDouble("setpoint", setpoint.position);
     logger.logDouble("goal", goal.position);
 

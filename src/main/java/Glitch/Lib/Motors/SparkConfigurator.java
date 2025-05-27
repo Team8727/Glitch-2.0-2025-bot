@@ -9,7 +9,6 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import frc.robot.Constants;
 
 import java.util.Set;
 
@@ -171,7 +170,18 @@ public class SparkConfigurator {
     spark.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
   }
 
-  // Get a sparkmax
+  /**
+   * Creates and configures a SparkMax motor controller with various options for
+   * sensors, logging, and whether it has a follower motor.
+   *
+   * @param id The CAN ID of the SparkMax motor controller to be created.
+   * @param motorType The type of motor being controlled (e.g., Brushless or Brushed).
+   * @param hasFollower Specifies whether the motor controller will have a follower.
+   * @param sensors A set of sensors to be used with the motor controller, such as
+   *                integrated or analog sensors.
+   * @param logData A set of data points to be logged, such as position, velocity, or voltage.
+   * @return A configured SparkMax motor controller based on the provided settings.
+   */
   public static SparkMax getSparkMax(
       int id,
       MotorType motorType,
@@ -209,6 +219,16 @@ public class SparkConfigurator {
     return (SparkFlex) setupLogging(spark, hasFollower, config, sensors, logData);
   }
 
+
+  /**
+   * Configures and returns a SparkMax motor controller that follows a specified leader motor.
+   *
+   * @param leader The leader SparkMax motor controller to follow.
+   * @param id The CAN ID of the follower motor controller.
+   * @param motorType The motor type of the follower (e.g., Brushless or Brushed).
+   * @param invert Specifies whether the follower motor's direction should be inverted relative to the leader.
+   * @return A configured SparkMax motor controller set as a follower to the specified leader.
+   */
   public static SparkMax getFollowerMax(
       SparkMax leader, int id, MotorType motorType, boolean invert) {
 

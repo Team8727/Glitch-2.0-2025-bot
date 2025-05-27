@@ -1,40 +1,45 @@
 package frc.robot.commands.DriveCmds;
 
+import Glitch.Lib.NetworkTableLogger;
+import Glitch.Lib.Swerve.Swerve;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.robot.Constants.kElevator;
-import frc.robot.Constants.kSwerve;
-import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.Elevator.Elevator;
-import Glitch.Lib.NetworkTableLogger;
 
 import java.util.function.Supplier;
 
 public class SwerveJoystickCmd extends Command {
 
+  // Deadzone values
   private final double translationDeadzone = 0.08;
   private final double rotationDeadzone = 0.08;
 
-  private final SwerveSubsystem m_SwerveSubsystem;
+  // Maximum speeds
+  private final double maxTransSpeed = 5;
+  private final double maxAngSpeed = 3 * Math.PI;
+  private final double minimumDriveSpeed = 4;
+
+
+  private final Swerve m_Swerve;
   private final Elevator m_Elevator;
   private final Supplier<Double> m_ySpdFunction, m_xSpdFunction, m_turningSpdFunction;
   private final NetworkTableLogger m_logger = new NetworkTableLogger(this.getName());
 
   public SwerveJoystickCmd(
-      SwerveSubsystem swerveSubsystem,
+      Swerve swerve,
       Elevator elevator,
       Supplier<Double> ySpdFunction,
       Supplier<Double> xSpdFunction,
       Supplier<Double> turningSpdFunction) {
-    m_SwerveSubsystem = swerveSubsystem;
+    m_Swerve = swerve;
     m_Elevator = elevator;
     m_ySpdFunction = ySpdFunction;
     m_xSpdFunction = xSpdFunction;
     m_turningSpdFunction = turningSpdFunction;
 
-    addRequirements(swerveSubsystem);
+    addRequirements(swerve);
   }
 
   @Override
@@ -55,26 +60,26 @@ public class SwerveJoystickCmd extends Command {
 
     // get elevator height for anti-tipping
     double elevatorHeight = m_Elevator.getElevatorHeight();
-    double driveSpeedConversionFactor = (kElevator.ElevatorPosition.L4.getOutputRotations() - (elevatorHeight - kSwerve.DriveSpeedScaling.minimumDriveSpeed)) / kElevator.ElevatorPosition.L4.getOutputRotations();
-    xSpeed = -(xSpeed * kSwerve.maxTransSpeed
+    double driveSpeedConversionFactor = (Elevator.ElevatorPosition.L4.getOutputRotations() - (elevatorHeight - minimumDriveSpeed)) / Elevator.ElevatorPosition.L4.getOutputRotations();
+    xSpeed = -(xSpeed * maxTransSpeed
      * driveSpeedConversionFactor);  // Scaling to elevator height
-    ySpeed = -(ySpeed * kSwerve.maxTransSpeed
+    ySpeed = -(ySpeed * maxTransSpeed
      * driveSpeedConversionFactor);  // Scaling to elevator height
-    turningSpeed = -(turningSpeed * kSwerve.maxAngSpeed
+    turningSpeed = -(turningSpeed * maxAngSpeed
      * driveSpeedConversionFactor);  // Scaling to elevator height
 
     // set chassis speed
     ChassisSpeeds chassisSpeeds =
       ChassisSpeeds.fromFieldRelativeSpeeds(
-        xSpeed, ySpeed, turningSpeed, m_SwerveSubsystem.getHeading());
+        xSpeed, ySpeed, turningSpeed, m_Swerve.getHeading());
 
     // Set the swerve module states
-    m_SwerveSubsystem.setChassisSpeeds(chassisSpeeds);
+    m_Swerve.setChassisSpeeds(chassisSpeeds);
     m_logger.logChassisSpeeds("chassis speeds", chassisSpeeds);
 
     // Update the sim rotation
     if (Robot.isSimulation()) {
-      m_SwerveSubsystem.applySimHeading();
+      m_Swerve.applySimHeading();
     }
   }
 

@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import Glitch.Lib.NetworkTableLogger;
+import Glitch.Lib.Swerve.Swerve;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -12,9 +14,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.kSwerve;
 import frc.robot.Robot;
-import Glitch.Lib.NetworkTableLogger;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class PoseEstimator extends SubsystemBase {
-  final SwerveSubsystem m_SwerveSubsystem;
+  final Swerve m_Swerve;
   final SwerveDrivePoseEstimator m_SwervePoseEstimator;
   final NetworkTableLogger networkTableLogger = new NetworkTableLogger(this.getName().toString());
 
@@ -40,8 +40,8 @@ public class PoseEstimator extends SubsystemBase {
 
   private VisionSystemSim visionSim;
 
-  private final PhotonCamera frontRightCamera = new PhotonCamera("frontRight");
-  private final PhotonCamera frontLeftCamera = new PhotonCamera("frontLeft");
+  private final PhotonCamera frontRightCamera = new PhotonCamera("frontRightOffset");
+  private final PhotonCamera frontLeftCamera = new PhotonCamera("frontLeftOffset");
   private final PhotonCamera centerCamera = new PhotonCamera("center");
 
   private final Transform3d frontLeftCameraPos = // Left Rear
@@ -72,16 +72,16 @@ public class PoseEstimator extends SubsystemBase {
   /**
    * Creates a new PoseEstimator.
    *
-   * @param swerveSubsystem The swerve subsystem used for odometry and heading information.
+   * @param swerve The swerve subsystem used for odometry and heading information.
    */
-  public PoseEstimator(SwerveSubsystem swerveSubsystem) {
+  public PoseEstimator(Swerve swerve) {
     // subsystem setups
-    m_SwerveSubsystem = swerveSubsystem;
+    m_Swerve = swerve;
     m_SwervePoseEstimator =
       new SwerveDrivePoseEstimator(
-        kSwerve.kinematics,
-        m_SwerveSubsystem.getHeading(),
-        m_SwerveSubsystem.getModulePositions(),
+        SwerveSubsytem.kinematics,
+        m_Swerve.getHeading(),
+        m_Swerve.getModulePositions(),
         new Pose2d()
       );
 
@@ -172,8 +172,8 @@ public class PoseEstimator extends SubsystemBase {
     m_SwervePoseEstimator.resetPose(pose2d);
     // System.out.println(m_SwervePoseEstimator.getEstimatedPosition().getRotation().getDegrees());
     if (Robot.isSimulation()) {
-      m_SwerveSubsystem.setNextSimHeading(pose2d.getRotation().getRadians());
-      m_SwerveSubsystem.applySimHeading();
+      m_Swerve.setNextSimHeading(pose2d.getRotation().getRadians());
+      m_Swerve.applySimHeading();
     }
   }
 
@@ -200,7 +200,7 @@ public class PoseEstimator extends SubsystemBase {
     if (Robot.isSimulation()) {
         return new Pose2d(
           m_SwervePoseEstimator.getEstimatedPosition().getTranslation(),
-          m_SwerveSubsystem.getHeading());
+          m_Swerve.getHeading());
     }
 
     return m_SwervePoseEstimator.getEstimatedPosition();
@@ -226,7 +226,7 @@ public class PoseEstimator extends SubsystemBase {
    * Zeros the robot's heading.
    */
   public void zeroHeading() {
-    m_SwerveSubsystem.zeroHeading();
+    m_Swerve.zeroHeading();
     m_SwervePoseEstimator.resetRotation(new Rotation2d());
   }
 
@@ -280,7 +280,7 @@ public class PoseEstimator extends SubsystemBase {
 
     // Changed second parameter of .addVisionMeasurement() to use `Timer.getFPGATimestamp()` which is in seconds (what this method wants) rather than the previous `RobotController.getFPGATime()` which is in microseconds
     m_SwervePoseEstimator.addVisionMeasurement(visionSim.getRobotPose().toPose2d(), Timer.getFPGATimestamp());
-    m_SwerveSubsystem.applySimHeading();
+    m_Swerve.applySimHeading();
   }
 
   /**
@@ -298,8 +298,8 @@ public class PoseEstimator extends SubsystemBase {
     // gyro update
     m_SwervePoseEstimator.updateWithTime(
       Timer.getFPGATimestamp(),
-      m_SwerveSubsystem.getHeading(),
-      m_SwerveSubsystem.getModulePositions());
+      m_Swerve.getHeading(),
+      m_Swerve.getModulePositions());
 
     // Update Field2d with pose to display the robot's visual position on the field to the dashboard
     field2d.setRobotPose(get2dPose());

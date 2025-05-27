@@ -5,12 +5,10 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.kAlgaeRemover.kPivot.RemoverPositions;
-import frc.robot.Constants.kElevator.ElevatorPosition;
-import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
 import frc.robot.subsystems.Elevator.Coral.Coral;
+import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.LEDs.LEDPatterns;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
 
@@ -18,13 +16,13 @@ import frc.robot.subsystems.LEDs.LEDSubsystem;
 public class weirdAlgaeIntakeCmd extends Command {
   private final AlgaeRemoverPivot m_pivot;
   private final AlgaeRemoverRollers m_rollers;
-  private final ElevatorPosition m_setPos;
+  private final Elevator.ElevatorPosition m_setPos;
   private final Elevator m_elevator;
   private final LEDSubsystem m_ledSubsystem;
   private final Coral m_coral;
 
   /** Creates a new removeAlgae. */
-  public weirdAlgaeIntakeCmd(AlgaeRemoverPivot algaeRemoverPivot, AlgaeRemoverRollers algaeRemoverRollers, ElevatorPosition setPos, Elevator elevator, LEDSubsystem ledSubsystem, Coral coral) {
+  public weirdAlgaeIntakeCmd(AlgaeRemoverPivot algaeRemoverPivot, AlgaeRemoverRollers algaeRemoverRollers, Elevator.ElevatorPosition setPos, Elevator elevator, LEDSubsystem ledSubsystem, Coral coral) {
     m_pivot = algaeRemoverPivot;
     m_rollers = algaeRemoverRollers;
     m_setPos = setPos;
@@ -38,9 +36,9 @@ public class weirdAlgaeIntakeCmd extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (m_elevator.getElevatorSetPosition() == ElevatorPosition.A2 || m_elevator.getElevatorSetPosition() == ElevatorPosition.A3) {
+    if (m_elevator.getElevatorSetPosition() == Elevator.ElevatorPosition.A2 || m_elevator.getElevatorSetPosition() == Elevator.ElevatorPosition.A3) {
       System.out.println("test");
-      m_pivot.setPositionTrapazoidal(RemoverPositions.RaisedL2); // TODO: set positions
+      m_pivot.setPositionTrapazoidal(AlgaeRemoverPivot.RemoverPositions.RaisedL2); // TODO: set positions
       m_rollers.setRemoverRollerSpeed(.5); // TODO: set speed
       m_coral.setOuttakeSpeedDuty(-.5);
       m_ledSubsystem.combinePatternsForDuration(LEDPatterns.blue, LEDPatterns.ace, LEDPatterns.green, 2);

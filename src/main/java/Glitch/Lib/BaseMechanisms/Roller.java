@@ -1,10 +1,8 @@
 package Glitch.Lib.BaseMechanisms;
 
-import static Glitch.Lib.Motors.SparkConfigurator.getSparkMax;
-
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import Glitch.Lib.Motors.Motor;
 import Glitch.Lib.NetworkTableLogger;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public abstract class Roller extends SubsystemBase {
 

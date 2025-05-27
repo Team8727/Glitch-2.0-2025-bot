@@ -4,16 +4,15 @@
 
 package frc.robot.subsystems.LEDs;
 
-import static edu.wpi.first.units.Units.Percent;
-import static edu.wpi.first.units.Units.Second;
-
-import java.util.Map;
-
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.LEDPattern.GradientType;
 import edu.wpi.first.wpilibj.util.Color;
-import frc.robot.Constants.kElevator;
 import frc.robot.subsystems.Elevator.Elevator;
+
+import java.util.Map;
+
+import static edu.wpi.first.units.Units.Percent;
+import static edu.wpi.first.units.Units.Second;
 
 /** 
  * This class contains all the premade LED patterns used in the robot.
@@ -81,7 +80,7 @@ public class LEDPatterns {
     LEDSubsystem.getColor(Color.kOrange), 
     Color.kRed)
   .mask(LEDPattern.progressMaskLayer(
-    () -> m_elevator.getElevatorHeight() / kElevator.ElevatorPosition.L4.getOutputRotations()));
+    () -> m_elevator.getElevatorHeight() / Elevator.ElevatorPosition.L4.getOutputRotations()));
   // Coral pickup pattern
   public static final LEDPattern coralPickup = LEDPattern.gradient(
     GradientType.kDiscontinuous, 

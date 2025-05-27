@@ -5,23 +5,22 @@
 package frc.robot.commands.ElevatorCmds;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.kElevator.ElevatorPosition;
 import frc.robot.subsystems.Elevator.Coral.Coral;
+import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.LEDs.LEDPatterns;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
-import frc.robot.subsystems.Elevator.Elevator;
 
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class SetElevatorHeightCmd extends Command {
   private final Elevator m_elevator;
-  private final ElevatorPosition m_scoreLevel;
+  private final Elevator.ElevatorPosition m_scoreLevel;
   private final LEDSubsystem m_ledSubsystem;
   private final LEDPatterns m_ledPatterns;
   private final Coral m_coral;
 
   /** Creates a new SetEvevatorHeightCmd. */
-  public SetElevatorHeightCmd(ElevatorPosition scoreLevel, Elevator elevator, Coral coral, LEDSubsystem ledSubsystem, LEDPatterns ledPatterns) {
+  public SetElevatorHeightCmd(Elevator.ElevatorPosition scoreLevel, Elevator elevator, Coral coral, LEDSubsystem ledSubsystem, LEDPatterns ledPatterns) {
 
     m_scoreLevel = scoreLevel;
     m_elevator = elevator;
@@ -42,7 +41,7 @@ public class SetElevatorHeightCmd extends Command {
       System.out.println("hey driver, are you trying to kill the elevator or something? please move the coral out of the way");
     }
 
-    if (m_scoreLevel != ElevatorPosition.L1) {
+    if (m_scoreLevel != Elevator.ElevatorPosition.L1) {
       m_ledSubsystem.setPatternForDuration(m_ledPatterns.elevatorProgress, 0.5);
     }
   }
