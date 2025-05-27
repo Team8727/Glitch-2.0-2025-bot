@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems.Elevator;
 
+import Glitch.Lib.Motors.SparkConfigurator.LogData;
+import Glitch.Lib.NetworkTableLogger;
 import com.revrobotics.sim.SparkMaxSim;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -23,14 +25,12 @@ import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.kConfigs;
-import Glitch.Lib.NetworkTableLogger;
-import Glitch.Lib.Motors.SparkConfigurator.LogData;
 
 import java.util.Set;
 
-import static edu.wpi.first.units.Units.Volt;
 import static Glitch.Lib.Motors.SparkConfigurator.getFollowerMax;
 import static Glitch.Lib.Motors.SparkConfigurator.getSparkMax;
+import static edu.wpi.first.units.Units.Volt;
 public class Elevator extends SubsystemBase {
 
   private final SparkMax elevatorMotorR;

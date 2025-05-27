@@ -1,13 +1,12 @@
 package frc.robot.commands.DriveCmds;
 
+import Glitch.Lib.NetworkTableLogger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.robot.Constants.kSwerve;
-import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.Elevator.Elevator;
-import Glitch.Lib.NetworkTableLogger;
+import frc.robot.subsystems.SwerveSubsystem;
 
 import java.util.function.Supplier;
 

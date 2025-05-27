@@ -4,11 +4,7 @@
 
 package frc.robot.subsystems;
 
-import java.io.IOException;
-import java.util.LinkedHashMap;
-
-import org.json.simple.parser.ParseException;
-
+import Glitch.Lib.NetworkTableLogger;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -26,12 +22,14 @@ import frc.robot.commands.CoralCmds.DeployCoralCmd;
 import frc.robot.commands.CoralCmds.IntakeCoralCmd;
 import frc.robot.commands.ElevatorCmds.SetElevatorHeightCmd;
 import frc.robot.subsystems.Elevator.Coral.Coral;
+import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.LEDs.LEDPatterns;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
-import frc.robot.subsystems.Elevator.Elevator;
-import Glitch.Lib.NetworkTableLogger;
+import org.json.simple.parser.ParseException;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class Autos extends SubsystemBase {

@@ -4,15 +4,15 @@
 
 package frc.robot.subsystems.LEDs;
 
-import static edu.wpi.first.units.Units.Percent;
-import static edu.wpi.first.units.Units.Second;
-
-import java.util.Map;
-
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.LEDPattern.GradientType;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.subsystems.Elevator.Elevator;
+
+import java.util.Map;
+
+import static edu.wpi.first.units.Units.Percent;
+import static edu.wpi.first.units.Units.Second;
 
 /** Add your docs here. */
 public class LEDPatterns {

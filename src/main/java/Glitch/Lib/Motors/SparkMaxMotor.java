@@ -4,7 +4,6 @@ import com.revrobotics.spark.*;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
-
 import java.util.Set;
 
 import static Glitch.Lib.Motors.SparkConfigurator.getSparkMax;

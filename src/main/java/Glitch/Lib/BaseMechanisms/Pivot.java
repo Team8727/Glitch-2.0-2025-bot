@@ -1,13 +1,13 @@
 package Glitch.Lib.BaseMechanisms;
 
+import Glitch.Lib.Motors.Motor;
+import Glitch.Lib.NetworkTableLogger;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import Glitch.Lib.Motors.Motor;
-import Glitch.Lib.NetworkTableLogger;
 
 public abstract class Pivot extends SubsystemBase {
 

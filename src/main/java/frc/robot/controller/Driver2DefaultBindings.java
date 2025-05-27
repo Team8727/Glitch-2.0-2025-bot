@@ -5,15 +5,15 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.CoralCmds.ReindexCoralCmd;
 import frc.robot.commands.CoralCmds.RejectCoralCmd;
+import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
+import frc.robot.subsystems.Elevator.Coral.Coral;
+import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.GroundIntake.GroundIntakePivot;
 import frc.robot.subsystems.GroundIntake.GroundIntakeRollers;
-import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.Elevator.Elevator;
-import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
-import frc.robot.subsystems.Elevator.Coral.Coral;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
 import frc.robot.subsystems.PoseEstimator;
+import frc.robot.subsystems.SwerveSubsystem;
 
 /**
  * Default teleop controller bindings for the robot.

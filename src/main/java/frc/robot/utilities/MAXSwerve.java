@@ -1,5 +1,7 @@
 package frc.robot.utilities;
 
+import Glitch.Lib.Motors.SparkConfigurator.LogData;
+import Glitch.Lib.Motors.SparkConfigurator.Sensors;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -20,8 +22,6 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.Constants.kSwerve.kModule;
-import Glitch.Lib.Motors.SparkConfigurator.LogData;
-import Glitch.Lib.Motors.SparkConfigurator.Sensors;
 
 import java.util.Set;
 

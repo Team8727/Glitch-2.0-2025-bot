@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import Glitch.Lib.NetworkTableLogger;
 import com.studica.frc.AHRS;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -11,7 +12,6 @@ import frc.robot.Constants.kSwerve;
 import frc.robot.Constants.kSwerve.kModule;
 import frc.robot.Robot;
 import frc.robot.utilities.MAXSwerve;
-import Glitch.Lib.NetworkTableLogger;
 
 public class SwerveSubsystem extends SubsystemBase {
   // Swerve uses ccw+ angular quanities and a coordinate plane with 0,0 at the robot's center

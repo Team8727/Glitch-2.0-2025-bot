@@ -1,9 +1,9 @@
 package frc.robot.subsystems.GroundIntake;
 
+import Glitch.Lib.BaseMechanisms.Pivot;
+import Glitch.Lib.Motors.SparkMaxMotor;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import Glitch.Lib.Motors.SparkMaxMotor;
-import Glitch.Lib.BaseMechanisms.Pivot;
 
 public class GroundIntakePivot extends Pivot {
   public enum IntakePosition {
