@@ -27,7 +27,7 @@ import frc.robot.subsystems.GroundIntake.GroundIntakeRollers;
 import frc.robot.subsystems.LEDs.LEDPatterns;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
 import frc.robot.subsystems.PoseEstimator;
-import frc.robot.subsystems.SwerveSubsystem;
+import Glitch.Lib.Swerve.Swerve;
 import org.json.simple.parser.ParseException;
 import org.littletonrobotics.urcl.URCL;
 
@@ -42,7 +42,7 @@ import java.util.Optional;
 public class Robot extends TimedRobot {
 
   private final RobotContainer m_robotContainer;
-  private final SwerveSubsystem m_SwerveSubsystem = new SwerveSubsystem();
+  private final Swerve m_SwerveSubsystem = new SwerveSubsystem();
   private final PoseEstimator m_PoseEstimator = new PoseEstimator(m_SwerveSubsystem);
   private final Elevator m_elevator = new Elevator();
   private final LEDSubsystem m_ledSubsystem = new LEDSubsystem(m_elevator);

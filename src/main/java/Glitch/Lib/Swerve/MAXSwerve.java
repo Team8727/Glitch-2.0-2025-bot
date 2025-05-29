@@ -1,4 +1,4 @@
-package frc.robot.utilities;
+package Glitch.Lib.Swerve;
 
 import Glitch.Lib.Motors.SparkConfigurator.LogData;
 import Glitch.Lib.Motors.SparkConfigurator.Sensors;
@@ -24,7 +24,6 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
-import frc.robot.subsystems.SwerveSubsystem;
 
 import java.util.Set;
 
@@ -36,7 +35,7 @@ public class MAXSwerve {
   private final double chassisOffset;
 
   // Chassis dimensions from wheel center to center (meters)
-  public static final double width = Units.inchesToMeters(SwerveSubsystem.wheelBaseWidth);
+  public static final double width = Units.inchesToMeters(Swerve.wheelBaseWidth);
   private static final double length = width;
 
   // Kinematics

@@ -73,7 +73,7 @@ public class LEDPatterns {
   * IMPORTANT: This will only work if you provided an Elevator object to the constructor of this class.
   * ALSO IMPORTANT: This pattern was based off of the elevator for the 2025 bot so it will take tinkering to get to work for your bot.
   */ 
-  public final LEDPattern elevatorProgress = m_elevator == null ? null : LEDPattern.gradient(
+  public final LEDPattern elevatorProgress = LEDPattern.gradient(
     GradientType.kDiscontinuous, 
     LEDSubsystem.getColor(Color.kGreen), 
     LEDSubsystem.getColor(Color.kYellow), 

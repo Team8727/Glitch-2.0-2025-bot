@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package Glitch.Lib.Swerve;
 
 import Glitch.Lib.NetworkTableLogger;
 import com.studica.frc.AHRS;
@@ -9,12 +9,11 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
-import frc.robot.utilities.MAXSwerve;
 
-import static frc.robot.utilities.MAXSwerve.kinematics;
-import static frc.robot.utilities.MAXSwerve.maxWheelSpeed;
+import static Glitch.Lib.Swerve.MAXSwerve.kinematics;
+import static Glitch.Lib.Swerve.MAXSwerve.maxWheelSpeed;
 
-public class SwerveSubsystem extends SubsystemBase {
+public abstract class Swerve extends SubsystemBase {
   // Swerve uses ccw+ angular quanities and a coordinate plane with 0,0 at the robot's center
   // , forward is +x, and a module order based on the quadrant system (front left is first)
   // BL        FL
@@ -22,7 +21,7 @@ public class SwerveSubsystem extends SubsystemBase {
   // BR        FR
   // NOTE: Make sure ModuleLocation and the order of the modules in the kinematics match
 
-  public static final double wheelBaseWidth = 22.52;
+  public static double wheelBaseWidth;
 
   private enum ModuleLocation {
     FRONT_LEFT,
@@ -44,14 +43,14 @@ public class SwerveSubsystem extends SubsystemBase {
   private final SwerveModuleState[] cachedModuleStates = new SwerveModuleState[kNumModules];
 
   // Motor CAN IDs
-  private static final int frontLeftDriveID = 9; //
-  private static final int frontLeftSteerID = 8; //
-  private static final int backLeftDriveID = 3; //
-  private static final int backLeftSteerID = 2; //
-  private static final int backRightDriveID = 5; //
-  private static final int backRightSteerID = 4; //
-  private static final int frontRightDriveID = 7; //
-  private static final int frontRightSteerID = 6; //
+  private final int frontLeftDriveID;
+  private final int frontLeftSteerID;
+  private final int backLeftDriveID;
+  private final int backLeftSteerID;
+  private final int backRightDriveID;
+  private final int backRightSteerID;
+  private final int frontRightDriveID;
+  private final int frontRightSteerID;
 
   // Gyro
   private final AHRS navX = new AHRS(AHRS.NavXComType.kMXP_SPI);
@@ -82,7 +81,26 @@ public class SwerveSubsystem extends SubsystemBase {
   // Network Table Logger
   private final NetworkTableLogger networkTableLogger = new NetworkTableLogger(this.getName().toString());
 
-  public SwerveSubsystem() {
+  public Swerve(
+      int frontLeftDriveID,
+      int frontLeftSteerID,
+      int backLeftDriveID,
+      int backLeftSteerID,
+      int backRightDriveID,
+      int backRightSteerID,
+      int frontRightDriveID,
+      int frontRightSteerID,
+      double wheelBaseWidth
+  ) {
+    this.frontLeftDriveID = frontLeftDriveID;
+    this.frontLeftSteerID = frontLeftSteerID;
+    this.backLeftDriveID = backLeftDriveID;
+    this.backLeftSteerID = backLeftSteerID;
+    this.backRightDriveID = backRightDriveID;
+    this.backRightSteerID = backRightSteerID;
+    this.frontRightDriveID = frontRightDriveID;
+    this.frontRightSteerID = frontRightSteerID;
+    Swerve.wheelBaseWidth = wheelBaseWidth;
     initSwerveModules();
 
     new Thread(

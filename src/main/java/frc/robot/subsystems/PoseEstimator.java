@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import Glitch.Lib.NetworkTableLogger;
+import Glitch.Lib.Swerve.Swerve;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -30,7 +31,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class PoseEstimator extends SubsystemBase {
-  final SwerveSubsystem m_SwerveSubsystem;
+  final Swerve m_SwerveSubsystem;
   final SwerveDrivePoseEstimator m_SwervePoseEstimator;
   final NetworkTableLogger networkTableLogger = new NetworkTableLogger(this.getName().toString());
 
@@ -74,7 +75,7 @@ public class PoseEstimator extends SubsystemBase {
    *
    * @param swerveSubsystem The swerve subsystem used for odometry and heading information.
    */
-  public PoseEstimator(SwerveSubsystem swerveSubsystem) {
+  public PoseEstimator(Swerve swerveSubsystem) {
     // subsystem setups
     m_SwerveSubsystem = swerveSubsystem;
     m_SwervePoseEstimator =
