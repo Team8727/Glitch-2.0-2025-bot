@@ -8,10 +8,11 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.kSwerve;
-import frc.robot.Constants.kSwerve.kModule;
 import frc.robot.Robot;
 import frc.robot.utilities.MAXSwerve;
+
+import static frc.robot.utilities.MAXSwerve.kinematics;
+import static frc.robot.utilities.MAXSwerve.maxWheelSpeed;
 
 public class SwerveSubsystem extends SubsystemBase {
   // Swerve uses ccw+ angular quanities and a coordinate plane with 0,0 at the robot's center
@@ -20,6 +21,9 @@ public class SwerveSubsystem extends SubsystemBase {
   //       C
   // BR        FR
   // NOTE: Make sure ModuleLocation and the order of the modules in the kinematics match
+
+  public static final double wheelBaseWidth = 22.52;
+
   private enum ModuleLocation {
     FRONT_LEFT,
     FRONT_RIGHT,
@@ -40,14 +44,14 @@ public class SwerveSubsystem extends SubsystemBase {
   private final SwerveModuleState[] cachedModuleStates = new SwerveModuleState[kNumModules];
 
   // Motor CAN IDs
-  private static int frontLeftDriveID = 9; //
-  private static int frontLeftSteerID = 8; //
-  private static int backLeftDriveID = 3; //
-  private static int backLeftSteerID = 2; //
-  private static int backRightDriveID = 5; //
-  private static int backRightSteerID = 4; //
-  private static int frontRightDriveID = 7; //
-  private static int frontRightSteerID = 6; //
+  private static final int frontLeftDriveID = 9; //
+  private static final int frontLeftSteerID = 8; //
+  private static final int backLeftDriveID = 3; //
+  private static final int backLeftSteerID = 2; //
+  private static final int backRightDriveID = 5; //
+  private static final int backRightSteerID = 4; //
+  private static final int frontRightDriveID = 7; //
+  private static final int frontRightSteerID = 6; //
 
   // Gyro
   private final AHRS navX = new AHRS(AHRS.NavXComType.kMXP_SPI);
@@ -136,7 +140,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * @return the chassis speeds
    */
   public ChassisSpeeds getChassisSpeeds() {
-    return kSwerve.kinematics.toChassisSpeeds(getModuleStates());
+    return kinematics.toChassisSpeeds(getModuleStates());
   }
 
   /**
@@ -188,7 +192,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * @param robotRelativeSpeeds the robot-relative speeds
    */
   public void setChassisSpeeds(ChassisSpeeds robotRelativeSpeeds) {
-    setModuleStates(kSwerve.kinematics.toSwerveModuleStates(robotRelativeSpeeds));
+    setModuleStates(kinematics.toSwerveModuleStates(robotRelativeSpeeds));
 
     if (Robot.isSimulation()) {
       setNextSimHeading(simGyro.nextHeading + robotRelativeSpeeds.omegaRadiansPerSecond * 0.02);
@@ -196,7 +200,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   private void setModuleStates(SwerveModuleState[] desiredState) {
-    SwerveDriveKinematics.desaturateWheelSpeeds(desiredState, kModule.maxWheelSpeed);
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredState, maxWheelSpeed);
     networkTableLogger.logSwerveModuleState("Desired Swerve Module States", desiredState);
 
     for (int i = 0; i < modules.length; ++i) {
