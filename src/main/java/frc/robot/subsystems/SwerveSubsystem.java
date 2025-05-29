@@ -1,18 +1,19 @@
-package Glitch.Lib.Swerve;
+package frc.robot.subsystems;
 
 import Glitch.Lib.NetworkTableLogger;
 import com.studica.frc.AHRS;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.kSwerve;
+import frc.robot.Constants.kSwerve.kModule;
 import frc.robot.Robot;
+import frc.robot.utilities.MAXSwerve;
 
-public abstract class Swerve extends SubsystemBase {
+public class SwerveSubsystem extends SubsystemBase {
   // Swerve uses ccw+ angular quanities and a coordinate plane with 0,0 at the robot's center
   // , forward is +x, and a module order based on the quadrant system (front left is first)
   // BL        FL
@@ -39,14 +40,14 @@ public abstract class Swerve extends SubsystemBase {
   private final SwerveModuleState[] cachedModuleStates = new SwerveModuleState[kNumModules];
 
   // Motor CAN IDs
-  private final int frontLeftDriveID;
-  private final int frontLeftSteerID;
-  private final int backLeftDriveID;
-  private final int backLeftSteerID;
-  private final int backRightDriveID;
-  private final int backRightSteerID;
-  private final int frontRightDriveID;
-  private final int frontRightSteerID;
+  private static int frontLeftDriveID = 9; //
+  private static int frontLeftSteerID = 8; //
+  private static int backLeftDriveID = 3; //
+  private static int backLeftSteerID = 2; //
+  private static int backRightDriveID = 5; //
+  private static int backRightSteerID = 4; //
+  private static int frontRightDriveID = 7; //
+  private static int frontRightSteerID = 6; //
 
   // Gyro
   private final AHRS navX = new AHRS(AHRS.NavXComType.kMXP_SPI);
@@ -77,40 +78,7 @@ public abstract class Swerve extends SubsystemBase {
   // Network Table Logger
   private final NetworkTableLogger networkTableLogger = new NetworkTableLogger(this.getName().toString());
 
-  public static double width;// wheelbase
-  public static double length = width;
-
-  public static final SwerveDriveKinematics kinematics =
-    new SwerveDriveKinematics(
-      new Translation2d(length / 2, width / 2), // front right
-      new Translation2d(length / 2, -width / 2), // front left
-      new Translation2d(-length / 2, width / 2), // back right
-      new Translation2d(-length / 2, -width / 2)); // back left
-
-
-  public Swerve(
-      int frontLeftDriveID,
-      int frontLeftSteerID,
-      int backLeftDriveID,
-      int backLeftSteerID,
-      int backRightDriveID,
-      int backRightSteerID,
-      int frontRightDriveID,
-      int frontRightSteerID,
-      double widthInches
-  ) {
-    // Motor CAN IDs
-    this.frontLeftDriveID = frontLeftDriveID;
-    this.frontLeftSteerID = frontLeftSteerID;
-    this.backLeftDriveID = backLeftDriveID;
-    this.backLeftSteerID = backLeftSteerID;
-    this.backRightDriveID = backRightDriveID;
-    this.backRightSteerID = backRightSteerID;
-    this.frontRightDriveID = frontRightDriveID;
-    this.frontRightSteerID = frontRightSteerID;
-
-    Swerve.width = Units.inchesToMeters(widthInches);
-
+  public SwerveSubsystem() {
     initSwerveModules();
 
     new Thread(
@@ -147,14 +115,6 @@ public abstract class Swerve extends SubsystemBase {
     return cachedModulePositions.clone();
   }
 
-  public double getWidth() {
-    return width;
-  }
-
-  public SwerveDriveKinematics getKinematics() {
-    return kinematics;
-  }
-
   /**
    * Get the current states of the swerve modules
    *
@@ -176,7 +136,7 @@ public abstract class Swerve extends SubsystemBase {
    * @return the chassis speeds
    */
   public ChassisSpeeds getChassisSpeeds() {
-    return kinematics.toChassisSpeeds(getModuleStates());
+    return kSwerve.kinematics.toChassisSpeeds(getModuleStates());
   }
 
   /**
@@ -228,7 +188,7 @@ public abstract class Swerve extends SubsystemBase {
    * @param robotRelativeSpeeds the robot-relative speeds
    */
   public void setChassisSpeeds(ChassisSpeeds robotRelativeSpeeds) {
-    setModuleStates(kinematics.toSwerveModuleStates(robotRelativeSpeeds));
+    setModuleStates(kSwerve.kinematics.toSwerveModuleStates(robotRelativeSpeeds));
 
     if (Robot.isSimulation()) {
       setNextSimHeading(simGyro.nextHeading + robotRelativeSpeeds.omegaRadiansPerSecond * 0.02);
@@ -236,7 +196,7 @@ public abstract class Swerve extends SubsystemBase {
   }
 
   private void setModuleStates(SwerveModuleState[] desiredState) {
-    SwerveDriveKinematics.desaturateWheelSpeeds(desiredState, MAXSwerve.maxWheelSpeed);
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredState, kModule.maxWheelSpeed);
     networkTableLogger.logSwerveModuleState("Desired Swerve Module States", desiredState);
 
     for (int i = 0; i < modules.length; ++i) {
