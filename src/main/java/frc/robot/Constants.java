@@ -28,11 +28,4 @@ public final class Constants {
         594.4, 
         1);
   }
-
-  public static class kAllianceInfo {
-    public enum RobotAlliance {
-      RED_ALLIANCE,
-      BLUE_ALLIANCE;
-    }
-  }
 }
