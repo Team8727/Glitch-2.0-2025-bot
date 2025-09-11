@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import Glitch.Lib.NetworkTableLogger;
+import Glitch.Lib.Swerve.MAXSwerve;
 import Glitch.Lib.Swerve.Swerve;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -14,7 +15,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.kSwerve;
 import frc.robot.Robot;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
@@ -80,7 +80,7 @@ public class PoseEstimator extends SubsystemBase {
     m_SwerveSubsystem = swerveSubsystem;
     m_SwervePoseEstimator =
       new SwerveDrivePoseEstimator(
-        kSwerve.kinematics,
+        MAXSwerve.kinematics,
         m_SwerveSubsystem.getHeading(),
         m_SwerveSubsystem.getModulePositions(),
         new Pose2d()

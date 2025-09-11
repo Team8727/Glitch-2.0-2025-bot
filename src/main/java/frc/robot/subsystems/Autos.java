@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import Glitch.Lib.NetworkTableLogger;
+import Glitch.Lib.Swerve.MAXSwerve;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -16,7 +17,6 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Constants.kAllianceInfo.RobotAlliance;
-import frc.robot.Constants.kSwerve;
 import frc.robot.Robot;
 import frc.robot.commands.CoralCmds.DeployCoralCmd;
 import frc.robot.commands.CoralCmds.IntakeCoralCmd;
@@ -341,7 +341,7 @@ public class Autos extends SubsystemBase {
       new Pose2d(
         reef.plus(
           new Translation2d(
-            0.65 + kSwerve.width + distanceFromReef,
+            0.65 + MAXSwerve.width + distanceFromReef,
             verticalOffset)),
         new Rotation2d(Math.toRadians(180)));
       return baseScoreLocation.rotateAround(reef, rotation);

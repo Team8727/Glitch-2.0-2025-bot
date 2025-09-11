@@ -14,6 +14,7 @@ import frc.robot.commands.ElevatorCmds.ZeroElevator;
 import frc.robot.commands.GroundCoralCmds.IntakeCoralGroundCmd;
 import frc.robot.commands.GroundCoralCmds.ScoreCoralGroundCmd;
 import frc.robot.subsystems.Autos;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
 import frc.robot.subsystems.Elevator.Coral.Coral;
@@ -29,7 +30,6 @@ import Glitch.Lib.Swerve.Swerve;
  * Default teleop controller bindings for the robot.
  */
 public class Driver1DefaultBindings implements ControllerBindings {
-  private final Swerve m_SwerveSubsystem;
   private final PoseEstimator m_poseEstimator;
   private final GroundIntakePivot groundIntakePivot;
   private final GroundIntakeRollers groundIntakeRollers;
@@ -42,18 +42,18 @@ public class Driver1DefaultBindings implements ControllerBindings {
   private final Autos m_autos;
 
   public Driver1DefaultBindings(
-    Swerve swerveSubsystem,
-    PoseEstimator poseEstimator,
-    GroundIntakePivot groundIntakePivot,
-    GroundIntakeRollers groundIntakeRollers,
-    Coral coral,
-    Elevator elevator,
-    LEDSubsystem ledSubsystem,
-    LEDPatterns ledPatterns,
-    AlgaeRemoverPivot algaeRemoverPivot,
-    AlgaeRemoverRollers algaeRemoverRollers,
-    Autos autos) {
-    m_SwerveSubsystem = swerveSubsystem;
+      CommandSwerveDrivetrain drivetrain,
+      PoseEstimator poseEstimator,
+      GroundIntakePivot groundIntakePivot,
+      GroundIntakeRollers groundIntakeRollers,
+      Coral coral,
+      Elevator elevator,
+      LEDSubsystem ledSubsystem,
+      LEDPatterns ledPatterns,
+      AlgaeRemoverPivot algaeRemoverPivot,
+      AlgaeRemoverRollers algaeRemoverRollers,
+      Autos autos,
+      CommandXboxController controller) {
     m_poseEstimator = poseEstimator;
     this.groundIntakePivot = groundIntakePivot;
     this.groundIntakeRollers = groundIntakeRollers;
@@ -64,18 +64,50 @@ public class Driver1DefaultBindings implements ControllerBindings {
     m_AlgaeRemoverPivot = algaeRemoverPivot;
     m_AlgaeRemoverRollers = algaeRemoverRollers;
     m_autos = autos;
+
+    new CTReSwerveConfigure(drivetrain, controller);
+
+    bind(controller);
   }
 
-  @Override
-  public void bind(CommandXboxController controller) {
-    m_SwerveSubsystem.setDefaultCommand(
+  public Driver1DefaultBindings(
+      Swerve swerveSubsystem,
+      PoseEstimator poseEstimator,
+      GroundIntakePivot groundIntakePivot,
+      GroundIntakeRollers groundIntakeRollers,
+      Coral coral,
+      Elevator elevator,
+      LEDSubsystem ledSubsystem,
+      LEDPatterns ledPatterns,
+      AlgaeRemoverPivot algaeRemoverPivot,
+      AlgaeRemoverRollers algaeRemoverRollers,
+      Autos autos,
+      CommandXboxController controller) {
+    m_poseEstimator = poseEstimator;
+    this.groundIntakePivot = groundIntakePivot;
+    this.groundIntakeRollers = groundIntakeRollers;
+    m_coral = coral;
+    m_elevator = elevator;
+    m_ledSubsytem = ledSubsystem;
+    m_ledPatterns = ledPatterns;
+    m_AlgaeRemoverPivot = algaeRemoverPivot;
+    m_AlgaeRemoverRollers = algaeRemoverRollers;
+    m_autos = autos;
+
+    swerveSubsystem.setDefaultCommand(
       new SwerveJoystickCmd(
-        m_SwerveSubsystem,
+        swerveSubsystem,
         m_elevator,
         controller::getLeftY,
         controller::getLeftX,
         controller::getRightX));
 
+    bind(controller);
+  }
+
+
+  @Override
+  public void bind(CommandXboxController controller) {
     // -=-=-=-=-=-=- Drive Commands -=-=-=-=-=-=-
       // Zero heading
       controller.start().onTrue(new InstantCommand(m_poseEstimator::zeroHeading));
@@ -119,10 +151,4 @@ public class Driver1DefaultBindings implements ControllerBindings {
       controller.povUp().whileTrue(new RemoveAlgaeCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers, Elevator.ElevatorPosition.A3, m_elevator, m_ledSubsytem));
     // -=-=-=-=-=-=-+-=-=-=-=-=-=-+-=-=-=-=-=-=-
   }
-
-  @Override
-  public void unbind(CommandXboxController controller) {
-    m_SwerveSubsystem.removeDefaultCommand();
-}
-
 }

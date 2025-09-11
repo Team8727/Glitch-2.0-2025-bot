@@ -90,9 +90,4 @@ public class Driver2DefaultBindings implements ControllerBindings {
     // controller.povDown().whileTrue(new RemoveAlgaeCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers, ElevatorPosition.A2, m_elevator, m_ledSubsytem));
 
   }
-
-  @Override
-  public void unbind(CommandXboxController controller) {
-    m_SwerveSubsystem.removeDefaultCommand();
-}
 }

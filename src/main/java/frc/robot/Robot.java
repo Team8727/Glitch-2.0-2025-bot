@@ -5,6 +5,7 @@
 package frc.robot;
 
 import Glitch.Lib.NetworkTableLogger;
+import Glitch.Lib.Swerve.SimCTReSwerve;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.config.PIDConstants;
@@ -17,7 +18,9 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Autos;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
 import frc.robot.subsystems.Elevator.Coral.Coral;
@@ -42,7 +45,8 @@ import java.util.Optional;
 public class Robot extends TimedRobot {
 
   private final RobotContainer m_robotContainer;
-  private final Swerve m_SwerveSubsystem = new SwerveSubsystem();
+  private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+  private final Swerve m_SwerveSubsystem = new RevSwerveSubsystem();
   private final PoseEstimator m_PoseEstimator = new PoseEstimator(m_SwerveSubsystem);
   private final Elevator m_elevator = new Elevator();
   private final LEDSubsystem m_ledSubsystem = new LEDSubsystem(m_elevator);
@@ -54,6 +58,9 @@ public class Robot extends TimedRobot {
   private final GroundIntakePivot groundIntakePivot = new GroundIntakePivot();
   private final GroundIntakeRollers groundIntakeRollers = new GroundIntakeRollers();
   private final Autos m_Autos = new Autos(m_ledSubsystem, m_ledPatterns, m_coral, m_elevator, m_PoseEstimator);
+
+
+  final SimCTReSwerve simCTReSwerve = new SimCTReSwerve();
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -210,6 +217,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    simCTReSwerve.fakeSwerve();
     // if (m_ledSubsystem.currentPattern == LEDSubsystem.defaultPattern) {
     //   m_ledSubsystem.enzoLEDS(enzoMap.NORMAL, Math.random() * 15);
     // }

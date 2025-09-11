@@ -19,7 +19,6 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
   public static class kConfigs {
-
     public static final DCMotor neoMotor = 
       new DCMotor(
         12,
@@ -34,70 +33,6 @@ public final class Constants {
     public enum RobotAlliance {
       RED_ALLIANCE,
       BLUE_ALLIANCE;
-    }
-  }
-
-  // Swerve subsystem constants (module constants included)
-  public static class kSwerve {
-    // Chassis dimensions from wheel center to center (meters)
-    public static double width = Units.inchesToMeters(22.52);
-    public static double length = width;
-
-    public static final SwerveDriveKinematics kinematics =
-        new SwerveDriveKinematics(
-            new Translation2d(length / 2, width / 2), // front right
-            new Translation2d(length / 2, -width / 2), // front left
-            new Translation2d(-length / 2, width / 2), // back right
-            new Translation2d(-length / 2, -width / 2)); // back left
-
-    public static class kModule {
-      // The MAXSwerve module can be configured with one of three pinion gears: 12T, 13T, or 14T.
-      public static final int drivePinionTeeth = 14;
-      public static final boolean invertSteerEncoder = true;
-
-      // Controls Constants
-      public static class kDrive {
-        public static final double kP = 0.25;
-        public static final double kD = 0.05;
-        public static final double kS = 0.068841;
-        public static final double kV = 2.4568;
-        public static final double kA = 0.22524;
-        public static final double minOutput = -1;
-        public static final double maxOutput = 1;
-      }
-
-      public static class kSteer {
-        public static final double kP = 2.5;
-        public static final double kD = 0;
-        public static final double minOutput = -1;
-        public static final double maxOutput = 1;
-      }
-
-      public static final int driveSmartCurrentLimit = 50; // amps
-      public static final int driveMaxCurrent = 80; // amps
-
-      // Physical dimensions/values
-      public static final double wheelDiameter = 0.97 * Units.inchesToMeters(3);
-      public static final double driveMotorReduction = (45.0 * 22) / (drivePinionTeeth * 15);
-
-      // Motor physics
-      public static final double neoFreeSpeed = 5820.0 / 60; // rot/s
-
-      public static final double maxWheelSpeed =
-          (neoFreeSpeed / driveMotorReduction) * (wheelDiameter * Math.PI); // m/s
-
-      // Encoders
-      public static final double drivingEncoderPositionFactor =
-          (wheelDiameter * Math.PI) / driveMotorReduction; // meters
-      public static final double drivingEncoderVelocityFactor =
-          ((wheelDiameter * Math.PI) / driveMotorReduction) / 60.0; // m/s
-
-      public static final double steeringEncoderPositionFactor = (2 * Math.PI); // radians
-      public static final double steeringEncoderVelocityFactor = (2 * Math.PI) / 60.0; // rad/s
-
-      public static final double steeringEncoderPositionPIDMinInput = 0; // radians
-      public static final double steeringEncoderPositionPIDMaxInput =
-          steeringEncoderPositionFactor; // radians
     }
   }
 }

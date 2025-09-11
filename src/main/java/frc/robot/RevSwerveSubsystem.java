@@ -2,8 +2,8 @@ package frc.robot;
 
 import Glitch.Lib.Swerve.Swerve;
 
-public class SwerveSubsystem extends Swerve {
-  public SwerveSubsystem() {
+public class RevSwerveSubsystem extends Swerve {
+  public RevSwerveSubsystem() {
     super(
       9,
       8,
