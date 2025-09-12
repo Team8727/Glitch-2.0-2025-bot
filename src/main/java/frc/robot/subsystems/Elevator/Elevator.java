@@ -17,6 +17,7 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
@@ -77,6 +78,16 @@ public class Elevator extends SubsystemBase {
 
   private TrapezoidProfile.State m_intermediate = new TrapezoidProfile.State();
 
+  public static final DCMotor neoMotor =
+    new DCMotor(
+      12,
+      2.6,
+      105,
+      1.8,
+      594.4,
+      1);
+
+
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 
 
   private final ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0, 1.28, 3.71, 0.23);
@@ -85,7 +96,7 @@ public class Elevator extends SubsystemBase {
     new ElevatorSim(
       3.71, 
       0.23,
-      kConfigs.neoMotor,
+      neoMotor,
       0.01,
       2.0,
       true,
@@ -125,7 +136,7 @@ public class Elevator extends SubsystemBase {
     elevatorPID = elevatorMotorR.getClosedLoopController();
 
     m_SparkMaxSim = 
-      new SparkMaxSim(elevatorMotorR, kConfigs.neoMotor);
+      new SparkMaxSim(elevatorMotorR, neoMotor);
 
     setElevatorHeightMotionProfile(ElevatorPosition.L1);
   }
