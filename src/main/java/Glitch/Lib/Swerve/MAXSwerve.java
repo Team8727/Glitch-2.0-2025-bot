@@ -47,17 +47,17 @@ public class MAXSwerve {
       new Translation2d(-length / 2, -width / 2)); // back left
 
   // Drive PID
-  private static final double driveKP = 0.25;
-  private static final double driveKD = 0.05;
-  private static final double driveKS = 0.068841;
-  private static final double driveKV = 2.4568;
-  private static final double driveKA = 0.22524;
+  public static final double driveKP = 0.25;
+  public static final double driveKD = 0.05;
+  public static final double driveKS = 0.068841;
+  public static final double driveKV = 2.4568;
+  public static final double driveKA = 0.22524;
   private static final double driveMinOutput = -1;
   private static final double driveMaxOutput = 1;
 
   // Steer PIDs
-  private static final double steerKP = 2.5;
-  private static final double steerKD = 0;
+  public static final double steerKP = 2.5;
+  public static final double steerKD = 0;
   private static final double steerMinOutput = -1;
   private static final double steerMaxOutput = 1;
 

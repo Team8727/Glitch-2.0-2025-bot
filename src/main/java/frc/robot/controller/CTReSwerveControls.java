@@ -12,9 +12,9 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 import static edu.wpi.first.units.Units.*;
 
-public class CTReSwerveConfigure {
+public class CTReSwerveControls {
 
-  public CTReSwerveConfigure(CommandSwerveDrivetrain drivetrain, CommandXboxController controller) {
+  public CTReSwerveControls(CommandSwerveDrivetrain drivetrain, CommandXboxController controller) {
     double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 

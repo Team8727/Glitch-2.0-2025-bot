@@ -65,7 +65,7 @@ public class Driver1DefaultBindings implements ControllerBindings {
     m_AlgaeRemoverRollers = algaeRemoverRollers;
     m_autos = autos;
 
-    new CTReSwerveConfigure(drivetrain, controller);
+    new CTReSwerveControls(drivetrain, controller);
 
     bind(controller);
   }

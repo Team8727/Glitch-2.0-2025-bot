@@ -5,6 +5,7 @@
 package frc.robot;
 
 import Glitch.Lib.NetworkTableLogger;
+import Glitch.Lib.Swerve.MAXSwerve;
 import Glitch.Lib.Swerve.SimCTReSwerve;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathfindingCommand;
@@ -67,25 +68,17 @@ public class Robot extends TimedRobot {
    * initialization code.
    */
   public Robot() {
-
+    // Configure PathPlanner's AutoBuilder
     try {
       AutoBuilder.configure(
           m_PoseEstimator::get2dPose,
           m_PoseEstimator::resetPoseToPose2d,
           m_SwerveSubsystem::getChassisSpeeds,
           (chassisSpeeds, driveff) -> { // drive command
-            System.out.println("aligning");
-            // PathPlannerLogging.setLogActivePathCallback((poselist) -> {
-            //   m_PoseEstimatior.field2d.getObject("Trajectory")
-            //     .setTrajectory(
-            //       TrajectoryGenerator.generateTrajectory(
-            //         poselist,
-            //         new TrajectoryConfig(10, 5))); //TODO: get this from pathplanner somehow
-            // });
-  //          if (Robot.isRedAlliance()) {
-  //            chassisSpeeds = new ChassisSpeeds(-chassisSpeeds.vxMetersPerSecond, -chassisSpeeds.vyMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
-  //          }
-            logger.logChassisSpeeds("speeds", chassisSpeeds);
+            // INVERT IF THINGS ARE GOING BACKWARDS
+            // if (Robot.isRedAlliance()) {
+            //   chassisSpeeds = new ChassisSpeeds(-chassisSpeeds.vxMetersPerSecond, -chassisSpeeds.vyMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
+            // }
             m_SwerveSubsystem.setChassisSpeeds(chassisSpeeds);
           },
           new PPHolonomicDriveController(
@@ -98,24 +91,12 @@ public class Robot extends TimedRobot {
               0,
               0)),
         RobotConfig.fromGUISettings(),
-          () -> { // to flip path
-            // Boolean supplier that controls when the path will be mirrored for the red alliance
-            // This will flip the path being followed to the red side of the field.
-            // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-            Optional<Alliance> alliance = DriverStation.getAlliance();
-
-            if (alliance.isPresent()) {
-              return alliance.get() == Alliance.Red;
-            }
-            return false;
-          },
-          m_SwerveSubsystem,
+        Robot::isRedAlliance,
+        // requirements
+        m_SwerveSubsystem,
         m_PoseEstimator);
-    } catch (IOException e) {
-      System.out.println("ERROR: Could not load pathplanner config");
-      throw new RuntimeException(e);
-    } catch (ParseException e) {
-      System.out.println("ERROR: Could not parse pathplanner config");
+    } catch (IOException | ParseException e) {
+      System.out.println("ERROR: Could not process pathplanner config");
       throw new RuntimeException(e);
     }
 
@@ -149,10 +130,6 @@ public class Robot extends TimedRobot {
 
     // Start the URCL logger (logs REV SparkMaxes and SparkFlexes automatically on networktables)
     URCL.start();
-
-    // Start logging subsystem values //TODO: Uncomment when m_AlgaeIntakePivot and m_AlgaeIntakeRollers are implemented and on the robot
-    // m_AlgaeIntakePivot.shouldLogValues(true);
-    // m_AlgaeIntakeRollers.shouldLogValues(true);
   }
 
   /**
@@ -181,6 +158,7 @@ public class Robot extends TimedRobot {
     m_ledSubsystem.setPattern(LEDPatterns.purple);
   }
 
+  /** This function is called periodically during disabled. */
   @Override
   public void disabledPeriodic() {}
 
@@ -212,7 +190,7 @@ public class Robot extends TimedRobot {
     // this line or comment it out.
 
     m_robotContainer.teleopInit();
-}
+  }
 
   /** This function is called periodically during operator control. */
   @Override

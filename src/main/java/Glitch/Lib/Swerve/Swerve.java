@@ -14,7 +14,7 @@ import static Glitch.Lib.Swerve.MAXSwerve.kinematics;
 import static Glitch.Lib.Swerve.MAXSwerve.maxWheelSpeed;
 
 public abstract class Swerve extends SubsystemBase {
-  // Swerve uses ccw+ angular quanities and a coordinate plane with 0,0 at the robot's center
+  // Swerve uses ccw+ angular quantities and a coordinate plane with 0,0 at the robot's center
   // , forward is +x, and a module order based on the quadrant system (front left is first)
   // BL        FL
   //       C
@@ -211,6 +211,8 @@ public abstract class Swerve extends SubsystemBase {
    */
   public void setChassisSpeeds(ChassisSpeeds robotRelativeSpeeds) {
     setModuleStates(kinematics.toSwerveModuleStates(robotRelativeSpeeds));
+
+    networkTableLogger.logChassisSpeeds("speeds", robotRelativeSpeeds);
 
     if (Robot.isSimulation()) {
       setNextSimHeading(simGyro.nextHeading + robotRelativeSpeeds.omegaRadiansPerSecond * 0.02);
