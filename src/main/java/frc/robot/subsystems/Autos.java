@@ -25,6 +25,7 @@ import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.LEDs.LEDPatterns;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
 import org.json.simple.parser.ParseException;
+import frc.robot.pose.PoseEstimator; // updated import
 
 import java.io.IOException;
 import java.util.Arrays;

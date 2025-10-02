@@ -5,8 +5,6 @@
 package frc.robot;
 
 import Glitch.Lib.NetworkTableLogger;
-import Glitch.Lib.Swerve.MAXSwerve;
-import Glitch.Lib.Swerve.SimCTReSwerve;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.config.PIDConstants;
@@ -30,13 +28,13 @@ import frc.robot.subsystems.GroundIntake.GroundIntakePivot;
 import frc.robot.subsystems.GroundIntake.GroundIntakeRollers;
 import frc.robot.subsystems.LEDs.LEDPatterns;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
-import frc.robot.subsystems.PoseEstimator;
+import frc.robot.pose.PoseEstimator;
 import Glitch.Lib.Swerve.Swerve;
+import frc.robot.vision.Vision;
 import org.json.simple.parser.ParseException;
 import org.littletonrobotics.urcl.URCL;
 
 import java.io.IOException;
-import java.util.Optional;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -46,9 +44,10 @@ import java.util.Optional;
 public class Robot extends TimedRobot {
 
   private final RobotContainer m_robotContainer;
-  private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+  private final CommandSwerveDrivetrain CTREdrivetrain = TunerConstants.createDrivetrain();
   private final Swerve m_SwerveSubsystem = new RevSwerveSubsystem();
-  private final PoseEstimator m_PoseEstimator = new PoseEstimator(m_SwerveSubsystem);
+  private final Vision m_Vision = new Vision();
+  private final PoseEstimator m_PoseEstimator = new PoseEstimator(m_SwerveSubsystem, m_Vision);
   private final Elevator m_elevator = new Elevator();
   private final LEDSubsystem m_ledSubsystem = new LEDSubsystem(m_elevator);
   private final LEDPatterns m_ledPatterns = new LEDPatterns(m_elevator);
@@ -59,9 +58,6 @@ public class Robot extends TimedRobot {
   private final GroundIntakePivot groundIntakePivot = new GroundIntakePivot();
   private final GroundIntakeRollers groundIntakeRollers = new GroundIntakeRollers();
   private final Autos m_Autos = new Autos(m_ledSubsystem, m_ledPatterns, m_coral, m_elevator, m_PoseEstimator);
-
-
-  final SimCTReSwerve simCTReSwerve = new SimCTReSwerve();
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -104,17 +100,17 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer =
         new RobotContainer(
-            m_SwerveSubsystem,
-            m_PoseEstimator,
-            groundIntakePivot,
-            groundIntakeRollers,
-            m_AlgaeRemoverPivot,
-            m_AlgeaRemoverRollers,
-            m_coral,
-            m_elevator,
-            m_ledSubsystem,
-            m_ledPatterns,
-            m_Autos
+          m_SwerveSubsystem,
+          m_PoseEstimator,
+          groundIntakePivot,
+          groundIntakeRollers,
+          m_AlgaeRemoverPivot,
+          m_AlgeaRemoverRollers,
+          m_coral,
+          m_elevator,
+          m_ledSubsystem,
+          m_ledPatterns,
+          m_Autos
             );
     
     // Load autos into chooser and use SmartDashboard to publish
@@ -195,10 +191,6 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    simCTReSwerve.fakeSwerve();
-    // if (m_ledSubsystem.currentPattern == LEDSubsystem.defaultPattern) {
-    //   m_ledSubsystem.enzoLEDS(enzoMap.NORMAL, Math.random() * 15);
-    // }
   }
 
   @Override

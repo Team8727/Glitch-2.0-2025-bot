@@ -12,7 +12,7 @@ import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.GroundIntake.GroundIntakePivot;
 import frc.robot.subsystems.GroundIntake.GroundIntakeRollers;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
-import frc.robot.subsystems.PoseEstimator;
+import frc.robot.pose.PoseEstimator; // updated package
 import Glitch.Lib.Swerve.Swerve;
 
 /**

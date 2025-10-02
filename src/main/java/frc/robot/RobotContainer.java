@@ -16,7 +16,7 @@ import frc.robot.subsystems.GroundIntake.GroundIntakePivot;
 import frc.robot.subsystems.GroundIntake.GroundIntakeRollers;
 import frc.robot.subsystems.LEDs.LEDPatterns;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
-import frc.robot.subsystems.PoseEstimator;
+import frc.robot.pose.PoseEstimator; // updated import
 import Glitch.Lib.Swerve.Swerve;
 
 import frc.robot.generated.TunerConstants;
