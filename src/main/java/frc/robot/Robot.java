@@ -5,6 +5,7 @@
 package frc.robot;
 
 import Glitch.Lib.NetworkTableLogger;
+import Glitch.Lib.Swerve.RevSwerve;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.config.PIDConstants;
@@ -29,7 +30,6 @@ import frc.robot.subsystems.GroundIntake.GroundIntakeRollers;
 import frc.robot.subsystems.LEDs.LEDPatterns;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
 import frc.robot.pose.PoseEstimator;
-import Glitch.Lib.Swerve.Swerve;
 import frc.robot.vision.Vision;
 import org.json.simple.parser.ParseException;
 import org.littletonrobotics.urcl.URCL;
@@ -44,8 +44,8 @@ import java.io.IOException;
 public class Robot extends TimedRobot {
 
   private final RobotContainer m_robotContainer;
-  private final CommandSwerveDrivetrain CTREdrivetrain = TunerConstants.createDrivetrain();
-  private final Swerve m_SwerveSubsystem = new RevSwerveSubsystem();
+//  private final CommandSwerveDrivetrain CTREdrivetrain = TunerConstants.createDrivetrain();
+  private final RevSwerve m_SwerveSubsystem = new RevSwerveSubsystem();
   private final Vision m_Vision = new Vision();
   private final PoseEstimator m_PoseEstimator = new PoseEstimator(m_SwerveSubsystem, m_Vision);
   private final Elevator m_elevator = new Elevator();

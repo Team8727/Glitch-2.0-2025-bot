@@ -2,7 +2,7 @@ package frc.robot.pose;
 
 import Glitch.Lib.NetworkTableLogger;
 import Glitch.Lib.Swerve.MAXSwerve;
-import Glitch.Lib.Swerve.Swerve;
+import Glitch.Lib.Swerve.RevSwerve;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
@@ -22,7 +22,7 @@ import frc.robot.vision.Vision;
  * - Publishing a fused {@link Field2d} for dashboards
  */
 public class PoseEstimator extends SubsystemBase {
-  private final Swerve m_SwerveSubsystem;
+  private final RevSwerve m_SwerveSubsystem;
   private final Glitch.Lib.Pose.PoseEstimator m_LibEstimator;
   private final Vision m_Vision;
   private final NetworkTableLogger networkTableLogger = new NetworkTableLogger(this.getName());
@@ -36,7 +36,7 @@ public class PoseEstimator extends SubsystemBase {
    * @param swerveSubsystem Robot swerve subsystem for heading and module positions
    * @param vision Robot-layer vision facade used to supply measurements
    */
-  public PoseEstimator(Swerve swerveSubsystem, Vision vision) {
+  public PoseEstimator(RevSwerve swerveSubsystem, Vision vision) {
     this.m_SwerveSubsystem = swerveSubsystem;
     this.m_Vision = vision;
     this.m_LibEstimator = new Glitch.Lib.Pose.PoseEstimator(

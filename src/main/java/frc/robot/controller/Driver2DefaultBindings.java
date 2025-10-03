@@ -13,13 +13,13 @@ import frc.robot.subsystems.GroundIntake.GroundIntakePivot;
 import frc.robot.subsystems.GroundIntake.GroundIntakeRollers;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
 import frc.robot.pose.PoseEstimator; // updated package
-import Glitch.Lib.Swerve.Swerve;
+import Glitch.Lib.Swerve.RevSwerve;
 
 /**
  * Default teleop controller bindings for the robot.
  */
 public class Driver2DefaultBindings implements ControllerBindings {
-  private final Swerve m_SwerveSubsystem;
+  private final RevSwerve m_SwerveSubsystem;
   private final PoseEstimator m_poseEstimator;
   private final GroundIntakePivot groundIntakePivot;
   private final GroundIntakeRollers groundIntakeRollers;
@@ -30,7 +30,7 @@ public class Driver2DefaultBindings implements ControllerBindings {
   private final AlgaeRemoverRollers m_AlgaeRemoverRollers;
 
   public Driver2DefaultBindings(
-    Swerve swerveSubsystem,
+    RevSwerve swerveSubsystem,
     PoseEstimator poseEstimator,
     GroundIntakePivot groundIntakePivot,
     GroundIntakeRollers groundIntakeRollers,

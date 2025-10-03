@@ -24,7 +24,7 @@ import frc.robot.subsystems.GroundIntake.GroundIntakeRollers;
 import frc.robot.subsystems.LEDs.LEDPatterns;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
 import frc.robot.pose.PoseEstimator; // updated package
-import Glitch.Lib.Swerve.Swerve;
+import Glitch.Lib.Swerve.RevSwerve;
 
 /**
  * Default teleop controller bindings for the robot.
@@ -71,7 +71,7 @@ public class Driver1DefaultBindings implements ControllerBindings {
   }
 
   public Driver1DefaultBindings(
-      Swerve swerveSubsystem,
+      RevSwerve swerveSubsystem,
       PoseEstimator poseEstimator,
       GroundIntakePivot groundIntakePivot,
       GroundIntakeRollers groundIntakeRollers,

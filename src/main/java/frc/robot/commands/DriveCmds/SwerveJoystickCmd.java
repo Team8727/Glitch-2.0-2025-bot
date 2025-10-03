@@ -6,7 +6,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.subsystems.Elevator.Elevator;
-import Glitch.Lib.Swerve.Swerve;
+import Glitch.Lib.Swerve.RevSwerve;
 
 import java.util.function.Supplier;
 
@@ -22,13 +22,13 @@ public class SwerveJoystickCmd extends Command {
   private final double minimumDriveSpeed = 4;
 
 
-  private final Swerve m_SwerveSubsystem;
+  private final RevSwerve m_SwerveSubsystem;
   private final Elevator m_Elevator;
   private final Supplier<Double> m_ySpdFunction, m_xSpdFunction, m_turningSpdFunction;
   private final NetworkTableLogger m_logger = new NetworkTableLogger(this.getName());
 
   public SwerveJoystickCmd(
-      Swerve swerveSubsystem,
+      RevSwerve swerveSubsystem,
       Elevator elevator,
       Supplier<Double> ySpdFunction,
       Supplier<Double> xSpdFunction,

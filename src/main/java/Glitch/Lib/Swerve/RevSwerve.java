@@ -13,7 +13,7 @@ import frc.robot.Robot;
 import static Glitch.Lib.Swerve.MAXSwerve.kinematics;
 import static Glitch.Lib.Swerve.MAXSwerve.maxWheelSpeed;
 
-public abstract class Swerve extends SubsystemBase {
+public abstract class RevSwerve extends SubsystemBase {
   // Swerve uses ccw+ angular quantities and a coordinate plane with 0,0 at the robot's center
   // , forward is +x, and a module order based on the quadrant system (front left is first)
   // BL        FL
@@ -81,7 +81,7 @@ public abstract class Swerve extends SubsystemBase {
   // Network Table Logger
   private final NetworkTableLogger networkTableLogger = new NetworkTableLogger(this.getName().toString());
 
-  public Swerve(
+  public RevSwerve(
       int frontLeftDriveID,
       int frontLeftSteerID,
       int backLeftDriveID,
@@ -100,7 +100,7 @@ public abstract class Swerve extends SubsystemBase {
     this.backRightSteerID = backRightSteerID;
     this.frontRightDriveID = frontRightDriveID;
     this.frontRightSteerID = frontRightSteerID;
-    Swerve.wheelBaseWidth = wheelBaseWidth;
+    RevSwerve.wheelBaseWidth = wheelBaseWidth;
     initSwerveModules();
 
     new Thread(

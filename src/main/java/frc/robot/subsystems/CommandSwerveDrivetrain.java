@@ -30,6 +30,9 @@ import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
  * Subsystem so it can easily be used in command-based projects.
  */
 public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem {
+    // Optional robot-layer Vision facade; when set, we will drain and fuse measurements here
+    private frc.robot.vision.Vision m_Vision = null;
+
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
@@ -185,6 +188,15 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     /**
+     * Optionally attach a robot-layer Vision facade to this drivetrain so it can drain and fuse
+     * timestamped measurements into the CTRE pose estimator. Only set this when CTRE is the
+     * active drivetrain/pose owner; do not also run a separate robot-layer PoseEstimator drain.
+     */
+    public void setVision(frc.robot.vision.Vision vision) {
+        this.m_Vision = vision;
+    }
+
+    /**
      * Returns a command that applies the specified control request to this swerve drivetrain.
      *
      * @param requestSupplier Function returning the request to apply
@@ -234,6 +246,20 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 );
                 m_hasAppliedOperatorPerspective = true;
             });
+        }
+
+        // Drain and fuse vision measurements into the CTRE estimator when a Vision provider is attached
+        if (m_Vision != null) {
+            // Allow provider to update any internal state
+            m_Vision.periodic();
+
+            // Use current drivetrain estimate as the reference pose for disambiguation
+            Pose2d reference = this.getState().Pose;
+
+            for (frc.robot.vision.Vision.Measurement m : m_Vision.drainMeasurements(reference)) {
+                // Convert FPGA timestamp base to current time base expected by CTRE estimator
+                super.addVisionMeasurement(m.getPose(), Utils.fpgaToCurrentTime(m.getTimestampSeconds()));
+            }
         }
     }
 

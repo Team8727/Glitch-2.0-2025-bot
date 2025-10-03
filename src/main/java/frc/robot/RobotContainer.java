@@ -6,7 +6,6 @@ package frc.robot;
 
 import Glitch.Lib.Controller.Controller;
 import frc.robot.controller.Driver1DefaultBindings;
-import frc.robot.controller.Driver2DefaultBindings;
 import frc.robot.subsystems.Autos;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
@@ -17,9 +16,8 @@ import frc.robot.subsystems.GroundIntake.GroundIntakeRollers;
 import frc.robot.subsystems.LEDs.LEDPatterns;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
 import frc.robot.pose.PoseEstimator; // updated import
-import Glitch.Lib.Swerve.Swerve;
+import Glitch.Lib.Swerve.RevSwerve;
 
-import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 /**
@@ -29,7 +27,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final CommandSwerveDrivetrain drivetrain; // Command-based swerve drivetrain subsystem
-  private final Swerve m_SwerveSubsystem; // Swerve subsystem
+  private final RevSwerve m_SwerveSubsystem; // Swerve subsystem
   private final PoseEstimator m_PoseEstimator; // Pose estimation subsystem
   private final GroundIntakePivot groundIntakePivot; // Ground intake pivot subsystem
   private final GroundIntakeRollers groundIntakeRollers; // Ground intake rollers subsystem
@@ -59,7 +57,7 @@ public class RobotContainer {
    * @param autos The autonomous routines subsystem
    */
   public RobotContainer(
-    Swerve swerveSubsystem,
+    RevSwerve swerveSubsystem,
     PoseEstimator poseEstimator,
     GroundIntakePivot groundIntakePivot,
     GroundIntakeRollers groundIntakeRollers,
@@ -92,7 +90,6 @@ public class RobotContainer {
    * Constructor for RobotContainer when using a CTRE drivetrain.
    *
    * @param drivetrain The command-based drivetrain subsystem
-   * @param poseEstimator The pose estimator subsystem
    * @param groundIntakePivot The ground intake pivot subsystem
    * @param groundIntakeRollers The ground intake rollers subsystem
    * @param AlgaeRemoverPivot The algae remover pivot subsystem
@@ -105,7 +102,6 @@ public class RobotContainer {
    */
   public RobotContainer(
     CommandSwerveDrivetrain drivetrain,
-    PoseEstimator poseEstimator,
     GroundIntakePivot groundIntakePivot,
     GroundIntakeRollers groundIntakeRollers,
     AlgaeRemoverPivot AlgaeRemoverPivot,
@@ -118,7 +114,7 @@ public class RobotContainer {
   ) {
     this.drivetrain = drivetrain;
     m_SwerveSubsystem = null;
-    m_PoseEstimator = poseEstimator;
+    m_PoseEstimator = null;
     this.groundIntakePivot = groundIntakePivot;
     this.groundIntakeRollers = groundIntakeRollers;
     m_AlgaeRemoverPivot = AlgaeRemoverPivot;

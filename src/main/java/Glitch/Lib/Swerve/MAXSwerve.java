@@ -35,7 +35,7 @@ public class MAXSwerve {
   private final double chassisOffset;
 
   // Chassis dimensions from wheel center to center (meters)
-  public static final double width = Units.inchesToMeters(Swerve.wheelBaseWidth);
+  public static final double width = Units.inchesToMeters(RevSwerve.wheelBaseWidth);
   private static final double length = width;
 
   // Kinematics
