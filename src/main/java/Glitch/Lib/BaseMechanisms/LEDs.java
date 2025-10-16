@@ -146,7 +146,7 @@ public abstract class LEDs extends SubsystemBase {
     }
   }
 
-    /**
+  /**
    * Uses some complicated logic to create a fire animation.
    * @param pattern The pattern that the fire overlays.
    * @param section The section that the animation will play on.
