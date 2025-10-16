@@ -83,4 +83,14 @@ public class SparkMaxMotor implements Motor{
       return motor.getEncoder().getVelocity();
     }
   }
+
+  @Override
+  public boolean getForwardLimitSwitch() {
+    return motor.getForwardLimitSwitch().isPressed();
+  }
+
+  @Override
+  public boolean getReverseLimitSwitch() {
+    return motor.getReverseLimitSwitch().isPressed();
+  }
 }

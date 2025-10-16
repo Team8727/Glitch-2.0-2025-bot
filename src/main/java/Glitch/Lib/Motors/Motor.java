@@ -49,4 +49,18 @@ public interface Motor {
    * @return The current velocity of the motor.
    */
   double getVelocity();
+
+  /**
+   * Gets the state of the forward limit switch.
+   *
+   * @return The state of the limit switch.
+   */
+  boolean getForwardLimitSwitch();
+
+  /**
+   * Gets the state of the reverse limit switch.
+   *
+   * @return The state of the limit switch.
+   */
+  boolean getReverseLimitSwitch();
 }

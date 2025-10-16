@@ -17,7 +17,8 @@ import frc.robot.subsystems.Autos;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
-import frc.robot.subsystems.Elevator.Coral.Coral;
+import frc.robot.subsystems.Elevator.Coral.BackCoralRoller;
+import frc.robot.subsystems.Elevator.Coral.FrontCoralRoller;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.GroundIntake.GroundIntakePivot;
 import frc.robot.subsystems.GroundIntake.GroundIntakeRollers;
@@ -33,7 +34,8 @@ public class Driver1DefaultBindings implements ControllerBindings {
   private final PoseEstimator m_poseEstimator;
   private final GroundIntakePivot groundIntakePivot;
   private final GroundIntakeRollers groundIntakeRollers;
-  private final Coral m_coral;
+  private final BackCoralRoller backCoralRoller;
+  private final FrontCoralRoller frontCoralRoller;
   private final Elevator m_elevator;
   private final LEDSubsystem m_ledSubsytem;
   private final LEDPatterns m_ledPatterns;
@@ -46,7 +48,8 @@ public class Driver1DefaultBindings implements ControllerBindings {
       PoseEstimator poseEstimator,
       GroundIntakePivot groundIntakePivot,
       GroundIntakeRollers groundIntakeRollers,
-      Coral coral,
+      BackCoralRoller backCoralRoller,
+      FrontCoralRoller frontCoralRoller,
       Elevator elevator,
       LEDSubsystem ledSubsystem,
       LEDPatterns ledPatterns,
@@ -57,7 +60,8 @@ public class Driver1DefaultBindings implements ControllerBindings {
     m_poseEstimator = poseEstimator;
     this.groundIntakePivot = groundIntakePivot;
     this.groundIntakeRollers = groundIntakeRollers;
-    m_coral = coral;
+    this.frontCoralRoller = frontCoralRoller;
+    this.backCoralRoller = backCoralRoller;
     m_elevator = elevator;
     m_ledSubsytem = ledSubsystem;
     m_ledPatterns = ledPatterns;
@@ -75,7 +79,8 @@ public class Driver1DefaultBindings implements ControllerBindings {
       PoseEstimator poseEstimator,
       GroundIntakePivot groundIntakePivot,
       GroundIntakeRollers groundIntakeRollers,
-      Coral coral,
+      FrontCoralRoller frontCoralRoller,
+      BackCoralRoller backCoralRoller,
       Elevator elevator,
       LEDSubsystem ledSubsystem,
       LEDPatterns ledPatterns,
@@ -86,7 +91,8 @@ public class Driver1DefaultBindings implements ControllerBindings {
     m_poseEstimator = poseEstimator;
     this.groundIntakePivot = groundIntakePivot;
     this.groundIntakeRollers = groundIntakeRollers;
-    m_coral = coral;
+    this.frontCoralRoller = frontCoralRoller;
+    this.backCoralRoller = backCoralRoller;
     m_elevator = elevator;
     m_ledSubsytem = ledSubsystem;
     m_ledPatterns = ledPatterns;
@@ -118,14 +124,14 @@ public class Driver1DefaultBindings implements ControllerBindings {
 
     // -=-=-=-=-=-=- Coral Commands -=-=-=-=-=-=-
       // intake coral
-      controller.leftTrigger().toggleOnTrue(new IntakeCoralCmd(m_coral, m_elevator, m_ledSubsytem));
+      controller.leftTrigger().toggleOnTrue(new IntakeCoralCmd(backCoralRoller, frontCoralRoller, m_elevator, m_ledSubsytem));
       // deploy coral
-      controller.rightTrigger().onTrue(new DeployCoralCmd(m_coral, m_ledSubsytem, m_elevator));
+      controller.rightTrigger().onTrue(new DeployCoralCmd(frontCoralRoller, backCoralRoller, m_ledSubsytem, m_elevator));
 
 //      // reindex coral
 //      controller.povRight().onTrue(new ReindexCoralCmd(m_coral, m_elevator, m_ledSubsytem));
       // reject coral
-      controller.povRight().onTrue(new RejectCoralCmd(m_coral));
+      controller.povRight().onTrue(new RejectCoralCmd(backCoralRoller, frontCoralRoller));
 
       // Ground intake coral
       controller.povLeft().whileTrue(new IntakeCoralGroundCmd(groundIntakeRollers, groundIntakePivot, m_ledSubsytem));
@@ -133,13 +139,13 @@ public class Driver1DefaultBindings implements ControllerBindings {
       controller.povRight().onTrue(new ScoreCoralGroundCmd(groundIntakePivot, groundIntakeRollers, m_ledSubsytem));
     // -=-=-=-=-=-=- Elevator Commands -=-=-=-=-=-=-
       // Elevator L1
-      controller.x().onTrue(new SetElevatorHeightCmd(Elevator.ElevatorPosition.L1, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns).andThen(new PrintCommand("hihih")));
+      controller.x().onTrue(new SetElevatorHeightCmd(Elevator.ElevatorPosition.L1, m_elevator, frontCoralRoller, m_ledSubsytem, m_ledPatterns).andThen(new PrintCommand("hihih")));
       // Elevator L2
-      controller.a().onTrue(new SetElevatorHeightCmd(Elevator.ElevatorPosition.L2, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
+      controller.a().onTrue(new SetElevatorHeightCmd(Elevator.ElevatorPosition.L2, m_elevator, frontCoralRoller, m_ledSubsytem, m_ledPatterns));
       // Elevator L3
-      controller.b().onTrue(new SetElevatorHeightCmd(Elevator.ElevatorPosition.L3, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
+      controller.b().onTrue(new SetElevatorHeightCmd(Elevator.ElevatorPosition.L3, m_elevator, frontCoralRoller, m_ledSubsytem, m_ledPatterns));
       // Elevator L4
-      controller.y().onTrue(new SetElevatorHeightCmd(Elevator.ElevatorPosition.L4, m_elevator, m_coral, m_ledSubsytem, m_ledPatterns));
+      controller.y().onTrue(new SetElevatorHeightCmd(Elevator.ElevatorPosition.L4, m_elevator, frontCoralRoller, m_ledSubsytem, m_ledPatterns));
 
       // Zero elevator (back button is the left small button on the controller near the top)
       controller.back().onTrue(new ZeroElevator(m_elevator));
