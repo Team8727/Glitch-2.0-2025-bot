@@ -36,7 +36,7 @@ public class DeployCoralCmd extends Command {
     m_ledSubsystem.setPatternForDuration(LEDPatterns.coralPickup.reversed(), 2);
     new Thread(() -> {
       try {
-        Thread.sleep(500);
+        Thread.sleep(400);
         backCoralRoller.setSpeedDutyCycle(0);
         frontCoralRoller.setSpeedDutyCycle(0);
         this.isFinished = true;
