@@ -55,7 +55,7 @@ public class IntakeCoralCmd extends Command {
 
     if (!frontCoralRoller.getReverseLimitSwitch() && frontCoralRoller.getForwardLimitSwitch() && sensedCoral) {
       backCoralRoller.setSpeedDutyCycle(0);
-      frontCoralRoller.setSpeedDutyCycle(.0);
+      frontCoralRoller.setSpeedDutyCycle(0);
       this.end = true;
 
     }
