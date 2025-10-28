@@ -1,23 +1,25 @@
-package frc.robot.subsystems.GroundIntake;
+package frc.robot.subsystems.Elevator.Coral;
 
 import Glitch.Lib.BaseMechanisms.Roller;
 import Glitch.Lib.Motors.SparkMaxMotor;
 import com.revrobotics.spark.config.ClosedLoopConfig;
+import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
-public class GroundIntakeRollers extends Roller {
-  private static final int CANID = 16;
+public class FrontCoralRoller extends Roller {
+  private static final int CANID = 14;
   private static final SparkMaxConfig config = new SparkMaxConfig();
   static {
     config
-      .smartCurrentLimit(60)
-      .idleMode(SparkMaxConfig.IdleMode.kBrake)
-      .inverted(false)
+      .smartCurrentLimit(40)
+      .idleMode(SparkBaseConfig.IdleMode.kBrake)
+      .inverted(true)
       .closedLoop
-      .pid(.5, 0, 0);
+      .velocityFF(0)
+      .pid(0.5, 0, 0);
   }
 
-  public GroundIntakeRollers() {
+  public FrontCoralRoller() {
     super(new SparkMaxMotor(config, CANID, ClosedLoopConfig.FeedbackSensor.kPrimaryEncoder));
   }
 

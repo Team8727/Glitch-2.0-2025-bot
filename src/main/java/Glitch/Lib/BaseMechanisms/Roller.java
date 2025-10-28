@@ -1,19 +1,8 @@
-package frc.robot.utilities.BaseSystems;
+package Glitch.Lib.BaseMechanisms;
 
-import static frc.robot.utilities.SparkConfigurator.getSparkMax;
-
-import com.revrobotics.spark.SparkBase;
-import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkLowLevel;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkMaxConfig;
+import Glitch.Lib.Motors.Motor;
+import Glitch.Lib.NetworkTableLogger;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.utilities.BaseSystems.Motors.Motor;
-import frc.robot.utilities.BaseSystems.Motors.SparkMaxMotor;
-import frc.robot.utilities.NetworkTableLogger;
-import frc.robot.utilities.SparkConfigurator;
-
-import java.util.Set;
 
 public abstract class Roller extends SubsystemBase {
 
@@ -24,8 +13,7 @@ public abstract class Roller extends SubsystemBase {
   /**
    * Creates a new Roller.
    *
-   * @param config The configuration for the SparkMax motor
-   * @param CANID The CAN ID of the motor
+   * @param motor The motor to use for the pivot.
    */
   public Roller(
       Motor motor) {
@@ -85,5 +73,30 @@ public abstract class Roller extends SubsystemBase {
    */
   public double getCurrent() {
     return motor.getCurrent();
+  }
+
+  /**
+   * gets the forward limit switch state of the roller motor.
+   *
+   * @return The limit switch state of the motor
+   */
+  public boolean getForwardLimitSwitch() {return motor.getForwardLimitSwitch();}
+
+  /**
+   * gets the reverse limit switch state of the roller motor.
+   *
+   * @return The limit switch state of the motor
+   */
+  public boolean getReverseLimitSwitch() {return motor.getReverseLimitSwitch();}
+
+
+  // This method will be called once per scheduler run
+  @Override
+  public void periodic() {
+    logger.logDouble("position", motor.getPosition());
+    logger.logDouble("velocity", motor.getVelocity());
+    logger.logDouble("current", motor.getCurrent());
+    logger.logBoolean("forward limit switch", motor.getForwardLimitSwitch());
+    logger.logBoolean("reverse limit switch", motor.getReverseLimitSwitch());
   }
 }

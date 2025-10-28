@@ -1,5 +1,7 @@
-package frc.robot.utilities;
+package Glitch.Lib.Swerve;
 
+import Glitch.Lib.Motors.SparkConfigurator.LogData;
+import Glitch.Lib.Motors.SparkConfigurator.Sensors;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
@@ -16,21 +18,77 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
-import frc.robot.Constants.kSwerve.kModule;
-import frc.robot.utilities.SparkConfigurator.LogData;
-import frc.robot.utilities.SparkConfigurator.Sensors;
 
 import java.util.Set;
 
-import static frc.robot.utilities.SparkConfigurator.getSparkFlex;
-import static frc.robot.utilities.SparkConfigurator.getSparkMax;
+import static Glitch.Lib.Motors.SparkConfigurator.getSparkFlex;
+import static Glitch.Lib.Motors.SparkConfigurator.getSparkMax;
 
 public class MAXSwerve {
   private SwerveModuleState targetState = new SwerveModuleState();
   private final double chassisOffset;
+
+  // Chassis dimensions from wheel center to center (meters)
+  public static final double width = Units.inchesToMeters(RevSwerve.wheelBaseWidth);
+  private static final double length = width;
+
+  // Kinematics
+  public static final SwerveDriveKinematics kinematics =
+    new SwerveDriveKinematics(
+      new Translation2d(length / 2, width / 2), // front right
+      new Translation2d(length / 2, -width / 2), // front left
+      new Translation2d(-length / 2, width / 2), // back right
+      new Translation2d(-length / 2, -width / 2)); // back left
+
+  // Drive PID
+  public static final double driveKP = 0.25;
+  public static final double driveKD = 0.05;
+  public static final double driveKS = 0.068841;
+  public static final double driveKV = 2.4568;
+  public static final double driveKA = 0.22524;
+  private static final double driveMinOutput = -1;
+  private static final double driveMaxOutput = 1;
+
+  // Steer PIDs
+  public static final double steerKP = 2.5;
+  public static final double steerKD = 0;
+  private static final double steerMinOutput = -1;
+  private static final double steerMaxOutput = 1;
+
+  // The MAXSwerve module can be configured with one of three pinion gears: 12T, 13T, or 14T.
+  private static final int drivePinionTeeth = 14;
+  private static final boolean invertSteerEncoder = true;
+
+  private static final int driveSmartCurrentLimit = 50; // amps
+  private static final int driveMaxCurrent = 80; // amps
+
+  // Physical dimensions/values
+  private static final double wheelDiameter = 0.97 * Units.inchesToMeters(3);
+  private static final double driveMotorReduction = (45.0 * 22) / (drivePinionTeeth * 15);
+
+  // Motor physics
+  public static final double neoFreeSpeed = 5820.0 / 60; // rot/s
+  public static final double maxWheelSpeed =
+    (neoFreeSpeed / driveMotorReduction) * (wheelDiameter * Math.PI); // m/s
+
+  // Encoders
+  private static final double drivingEncoderPositionFactor =
+    (wheelDiameter * Math.PI) / driveMotorReduction; // meters
+  private static final double drivingEncoderVelocityFactor =
+    ((wheelDiameter * Math.PI) / driveMotorReduction) / 60.0; // m/s
+
+  private static final double steeringEncoderPositionFactor = (2 * Math.PI); // radians
+  private static final double steeringEncoderVelocityFactor = (2 * Math.PI) / 60.0; // rad/s
+
+  private static final double steeringEncoderPositionPIDMinInput = 0; // radians
+  private static final double steeringEncoderPositionPIDMaxInput =
+    steeringEncoderPositionFactor; // radians
 
   // Hardware
   private final SparkFlex driveNEO;
@@ -69,20 +127,20 @@ public class MAXSwerve {
     SparkFlexConfig driveConfig = new SparkFlexConfig();
     driveConfig
         .encoder
-        .positionConversionFactor(kModule.drivingEncoderPositionFactor)
-        .velocityConversionFactor(kModule.drivingEncoderVelocityFactor);
+        .positionConversionFactor(drivingEncoderPositionFactor)
+        .velocityConversionFactor(drivingEncoderVelocityFactor);
     // steerConfig.closedLoop        something's wrong here but im too dumb to figure out what
     //   .feedbackSensor(driveEncoder);
     driveConfig
         .closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-        .outputRange(kModule.kDrive.minOutput, kModule.kDrive.maxOutput)
-        .p(kModule.kDrive.kP)
-        .d(kModule.kDrive.kD);
+        .outputRange(driveMinOutput, driveMaxOutput)
+        .p(driveKP)
+        .d(driveKD);
     driveConfig
         .idleMode(IdleMode.kBrake)
-        .smartCurrentLimit(kModule.driveSmartCurrentLimit)
-        .secondaryCurrentLimit(kModule.driveMaxCurrent);
+        .smartCurrentLimit(driveSmartCurrentLimit)
+        .secondaryCurrentLimit(driveMaxCurrent);
     driveNEO.configure(
         driveConfig,
         ResetMode.kNoResetSafeParameters,
@@ -91,24 +149,24 @@ public class MAXSwerve {
     SparkMaxConfig steerConfig = new SparkMaxConfig();
     steerConfig
         .absoluteEncoder
-        .inverted(kModule.invertSteerEncoder)
-        .positionConversionFactor(kModule.steeringEncoderPositionFactor)
-        .velocityConversionFactor(kModule.steeringEncoderVelocityFactor);
+        .inverted(invertSteerEncoder)
+        .positionConversionFactor(steeringEncoderPositionFactor)
+        .velocityConversionFactor(steeringEncoderVelocityFactor);
     // steerConfig.closedLoop      something's wrong here but im too dumb to figure out what
     //   .feedbackSensor(driveEncoder);
     steerConfig
         .closedLoop
         .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-        .outputRange(kModule.kSteer.minOutput, kModule.kSteer.maxOutput)
+        .outputRange(steerMinOutput, steerMaxOutput)
         .positionWrappingEnabled(true)
-        .positionWrappingMaxInput(kModule.steeringEncoderPositionPIDMaxInput)
-        .positionWrappingMinInput(kModule.steeringEncoderPositionPIDMinInput)
-        .p(kModule.kSteer.kP)
-        .d(kModule.kSteer.kD);
+        .positionWrappingMaxInput(steeringEncoderPositionPIDMaxInput)
+        .positionWrappingMinInput(steeringEncoderPositionPIDMinInput)
+        .p(steerKP)
+        .d(steerKD);
     steerConfig
         .idleMode(IdleMode.kBrake)
-        .smartCurrentLimit(kModule.driveSmartCurrentLimit)
-        .secondaryCurrentLimit(kModule.driveMaxCurrent);
+        .smartCurrentLimit(driveSmartCurrentLimit)
+        .secondaryCurrentLimit(driveMaxCurrent);
     steerNEO.configure(
         steerConfig,
         ResetMode.kNoResetSafeParameters,
@@ -121,7 +179,7 @@ public class MAXSwerve {
     drivePID = driveNEO.getClosedLoopController();
     steerPID = steerNEO.getClosedLoopController();
 
-    driveFF = new SimpleMotorFeedforward(kModule.kDrive.kS, kModule.kDrive.kV, kModule.kDrive.kA);
+    driveFF = new SimpleMotorFeedforward(driveKS, driveKV, driveKA);
 
     if (!RobotBase.isReal()) targetState.angle = new Rotation2d(steerEncoder.getPosition());
   }

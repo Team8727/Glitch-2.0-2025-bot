@@ -6,7 +6,6 @@ package frc.robot.commands.GroundCoralCmds;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants.kAlgaeIntake.kAlgaeIntakePivot;
 import frc.robot.subsystems.GroundIntake.GroundIntakePivot;
 import frc.robot.subsystems.GroundIntake.GroundIntakeRollers;
 import frc.robot.subsystems.LEDs.LEDPatterns;
@@ -33,9 +32,9 @@ public class ScoreCoralGroundCmd extends Command {
   @Override
   public void initialize() {
     // Set the intake to score position, score the algae by running rollers, and then set the intake to home position.
+    m_ledSubsystem.activateRandomNoise(LEDPatterns.coralPickup);
       intakePivot.setPositionCommand(12)
-        .andThen(new WaitCommand(.2))
-        .andThen(() -> intakeRollers.setSpeedDutyCycle(.3))
+        .andThen(() -> intakeRollers.setSpeedDutyCycle(.7))
         .andThen(new WaitCommand(0.2))
         .andThen(this::cancel).schedule();
   }
@@ -49,13 +48,14 @@ public class ScoreCoralGroundCmd extends Command {
   @Override
   public void end(boolean interrupted) {
     // Go to home position (in robot) after scoring
-    intakePivot.setPosition(0);
+    intakePivot.setPosition(5);
     intakeRollers.setSpeedDutyCycle(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    m_ledSubsystem.setPatternForDuration(LEDPatterns.coralPickup.reversed(), 0.5);
     return false;
   }
 }

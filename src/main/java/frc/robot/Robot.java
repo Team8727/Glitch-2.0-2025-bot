@@ -4,35 +4,36 @@
 
 package frc.robot;
 
+import Glitch.Lib.NetworkTableLogger;
+import Glitch.Lib.Swerve.RevSwerve;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathfindingCommand;
-
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Constants.kConfigs;
-import frc.robot.Constants.kSwerve;
 import frc.robot.subsystems.Autos;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
-import frc.robot.subsystems.Elevator.Coral.Coral;
+import frc.robot.subsystems.Elevator.Coral.BackCoralRoller;
+import frc.robot.subsystems.Elevator.Coral.FrontCoralRoller;
+import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.GroundIntake.GroundIntakePivot;
 import frc.robot.subsystems.GroundIntake.GroundIntakeRollers;
 import frc.robot.subsystems.LEDs.LEDPatterns;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
-import frc.robot.subsystems.Elevator.Elevator;
-import frc.robot.subsystems.PoseEstimator;
-import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.utilities.NetworkTableLogger;
+import frc.robot.pose.PoseEstimator;
+import frc.robot.vision.Vision;
+import org.json.simple.parser.ParseException;
 import org.littletonrobotics.urcl.URCL;
 
-import java.util.Optional;
+import java.io.IOException;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -42,75 +43,75 @@ import java.util.Optional;
 public class Robot extends TimedRobot {
 
   private final RobotContainer m_robotContainer;
-  private final SwerveSubsystem m_SwerveSubsystem = new SwerveSubsystem();
-  private final PoseEstimator m_PoseEstimator = new PoseEstimator(m_SwerveSubsystem);
+//  private final CommandSwerveDrivetrain CTREdrivetrain = TunerConstants.createDrivetrain();
+  private final RevSwerve m_SwerveSubsystem = new RevSwerveSubsystem();
+  private final Vision m_Vision = new Vision();
+  private final PoseEstimator m_PoseEstimator = new PoseEstimator(m_SwerveSubsystem, m_Vision);
   private final Elevator m_elevator = new Elevator();
   private final LEDSubsystem m_ledSubsystem = new LEDSubsystem(m_elevator);
   private final LEDPatterns m_ledPatterns = new LEDPatterns(m_elevator);
   private final NetworkTableLogger logger = new NetworkTableLogger("SHOW UPPPP");
   private final AlgaeRemoverRollers m_AlgeaRemoverRollers = new AlgaeRemoverRollers();
   private final AlgaeRemoverPivot m_AlgaeRemoverPivot = new AlgaeRemoverPivot();
-  private final Coral m_coral = new Coral();
+  private final FrontCoralRoller frontCoralRoller = new FrontCoralRoller();
+  private final BackCoralRoller backCoralRoller = new BackCoralRoller();
   private final GroundIntakePivot groundIntakePivot = new GroundIntakePivot();
   private final GroundIntakeRollers groundIntakeRollers = new GroundIntakeRollers();
-  private final Autos m_Autos = new Autos(m_ledSubsystem, m_ledPatterns, m_coral, m_elevator, m_PoseEstimator);
+  private final Autos m_Autos = new Autos(m_ledSubsystem, m_ledPatterns, frontCoralRoller, backCoralRoller, m_elevator, m_PoseEstimator);
 
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   public Robot() {
-
-    AutoBuilder.configure(
-        m_PoseEstimator::get2dPose,
-        m_PoseEstimator::resetPoseToPose2d,
-        m_SwerveSubsystem::getChassisSpeeds,
-        (chassisSpeeds, driveff) -> { // drive command
-          System.out.println("aligning");
-          // PathPlannerLogging.setLogActivePathCallback((poselist) -> {
-          //   m_PoseEstimatior.field2d.getObject("Trajectory")
-          //     .setTrajectory(
-          //       TrajectoryGenerator.generateTrajectory(
-          //         poselist, 
-          //         new TrajectoryConfig(10, 5))); //TODO: get this from pathplanner somehow
-          // });
-          if (Robot.isRedAlliance()) {
-            chassisSpeeds = new ChassisSpeeds(-chassisSpeeds.vxMetersPerSecond, -chassisSpeeds.vyMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
-          }
-          logger.logChassisSpeeds("speeds", chassisSpeeds);
-          m_SwerveSubsystem.setChassisSpeeds(chassisSpeeds);
-        },
-        kSwerve.Auton.pathFollowController, 
-        kConfigs.robotConfig,
-        () -> { // to flip path
-          // Boolean supplier that controls when the path will be mirrored for the red alliance
-          // This will flip the path being followed to the red side of the field.
-          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-          Optional<Alliance> alliance = DriverStation.getAlliance();
-
-          if (alliance.isPresent()) {
-            return alliance.get() == DriverStation.Alliance.Red;
-          }
-          return false;
-        },
+    // Configure PathPlanner's AutoBuilder
+    try {
+      AutoBuilder.configure(
+          m_PoseEstimator::get2dPose,
+          m_PoseEstimator::resetPoseToPose2d,
+          m_SwerveSubsystem::getChassisSpeeds,
+          (chassisSpeeds, driveff) -> { // drive command
+            // INVERT IF THINGS ARE GOING BACKWARDS
+            // if (Robot.isRedAlliance()) {
+            //   chassisSpeeds = new ChassisSpeeds(-chassisSpeeds.vxMetersPerSecond, -chassisSpeeds.vyMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond);
+            // }
+            m_SwerveSubsystem.setChassisSpeeds(chassisSpeeds);
+          },
+          new PPHolonomicDriveController(
+            new PIDConstants(
+              8,
+              0,
+              0),
+            new PIDConstants(
+              4,
+              0,
+              0)),
+        RobotConfig.fromGUISettings(),
+        Robot::isRedAlliance,
+        // requirements
         m_SwerveSubsystem,
-      m_PoseEstimator);
+        m_PoseEstimator);
+    } catch (IOException | ParseException e) {
+      System.out.println("ERROR: Could not process pathplanner config");
+      throw new RuntimeException(e);
+    }
 
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer =
         new RobotContainer(
-            m_SwerveSubsystem,
-            m_PoseEstimator,
-            groundIntakePivot,
-            groundIntakeRollers,
-            m_AlgaeRemoverPivot,
-            m_AlgeaRemoverRollers,
-            m_coral,
-            m_elevator,
-            m_ledSubsystem,
-            m_ledPatterns,
-            m_Autos
+          m_SwerveSubsystem,
+          m_PoseEstimator,
+          groundIntakePivot,
+          groundIntakeRollers,
+          m_AlgaeRemoverPivot,
+          m_AlgeaRemoverRollers,
+          frontCoralRoller,
+          backCoralRoller,
+          m_elevator,
+          m_ledSubsystem,
+          m_ledPatterns,
+          m_Autos
             );
     
     // Load autos into chooser and use SmartDashboard to publish
@@ -126,10 +127,6 @@ public class Robot extends TimedRobot {
 
     // Start the URCL logger (logs REV SparkMaxes and SparkFlexes automatically on networktables)
     URCL.start();
-
-    // Start logging subsystem values //TODO: Uncomment when m_AlgaeIntakePivot and m_AlgaeIntakeRollers are implemented and on the robot
-    // m_AlgaeIntakePivot.shouldLogValues(true);
-    // m_AlgaeIntakeRollers.shouldLogValues(true);
   }
 
   /**
@@ -158,6 +155,7 @@ public class Robot extends TimedRobot {
     m_ledSubsystem.setPattern(LEDPatterns.purple);
   }
 
+  /** This function is called periodically during disabled. */
   @Override
   public void disabledPeriodic() {}
 
@@ -181,11 +179,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     CommandScheduler.getInstance().cancelAll();
 
-    // m_ledSubsystem.setPattern(LEDPatterns.green);
-
-    m_ledSubsystem.fireAnimation(LEDPatterns.darkGreen, true);
-
-    // m_ledSubsystem.enzoLEDS(enzoMap.NORMAL, Math.random() * 15);
+    m_ledSubsystem.fireAnimation(LEDPatterns.theCoolerGreen, true);
 
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
@@ -193,14 +187,11 @@ public class Robot extends TimedRobot {
     // this line or comment it out.
 
     m_robotContainer.teleopInit();
-}
+  }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    // if (m_ledSubsystem.currentPattern == LEDSubsystem.defaultPattern) {
-    //   m_ledSubsystem.enzoLEDS(enzoMap.NORMAL, Math.random() * 15);
-    // }
   }
 
   @Override

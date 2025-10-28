@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems.Elevator;
 
+import Glitch.Lib.Motors.SparkConfigurator.LogData;
+import Glitch.Lib.NetworkTableLogger;
 import com.revrobotics.sim.SparkMaxSim;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -15,6 +17,7 @@ import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
@@ -22,26 +25,44 @@ import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Constants.kConfigs;
-import frc.robot.Constants.kElevator;
-import frc.robot.utilities.NetworkTableLogger;
-import frc.robot.utilities.SparkConfigurator.LogData;
 
 import java.util.Set;
 
+import static Glitch.Lib.Motors.SparkConfigurator.getFollowerMax;
+import static Glitch.Lib.Motors.SparkConfigurator.getSparkMax;
 import static edu.wpi.first.units.Units.Volt;
-import static frc.robot.utilities.SparkConfigurator.getFollowerMax;
-import static frc.robot.utilities.SparkConfigurator.getSparkMax;
 public class Elevator extends SubsystemBase {
 
   private final SparkMax elevatorMotorR;
   private final SparkMax elevatorMotorL;
   private final SparkClosedLoopController elevatorPID;
-  private kElevator.ElevatorPosition targetHeight;
-  private kElevator.ElevatorPosition previousHeight;
+  private ElevatorPosition targetHeight;
+  private ElevatorPosition previousHeight;
   private double targetRotations;
   private final NetworkTableLogger logger = new NetworkTableLogger(this.getSubsystem());
   public boolean isHoming = false;
+
+  public enum ElevatorPosition {
+    // elevator calculations https://www.desmos.com/calculator/suqtj7vxc7
+
+    HOME(0), // TODO: SET WITH ACTUAL VALUES
+    L1(1.1), // TODO: SET WITH ACTUAL VALUES
+    L2(8.23663),// TODO: SET WITH ACTUAL VALUES
+    L3(20.43877), // TODO: SET WITH ACTUAL VALUES
+    L4(39.53888), // TODO: SET WITH ACTUAL VALUES
+    A2(13.5), // TODO: SET WITH ACTUAL VALUES
+    A3(25.5); // TODO: SET WITH ACTUAL VALUES
+
+    private final double rotations;
+
+    private ElevatorPosition(double rotations) {
+      this.rotations = rotations;
+    }
+
+    public double getOutputRotations() {
+      return rotations;
+    }
+  }
 
 //-=-=-=-=-=-=-=-=-TrapezoidProfile=-=-=-=-=-=-=-=- /
 
@@ -56,6 +77,16 @@ public class Elevator extends SubsystemBase {
 
   private TrapezoidProfile.State m_intermediate = new TrapezoidProfile.State();
 
+  public static final DCMotor neoMotor =
+    new DCMotor(
+      12,
+      2.6,
+      105,
+      1.8,
+      594.4,
+      1);
+
+
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 
 
   private final ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0, 1.28, 3.71, 0.23);
@@ -64,7 +95,7 @@ public class Elevator extends SubsystemBase {
     new ElevatorSim(
       3.71, 
       0.23,
-      kConfigs.neoMotor,
+      neoMotor,
       0.01,
       2.0,
       true,
@@ -75,7 +106,7 @@ public class Elevator extends SubsystemBase {
   /** Creates a new Elevator. */
   public Elevator() {
     elevatorMotorR = getSparkMax(
-      kElevator.elevatorMotorRCANID, 
+      10,
       SparkMax.MotorType.kBrushless,
       true,
       Set.of(),
@@ -97,16 +128,16 @@ public class Elevator extends SubsystemBase {
 
     elevatorMotorL = getFollowerMax(
       elevatorMotorR, 
-      kElevator.elevatorMotorLCANID, 
+      11,
       SparkMax.MotorType.kBrushless, 
       true);
 
     elevatorPID = elevatorMotorR.getClosedLoopController();
 
     m_SparkMaxSim = 
-      new SparkMaxSim(elevatorMotorR, kConfigs.neoMotor);
+      new SparkMaxSim(elevatorMotorR, neoMotor);
 
-    setElevatorHeightMotionProfile(kElevator.ElevatorPosition.L1);
+    setElevatorHeightMotionProfile(ElevatorPosition.L1);
   }
 
   public void setDutyCycle(double dutyCycle) {
@@ -130,7 +161,7 @@ public class Elevator extends SubsystemBase {
       );
   }
 
-  public void setElevatorHeightMotionProfile(kElevator.ElevatorPosition height_chosen) {
+  public void setElevatorHeightMotionProfile(ElevatorPosition height_chosen) {
     // get double from enum
     previousHeight = targetHeight;
     targetHeight = height_chosen;
@@ -140,7 +171,7 @@ public class Elevator extends SubsystemBase {
     m_setpoint = new TrapezoidProfile.State(elevatorMotorR.getEncoder().getPosition(), 0);
   }
 
-  public kElevator.ElevatorPosition getElevatorSetPosition() {
+  public ElevatorPosition getElevatorSetPosition() {
     return targetHeight;
   }
 

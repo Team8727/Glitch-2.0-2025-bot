@@ -1,39 +1,43 @@
 package frc.robot.controller;
 
+import Glitch.Lib.Controller.ControllerBindings;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.CoralCmds.ReindexCoralCmd;
 import frc.robot.commands.CoralCmds.RejectCoralCmd;
+import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
+import frc.robot.subsystems.Elevator.Coral.BackCoralRoller;
+import frc.robot.subsystems.Elevator.Coral.FrontCoralRoller;
+import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.GroundIntake.GroundIntakePivot;
 import frc.robot.subsystems.GroundIntake.GroundIntakeRollers;
-import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.Elevator.Elevator;
-import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
-import frc.robot.subsystems.Elevator.Coral.Coral;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
-import frc.robot.subsystems.PoseEstimator;
+import frc.robot.pose.PoseEstimator; // updated package
+import Glitch.Lib.Swerve.RevSwerve;
 
 /**
  * Default teleop controller bindings for the robot.
  */
 public class Driver2DefaultBindings implements ControllerBindings {
-  private final SwerveSubsystem m_SwerveSubsystem;
+  private final RevSwerve m_SwerveSubsystem;
   private final PoseEstimator m_poseEstimator;
   private final GroundIntakePivot groundIntakePivot;
   private final GroundIntakeRollers groundIntakeRollers;
-  private final Coral m_coral;
+  private final FrontCoralRoller frontCoralRoller;
+  private final BackCoralRoller backCoralRoller;
   private final Elevator m_elevator;
   private final LEDSubsystem m_ledSubsytem;
   private final AlgaeRemoverPivot m_AlgaeRemoverPivot;
   private final AlgaeRemoverRollers m_AlgaeRemoverRollers;
 
   public Driver2DefaultBindings(
-    SwerveSubsystem swerveSubsystem,
+    RevSwerve swerveSubsystem,
     PoseEstimator poseEstimator,
     GroundIntakePivot groundIntakePivot,
     GroundIntakeRollers groundIntakeRollers,
-    Coral coral,
+    FrontCoralRoller frontCoralRoller,
+    BackCoralRoller backCoralRoller,
     Elevator elevator,
     LEDSubsystem ledSubsystem,
     AlgaeRemoverPivot algaeRemoverPivot,
@@ -42,7 +46,8 @@ public class Driver2DefaultBindings implements ControllerBindings {
     m_poseEstimator = poseEstimator;
     this.groundIntakePivot = groundIntakePivot;
     this.groundIntakeRollers = groundIntakeRollers;
-    m_coral = coral;
+    this.frontCoralRoller = frontCoralRoller;
+    this.backCoralRoller = backCoralRoller;
     m_elevator = elevator;
     m_ledSubsytem = ledSubsystem;
     m_AlgaeRemoverPivot = algaeRemoverPivot;
@@ -59,8 +64,8 @@ public class Driver2DefaultBindings implements ControllerBindings {
     // intake coral
     // controller.leftTrigger().toggleOnTrue(new IntakeCoralCmd(m_coral, m_elevator, m_ledSubsytem));
     // reindex coral
-    controller.povRight().onTrue(new ReindexCoralCmd(m_coral, m_elevator, m_ledSubsytem));
-    controller.povLeft().onTrue(new RejectCoralCmd(m_coral));
+    controller.povRight().onTrue(new ReindexCoralCmd(backCoralRoller, frontCoralRoller, m_elevator, m_ledSubsytem));
+    controller.povLeft().onTrue(new RejectCoralCmd(backCoralRoller, frontCoralRoller));
     //deploy coral
     // controller.leftBumper().onTrue(new DeployCoralCmd(m_coral, m_ledSubsytem, m_elevator));
 
@@ -89,9 +94,4 @@ public class Driver2DefaultBindings implements ControllerBindings {
     // controller.povDown().whileTrue(new RemoveAlgaeCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers, ElevatorPosition.A2, m_elevator, m_ledSubsytem));
 
   }
-
-  @Override
-  public void unbind(CommandXboxController controller) {
-    m_SwerveSubsystem.removeDefaultCommand();
-}
 }

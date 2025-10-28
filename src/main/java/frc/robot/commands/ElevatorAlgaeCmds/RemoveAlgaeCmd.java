@@ -5,23 +5,21 @@
 package frc.robot.commands.ElevatorAlgaeCmds;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.kAlgaeRemover.kPivot.RemoverPositions;
-import frc.robot.Constants.kElevator.ElevatorPosition;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
-import frc.robot.subsystems.LEDs.LEDSubsystem;
 import frc.robot.subsystems.Elevator.Elevator;
+import frc.robot.subsystems.LEDs.LEDSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class RemoveAlgaeCmd extends Command {
   private final AlgaeRemoverPivot m_pivot;
   private final AlgaeRemoverRollers m_rollers;
-  private final ElevatorPosition m_setPos;
+  private final Elevator.ElevatorPosition m_setPos;
   private final Elevator m_elevator;
   private final LEDSubsystem m_ledSubsystem;
 
   /** Creates a new removeAlgae. */
-  public RemoveAlgaeCmd(AlgaeRemoverPivot algaeRemoverPivot, AlgaeRemoverRollers algaeRemoverRollers, ElevatorPosition setPos, Elevator elevator, LEDSubsystem ledSubsystem) {
+  public RemoveAlgaeCmd(AlgaeRemoverPivot algaeRemoverPivot, AlgaeRemoverRollers algaeRemoverRollers, Elevator.ElevatorPosition setPos, Elevator elevator, LEDSubsystem ledSubsystem) {
     m_pivot = algaeRemoverPivot;
     m_rollers = algaeRemoverRollers;
     m_setPos = setPos;
@@ -35,7 +33,7 @@ public class RemoveAlgaeCmd extends Command {
   @Override
   public void initialize() {
     if (m_elevator.getElevatorSetPosition() == m_setPos) {
-      m_pivot.setPositionTrapazoidal(RemoverPositions.RaisedL2); // TODO: set positions
+      m_pivot.setPositionTrapazoidal(AlgaeRemoverPivot.RemoverPositions.RaisedL2); // TODO: set positions
       m_rollers.setRemoverRollerSpeed(.5); // TODO: set speed
     } else {
       m_elevator.setElevatorHeightMotionProfile(m_setPos);
@@ -51,7 +49,7 @@ public class RemoveAlgaeCmd extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_pivot.setPositionTrapazoidal(RemoverPositions.Stowed);
+    m_pivot.setPositionTrapazoidal(AlgaeRemoverPivot.RemoverPositions.Stowed);
     m_rollers.setRemoverRollerSpeed(0);
   }
 

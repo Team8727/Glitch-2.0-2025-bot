@@ -28,7 +28,7 @@ public class ZeroElevator extends Command {
       new WaitCommand(.1),
       new InstantCommand(() -> m_elevator.setDutyCycle(-0.1)),
       new WaitCommand(0.3),
-      new WaitUntilCommand(() -> m_elevator.getCurrentDrawAmps() > 35),
+      new WaitUntilCommand(() -> m_elevator.getCurrentDrawAmps() > 30),
       new InstantCommand(m_elevator::resetElevatorEncoders),
       new InstantCommand(() -> m_elevator.isHoming = false),
       new RunCommand(this::cancel)).schedule();

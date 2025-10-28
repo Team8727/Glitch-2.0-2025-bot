@@ -1,27 +1,32 @@
 package frc.robot.subsystems.GroundIntake;
 
+import Glitch.Lib.BaseMechanisms.Pivot;
+import Glitch.Lib.Motors.SparkMaxMotor;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import frc.robot.utilities.BaseSystems.Motors.SparkMaxMotor;
-import frc.robot.utilities.BaseSystems.Pivot;
-
-import static frc.robot.Constants.kAlgaeIntake.kAlgaeIntakePivot;
 
 public class GroundIntakePivot extends Pivot {
-  private static final double maxVelocity = 100000;
-  private static final double maxAcceleration = 100000;
-  private static final double zeroedAngelFromHorizontal = 100;
-  private static final double allowedError = 1;
-  private static final int CANID = kAlgaeIntakePivot.intakePivotMotorCANID;
+  public enum IntakePosition {
+    HOME(20),
+    SCORE(20),
+    DOWN(90);
+
+    private final double degrees;
+    private IntakePosition(double degrees) { this.degrees = degrees; }
+
+    public double getIntakePositionDegrees() {
+      return degrees;
+    }
+  }
+
+  private static final int CANID = 17;
   private static final SparkMaxConfig config = new SparkMaxConfig();
   static {
     config
       .smartCurrentLimit(60)
       .idleMode(SparkMaxConfig.IdleMode.kBrake)
       .closedLoop
-      .feedbackSensor(ClosedLoopConfig.FeedbackSensor.kAbsoluteEncoder)
-      .pid(5, 0, 0);
-  }
+      .feedbackSensor(ClosedLoopConfig.FeedbackSensor.kAbsoluteEncoder);}
 
   public GroundIntakePivot() {
     super(
@@ -29,16 +34,20 @@ public class GroundIntakePivot extends Pivot {
         config,
         CANID,
         ClosedLoopConfig.FeedbackSensor.kAbsoluteEncoder),
-      zeroedAngelFromHorizontal,
-      maxVelocity,
-      maxAcceleration,
-      allowedError);
+      100,
+      100000,
+      5000,
+      1);
+    setPosition(5);
   }
 
   /** This method will be called once per scheduler run */
   @Override
   public void periodic() {
     super.periodic();
+    if ((getPosition() * 360) > 300) {
+      setDutyCycle(.05);
+    }
     // Add any additional periodic logic here
 
   }

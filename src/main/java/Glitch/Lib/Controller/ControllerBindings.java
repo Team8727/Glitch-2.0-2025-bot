@@ -1,4 +1,4 @@
-package frc.robot.controller;
+package Glitch.Lib.Controller;
 
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
@@ -12,9 +12,4 @@ public interface ControllerBindings {
   */
   void bind(CommandXboxController controller);
 
-  /**
-  * Unbind your commands from the controller here, and do any other necessary cleanup.
-  * @param controller The controller to unbind from.
-  */
-  void unbind(CommandXboxController controller);
 }

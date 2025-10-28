@@ -1,27 +1,34 @@
 package frc.robot.commands.DriveCmds;
 
+import Glitch.Lib.NetworkTableLogger;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
-import frc.robot.Constants.kElevator;
-import frc.robot.Constants.kOI;
-import frc.robot.Constants.kSwerve;
-import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.Elevator.Elevator;
-import frc.robot.utilities.NetworkTableLogger;
+import Glitch.Lib.Swerve.RevSwerve;
 
 import java.util.function.Supplier;
 
 public class SwerveJoystickCmd extends Command {
 
-  private final SwerveSubsystem m_SwerveSubsystem;
+  // Deadzone values
+  private final double translationDeadzone = 0.08;
+  private final double rotationDeadzone = 0.08;
+
+  // Maximum speeds
+  private final double maxTransSpeed = 5;
+  private final double maxAngSpeed = 3 * Math.PI;
+  private final double minimumDriveSpeed = 4;
+
+
+  private final RevSwerve m_SwerveSubsystem;
   private final Elevator m_Elevator;
   private final Supplier<Double> m_ySpdFunction, m_xSpdFunction, m_turningSpdFunction;
   private final NetworkTableLogger m_logger = new NetworkTableLogger(this.getName());
 
   public SwerveJoystickCmd(
-      SwerveSubsystem swerveSubsystem,
+      RevSwerve swerveSubsystem,
       Elevator elevator,
       Supplier<Double> ySpdFunction,
       Supplier<Double> xSpdFunction,
@@ -46,19 +53,19 @@ public class SwerveJoystickCmd extends Command {
     double turningSpeed = m_turningSpdFunction.get();
 
     // apply deadband
-    xSpeed = MathUtil.applyDeadband(xSpeed, kOI.translationDeadzone);
-    ySpeed = MathUtil.applyDeadband(ySpeed, kOI.translationDeadzone);
-    turningSpeed = MathUtil.applyDeadband(turningSpeed, kOI.rotationDeadzone);
+    xSpeed = MathUtil.applyDeadband(xSpeed, translationDeadzone);
+    ySpeed = MathUtil.applyDeadband(ySpeed, translationDeadzone);
+    turningSpeed = MathUtil.applyDeadband(turningSpeed, rotationDeadzone);
 
 
     // get elevator height for anti-tipping
     double elevatorHeight = m_Elevator.getElevatorHeight();
-    double driveSpeedConversionFactor = (kElevator.ElevatorPosition.L4.getOutputRotations() - (elevatorHeight - kSwerve.DriveSpeedScaling.minimumDriveSpeed)) / kElevator.ElevatorPosition.L4.getOutputRotations();
-    xSpeed = -(xSpeed * kSwerve.maxTransSpeed
+    double driveSpeedConversionFactor = (Elevator.ElevatorPosition.L4.getOutputRotations() - (elevatorHeight - minimumDriveSpeed)) / Elevator.ElevatorPosition.L4.getOutputRotations();
+    xSpeed = -(xSpeed * maxTransSpeed
      * driveSpeedConversionFactor);  // Scaling to elevator height
-    ySpeed = -(ySpeed * kSwerve.maxTransSpeed
+    ySpeed = -(ySpeed * maxTransSpeed
      * driveSpeedConversionFactor);  // Scaling to elevator height
-    turningSpeed = -(turningSpeed * kSwerve.maxAngSpeed
+    turningSpeed = -(turningSpeed * maxAngSpeed
      * driveSpeedConversionFactor);  // Scaling to elevator height
 
     // set chassis speed

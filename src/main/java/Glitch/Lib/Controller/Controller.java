@@ -1,4 +1,4 @@
-package frc.robot.controller;
+package Glitch.Lib.Controller;
 
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
@@ -37,10 +37,6 @@ public class Controller {
     }
 
   public void applyBindings(ControllerBindings bindings) {
-    if (m_currentBindings != null) {
-      m_currentBindings.unbind(m_controller);
-    }
-
     initController();
 
     if (bindings != null) {
@@ -52,5 +48,9 @@ public class Controller {
 
   public void clearBindings() {
     applyBindings(null);
+  }
+
+  public CommandXboxController getController() {
+    return m_controller;
   }
 }

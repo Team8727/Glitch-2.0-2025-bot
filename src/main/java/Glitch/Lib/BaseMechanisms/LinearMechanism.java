@@ -1,14 +1,13 @@
-package frc.robot.utilities.BaseSystems;
+package Glitch.Lib.BaseMechanisms;
 
+import Glitch.Lib.Motors.Motor;
+import Glitch.Lib.NetworkTableLogger;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import frc.robot.Constants;
-import frc.robot.utilities.BaseSystems.Motors.Motor;
-import frc.robot.utilities.NetworkTableLogger;
 
 public abstract class LinearMechanism extends SubsystemBase {
 
@@ -22,11 +21,9 @@ public abstract class LinearMechanism extends SubsystemBase {
 
   private final ElevatorFeedforward feedforward;
 
-  private final double dt;
-
   private final double allowedError;
 
-  private final double rotationsToMeters;
+  private final double rotationsToMeter;
 
   /**
    * Creates a new LinearMechanism.
@@ -35,37 +32,34 @@ public abstract class LinearMechanism extends SubsystemBase {
    * @param maxVelocity The maximum velocity of the mechanism
    * @param maxAcceleration The maximum acceleration of the mechanism
    * @param allowedError The allowed error for the mechanism in meters
-   * @param rotationsToMeters The conversion factor from rotations to meters
+   * @param rotationsToMeter The amount of rotation to move the mechanism 1 meter
    * @param ks The static gain of the mechanism
    * @param kg The gravity gain of the mechanism
    * @param kv The velocity gain of the mechanism
    * @param ka The acceleration gain of the mechanism
-   * @param dt The time step for the profile
    */
   public LinearMechanism(
     Motor motor,
     double maxVelocity,
     double maxAcceleration,
     double allowedError,
-    double rotationsToMeters,
+    double rotationsToMeter,
     double ks,
     double kg,
     double kv,
-    double ka,
-    double dt
-    ) {
+    double ka
+  ) {
 
     logger = new NetworkTableLogger(this.getName());
 
     profile = new TrapezoidProfile(new TrapezoidProfile.Constraints(maxVelocity, maxAcceleration));
     this.motor = motor;
 
-    feedforward = new ElevatorFeedforward(ks, kg, kv, ka, dt);
-    this.dt = dt;
+    feedforward = new ElevatorFeedforward(ks, kg, kv, ka);
 
     this.allowedError = allowedError;
 
-    this.rotationsToMeters = rotationsToMeters;
+    this.rotationsToMeter = rotationsToMeter;
   }
 
   /**
@@ -91,8 +85,8 @@ public abstract class LinearMechanism extends SubsystemBase {
 
   // set position
   private void setMotorFFAndPIDPosition(double nextPos) {
-    motor.setPosition(//TODO: convert to meters per second
-      nextPos,
+    motor.setPosition(
+      nextPos * rotationsToMeter,
       feedforward.calculateWithVelocities(motor.getVelocity(), setpoint.velocity));
   }
 
@@ -111,7 +105,7 @@ public abstract class LinearMechanism extends SubsystemBase {
    * @return The current position in meters.
    */
   public double getPosition() {
-    return motor.getPosition();
+    return motor.getPosition()* rotationsToMeter;
   }
 
   /**
@@ -127,10 +121,10 @@ public abstract class LinearMechanism extends SubsystemBase {
   @Override
   public void periodic() {
     logger.logDouble("setpoint", setpoint.position);
-    logger.logDouble("actualPosition", motor.getPosition());
+    logger.logDouble("position", motor.getPosition());
     logger.logDouble("goal", goal.position);
 
-    setpoint = profile.calculate(dt, setpoint, goal);
+    setpoint = profile.calculate(0.02, setpoint, goal);
 
     setMotorFFAndPIDPosition(setpoint.position);
   }

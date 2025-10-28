@@ -1,5 +1,6 @@
-package frc.robot.subsystems;
+package Glitch.Lib.Swerve;
 
+import Glitch.Lib.NetworkTableLogger;
 import com.studica.frc.AHRS;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -7,17 +8,49 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.kSwerve;
-import frc.robot.Constants.kSwerve.kModule;
 import frc.robot.Robot;
-import frc.robot.utilities.MAXSwerve;
-import frc.robot.utilities.NetworkTableLogger;
 
-public class SwerveSubsystem extends SubsystemBase {
+import static Glitch.Lib.Swerve.MAXSwerve.kinematics;
+import static Glitch.Lib.Swerve.MAXSwerve.maxWheelSpeed;
+
+public abstract class RevSwerve extends SubsystemBase {
+  // Swerve uses ccw+ angular quantities and a coordinate plane with 0,0 at the robot's center
+  // , forward is +x, and a module order based on the quadrant system (front left is first)
+  // BL        FL
+  //       C
+  // BR        FR
+  // NOTE: Make sure ModuleLocation and the order of the modules in the kinematics match
+
+  public static double wheelBaseWidth;
+
+  private enum ModuleLocation {
+    FRONT_LEFT,
+    FRONT_RIGHT,
+    BACK_LEFT,
+    BACK_RIGHT
+  }
+  private final int kNumModules = ModuleLocation.values().length;
+
+  // Module angular offsets (rad)
+  public static double frontLeftOffset = Math.PI / 2;
+  public static double backLeftOffset = -Math.PI;
+  public static double backRightOffset = -Math.PI / 2;
+  public static double frontRightOffset = 0;
+
   // Swerve modules
-  private final MAXSwerve[] modules = new MAXSwerve[kSwerve.kNumModules];
-  private final SwerveModulePosition[] cachedModulePositions = new SwerveModulePosition[kSwerve.kNumModules];
-  private final SwerveModuleState[] cachedModuleStates = new SwerveModuleState[kSwerve.kNumModules];
+  private final MAXSwerve[] modules = new MAXSwerve[kNumModules];
+  private final SwerveModulePosition[] cachedModulePositions = new SwerveModulePosition[kNumModules];
+  private final SwerveModuleState[] cachedModuleStates = new SwerveModuleState[kNumModules];
+
+  // Motor CAN IDs
+  private final int frontLeftDriveID;
+  private final int frontLeftSteerID;
+  private final int backLeftDriveID;
+  private final int backLeftSteerID;
+  private final int backRightDriveID;
+  private final int backRightSteerID;
+  private final int frontRightDriveID;
+  private final int frontRightSteerID;
 
   // Gyro
   private final AHRS navX = new AHRS(AHRS.NavXComType.kMXP_SPI);
@@ -48,7 +81,26 @@ public class SwerveSubsystem extends SubsystemBase {
   // Network Table Logger
   private final NetworkTableLogger networkTableLogger = new NetworkTableLogger(this.getName().toString());
 
-  public SwerveSubsystem() {
+  public RevSwerve(
+      int frontLeftDriveID,
+      int frontLeftSteerID,
+      int backLeftDriveID,
+      int backLeftSteerID,
+      int backRightDriveID,
+      int backRightSteerID,
+      int frontRightDriveID,
+      int frontRightSteerID,
+      double wheelBaseWidth
+  ) {
+    this.frontLeftDriveID = frontLeftDriveID;
+    this.frontLeftSteerID = frontLeftSteerID;
+    this.backLeftDriveID = backLeftDriveID;
+    this.backLeftSteerID = backLeftSteerID;
+    this.backRightDriveID = backRightDriveID;
+    this.backRightSteerID = backRightSteerID;
+    this.frontRightDriveID = frontRightDriveID;
+    this.frontRightSteerID = frontRightSteerID;
+    RevSwerve.wheelBaseWidth = wheelBaseWidth;
     initSwerveModules();
 
     new Thread(
@@ -64,10 +116,10 @@ public class SwerveSubsystem extends SubsystemBase {
 
   // Call this if you ever need to re-initialize the swerve modules
   private void initSwerveModules() {
-    modules[kSwerve.ModuleLocation.FRONT_LEFT.ordinal()] = new MAXSwerve(kSwerve.CANID.frontLeftDrive, kSwerve.CANID.frontLeftSteer, kSwerve.Offsets.frontLeft);
-    modules[kSwerve.ModuleLocation.FRONT_RIGHT.ordinal()] = new MAXSwerve(kSwerve.CANID.frontRightDrive, kSwerve.CANID.frontRightSteer, kSwerve.Offsets.frontRight);
-    modules[kSwerve.ModuleLocation.BACK_LEFT.ordinal()] = new MAXSwerve(kSwerve.CANID.backLeftDrive, kSwerve.CANID.backLeftSteer, kSwerve.Offsets.backLeft);
-    modules[kSwerve.ModuleLocation.BACK_RIGHT.ordinal()] = new MAXSwerve(kSwerve.CANID.backRightDrive, kSwerve.CANID.backRightSteer, kSwerve.Offsets.backRight);
+    modules[ModuleLocation.FRONT_LEFT.ordinal()] = new MAXSwerve(frontLeftDriveID, frontLeftSteerID, frontLeftOffset);
+    modules[ModuleLocation.FRONT_RIGHT.ordinal()] = new MAXSwerve(frontRightDriveID, frontRightSteerID, frontRightOffset);
+    modules[ModuleLocation.BACK_LEFT.ordinal()] = new MAXSwerve(backLeftDriveID, backLeftSteerID, backLeftOffset);
+    modules[ModuleLocation.BACK_RIGHT.ordinal()] = new MAXSwerve(backRightDriveID, backRightSteerID, backRightOffset);
   }
 
   /**
@@ -106,7 +158,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * @return the chassis speeds
    */
   public ChassisSpeeds getChassisSpeeds() {
-    return kSwerve.kinematics.toChassisSpeeds(getModuleStates());
+    return kinematics.toChassisSpeeds(getModuleStates());
   }
 
   /**
@@ -158,7 +210,9 @@ public class SwerveSubsystem extends SubsystemBase {
    * @param robotRelativeSpeeds the robot-relative speeds
    */
   public void setChassisSpeeds(ChassisSpeeds robotRelativeSpeeds) {
-    setModuleStates(kSwerve.kinematics.toSwerveModuleStates(robotRelativeSpeeds));
+    setModuleStates(kinematics.toSwerveModuleStates(robotRelativeSpeeds));
+
+    networkTableLogger.logChassisSpeeds("speeds", robotRelativeSpeeds);
 
     if (Robot.isSimulation()) {
       setNextSimHeading(simGyro.nextHeading + robotRelativeSpeeds.omegaRadiansPerSecond * 0.02);
@@ -166,7 +220,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   private void setModuleStates(SwerveModuleState[] desiredState) {
-    SwerveDriveKinematics.desaturateWheelSpeeds(desiredState, kModule.maxWheelSpeed);
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredState, maxWheelSpeed);
     networkTableLogger.logSwerveModuleState("Desired Swerve Module States", desiredState);
 
     for (int i = 0; i < modules.length; ++i) {

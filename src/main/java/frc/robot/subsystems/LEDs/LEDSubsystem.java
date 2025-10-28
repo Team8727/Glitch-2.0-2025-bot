@@ -4,34 +4,23 @@
 
 package frc.robot.subsystems.LEDs;
 
-import edu.wpi.first.units.measure.Frequency;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.AddressableLEDBufferView;
 import edu.wpi.first.wpilibj.LEDPattern;
-import edu.wpi.first.wpilibj.LEDPattern.GradientType;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.kElevator;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.LEDs.LEDPatterns.enzoMap;
 
-import java.security.KeyFactory;
-import java.util.List;
-import java.util.Map;
-
-import static edu.wpi.first.units.Units.Percent;
-import static edu.wpi.first.units.Units.Second;
-
 public class LEDSubsystem extends SubsystemBase {
   private final AddressableLED lightStrip;
   private final AddressableLEDBuffer stripBuffer;
+  private AddressableLEDBuffer fakeBuffer;
   private boolean altLogic = false;
   private boolean noiseLogic = false;
-  private LEDPattern firePattern;
+  private LEDPattern firePattern = LEDPatterns.theCoolerGreen;
   private LEDPattern noisePattern;
   private boolean fireViews;
   private boolean skipUpdate = false;
@@ -119,6 +108,7 @@ public class LEDSubsystem extends SubsystemBase {
     // LED setup and port configuration
     lightStrip = new AddressableLED(5); // Correct PWM port
     stripBuffer = new AddressableLEDBuffer(36); // Correct LED count
+    fakeBuffer = new AddressableLEDBuffer(stripBuffer.getLength());
     leftSide = new Section(stripBuffer, 0, 13);
     rightSide = new Section(stripBuffer, 35, 20);
     secretBuffer = new Section(stripBuffer, 14, 19);

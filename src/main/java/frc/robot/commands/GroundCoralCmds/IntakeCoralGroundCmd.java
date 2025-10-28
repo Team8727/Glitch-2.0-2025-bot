@@ -5,9 +5,6 @@
 package frc.robot.commands.GroundCoralCmds;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import frc.robot.Constants.kAlgaeIntake.kAlgaeIntakePivot;
 import frc.robot.subsystems.GroundIntake.GroundIntakePivot;
 import frc.robot.subsystems.GroundIntake.GroundIntakeRollers;
 import frc.robot.subsystems.LEDs.LEDPatterns;
@@ -31,7 +28,7 @@ public class IntakeCoralGroundCmd extends Command {
   @Override
   public void initialize() {
     intakePivot.setPosition(110);
-    intakeRollers.setSpeedDutyCycle(-1);
+    intakeRollers.setSpeedDutyCycle(-.8);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -42,7 +39,7 @@ public class IntakeCoralGroundCmd extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intakePivot.setPositionCommand(3)
+    intakePivot.setPositionCommand(5)
       .andThen(() -> intakeRollers.setSpeedDutyCycle(-0.1))
     .schedule();
 //    // Go back to home position and stop rollers
@@ -51,7 +48,7 @@ public class IntakeCoralGroundCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-
+    ledSubsystem.setPatternForDuration(LEDPatterns.coralPickup, 0.5);;
     return false;
     // Finish when algae is detected
 //    return intakeRollers.getCurrent() > 30;

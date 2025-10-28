@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems.Elevator.AlgaeRemover;
 
+import Glitch.Lib.Motors.SparkConfigurator.LogData;
+import Glitch.Lib.NetworkTableLogger;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -17,14 +19,10 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.kAlgaeRemover;
-import frc.robot.Constants.kAlgaeRemover.kPivot.RemoverPositions;
-import frc.robot.utilities.NetworkTableLogger;
-import frc.robot.utilities.SparkConfigurator.LogData;
 
 import java.util.Set;
 
-import static frc.robot.utilities.SparkConfigurator.getSparkMax;
+import static Glitch.Lib.Motors.SparkConfigurator.getSparkMax;
 
 public class AlgaeRemoverPivot extends SubsystemBase {
   private final SparkMax removerPivotMotor;
@@ -40,11 +38,29 @@ public class AlgaeRemoverPivot extends SubsystemBase {
 
   private final double kDt = 0.02;
 
+  public enum RemoverPositions {
+    Fling(110),
+    Grab(70),
+    RaisedL2(80), // TODO: SET WITH ACTUAL VALUES
+    Stowed(18); // TODO: SET WITH ACTUAL VALUES
+
+    private final double degrees;
+
+    private RemoverPositions(double degrees) {
+      this.degrees = degrees;
+    }
+
+    public double getDegrees() {
+      return degrees;
+    }
+  }
+
+
   /** Creates a new AlgaePivot. */
   public AlgaeRemoverPivot() {
     removerPivotMotor =
         getSparkMax(
-            kAlgaeRemover.kPivot.removerPivotMotorCANID,
+            12,
             SparkLowLevel.MotorType.kBrushless,
             false,
             Set.of(),
