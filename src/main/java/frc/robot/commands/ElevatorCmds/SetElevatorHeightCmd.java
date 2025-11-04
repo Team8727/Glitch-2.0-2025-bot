@@ -5,7 +5,7 @@
 package frc.robot.commands.ElevatorCmds;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Elevator.Coral.Coral;
+import frc.robot.subsystems.Elevator.Coral.FrontCoralRoller;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.LEDs.LEDPatterns;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
@@ -17,16 +17,16 @@ public class SetElevatorHeightCmd extends Command {
   private final Elevator.ElevatorPosition m_scoreLevel;
   private final LEDSubsystem m_ledSubsystem;
   private final LEDPatterns m_ledPatterns;
-  private final Coral m_coral;
+  private final FrontCoralRoller coral;
 
   /** Creates a new SetEvevatorHeightCmd. */
-  public SetElevatorHeightCmd(Elevator.ElevatorPosition scoreLevel, Elevator elevator, Coral coral, LEDSubsystem ledSubsystem, LEDPatterns ledPatterns) {
+  public SetElevatorHeightCmd(Elevator.ElevatorPosition scoreLevel, Elevator elevator, FrontCoralRoller coral, LEDSubsystem ledSubsystem, LEDPatterns ledPatterns) {
 
     m_scoreLevel = scoreLevel;
     m_elevator = elevator;
     m_ledSubsystem = ledSubsystem;
     m_ledPatterns = ledPatterns;
-    m_coral = coral;
+    this.coral = coral;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(elevator, coral, ledSubsystem);
   }
@@ -34,7 +34,7 @@ public class SetElevatorHeightCmd extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (!m_coral.getBackCoralSensor()) {
+    if (!coral.getReverseLimitSwitch()) {
       System.out.println("Setting elevator height to " + m_scoreLevel);
       m_elevator.setElevatorHeightMotionProfile(m_scoreLevel);
     } else {

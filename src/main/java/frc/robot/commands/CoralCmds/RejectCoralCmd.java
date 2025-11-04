@@ -5,33 +5,36 @@
 package frc.robot.commands.CoralCmds;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Elevator.Coral.Coral;
+import frc.robot.subsystems.Elevator.Coral.BackCoralRoller;
+import frc.robot.subsystems.Elevator.Coral.FrontCoralRoller;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class RejectCoralCmd extends Command {
-  private final Coral m_coral;
+  private final FrontCoralRoller frontCoralRoller;
+  private final BackCoralRoller backCoralRoller;
 
   /** Creates a new ReindexCoralCmd. */
-  public RejectCoralCmd(Coral coral) {
-    m_coral = coral;
+  public RejectCoralCmd(BackCoralRoller backCoralRoller, FrontCoralRoller frontCoralRoller) {
+    this.frontCoralRoller = frontCoralRoller;
+    this.backCoralRoller = backCoralRoller;
 
-    addRequirements(coral);
+    addRequirements(frontCoralRoller, backCoralRoller);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     new Thread(() -> {
-      m_coral.setIntakeSpeedDuty(-1);
-      m_coral.setOuttakeSpeedDuty(1);
+      backCoralRoller.setSpeedDutyCycle(-1);
+      frontCoralRoller.setSpeedDutyCycle(1);
       try {
         Thread.sleep(500);
       } catch (InterruptedException e) {
         Thread.currentThread().interrupt();
         e.printStackTrace();
       }
-      m_coral.setIntakeSpeedDuty(0);
-      m_coral.setOuttakeSpeedDuty(0);
+      backCoralRoller.setSpeedDutyCycle(0);
+      frontCoralRoller.setSpeedDutyCycle(0);
       this.cancel();
       Thread.currentThread().interrupt();
     }).start();

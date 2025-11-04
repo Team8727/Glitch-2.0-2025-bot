@@ -18,12 +18,12 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Autos;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
-import frc.robot.subsystems.Elevator.Coral.Coral;
+import frc.robot.subsystems.Elevator.Coral.BackCoralRoller;
+import frc.robot.subsystems.Elevator.Coral.FrontCoralRoller;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.GroundIntake.GroundIntakePivot;
 import frc.robot.subsystems.GroundIntake.GroundIntakeRollers;
@@ -54,10 +54,11 @@ public class Robot extends TimedRobot {
   private final NetworkTableLogger logger = new NetworkTableLogger("SHOW UPPPP");
   private final AlgaeRemoverRollers m_AlgeaRemoverRollers = new AlgaeRemoverRollers();
   private final AlgaeRemoverPivot m_AlgaeRemoverPivot = new AlgaeRemoverPivot();
-  private final Coral m_coral = new Coral();
+  private final FrontCoralRoller frontCoralRoller = new FrontCoralRoller();
+  private final BackCoralRoller backCoralRoller = new BackCoralRoller();
   private final GroundIntakePivot groundIntakePivot = new GroundIntakePivot();
   private final GroundIntakeRollers groundIntakeRollers = new GroundIntakeRollers();
-  private final Autos m_Autos = new Autos(m_ledSubsystem, m_ledPatterns, m_coral, m_elevator, m_PoseEstimator);
+  private final Autos m_Autos = new Autos(m_ledSubsystem, m_ledPatterns, frontCoralRoller, backCoralRoller, m_elevator, m_PoseEstimator);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -106,7 +107,8 @@ public class Robot extends TimedRobot {
           groundIntakeRollers,
           m_AlgaeRemoverPivot,
           m_AlgeaRemoverRollers,
-          m_coral,
+          frontCoralRoller,
+          backCoralRoller,
           m_elevator,
           m_ledSubsystem,
           m_ledPatterns,

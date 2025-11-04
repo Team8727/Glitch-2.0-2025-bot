@@ -9,7 +9,8 @@ import frc.robot.controller.Driver1DefaultBindings;
 import frc.robot.subsystems.Autos;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
-import frc.robot.subsystems.Elevator.Coral.Coral;
+import frc.robot.subsystems.Elevator.Coral.BackCoralRoller;
+import frc.robot.subsystems.Elevator.Coral.FrontCoralRoller;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.GroundIntake.GroundIntakePivot;
 import frc.robot.subsystems.GroundIntake.GroundIntakeRollers;
@@ -33,7 +34,8 @@ public class RobotContainer {
   private final GroundIntakeRollers groundIntakeRollers; // Ground intake rollers subsystem
   private final AlgaeRemoverPivot m_AlgaeRemoverPivot; // Algae remover pivot subsystem
   private final AlgaeRemoverRollers m_AlgaeRemoverRollers; // Algae remover rollers subsystem
-  private final Coral m_coral; // Coral subsystem
+  private final FrontCoralRoller frontCoralRoller; // front coral roller subsystem
+  private final BackCoralRoller backCoralRoller; // back coral roller subsystem
   private final Elevator m_elevator; // Elevator subsystem
   private final LEDSubsystem m_ledSubsystem; // LED subsystem
   private final LEDPatterns m_ledPatterns; // LED patterns subsystem
@@ -50,7 +52,6 @@ public class RobotContainer {
    * @param groundIntakeRollers The ground intake rollers subsystem
    * @param AlgaeRemoverPivot The algae remover pivot subsystem
    * @param AlgaeRemoverRollers The algae remover rollers subsystem
-   * @param coral The coral subsystem
    * @param elevator The elevator subsystem
    * @param ledSubsystem The LED subsystem
    * @param ledPatterns The LED patterns subsystem
@@ -63,7 +64,8 @@ public class RobotContainer {
     GroundIntakeRollers groundIntakeRollers,
     AlgaeRemoverPivot AlgaeRemoverPivot,
     AlgaeRemoverRollers AlgaeRemoverRollers,
-    Coral coral,
+    FrontCoralRoller frontCoralRoller,
+    BackCoralRoller backCoralRoller,
     Elevator elevator,
     LEDSubsystem ledSubsystem,
     LEDPatterns ledPatterns,
@@ -74,9 +76,10 @@ public class RobotContainer {
     m_PoseEstimator = poseEstimator;
     this.groundIntakePivot = groundIntakePivot;
     this.groundIntakeRollers = groundIntakeRollers;
+    this.frontCoralRoller = frontCoralRoller;
+    this.backCoralRoller = backCoralRoller;
     m_AlgaeRemoverPivot = AlgaeRemoverPivot;
     m_AlgaeRemoverRollers = AlgaeRemoverRollers;
-    m_coral = coral;
     m_elevator = elevator;
     m_ledSubsystem = ledSubsystem;
     m_ledPatterns = ledPatterns;
@@ -94,7 +97,6 @@ public class RobotContainer {
    * @param groundIntakeRollers The ground intake rollers subsystem
    * @param AlgaeRemoverPivot The algae remover pivot subsystem
    * @param AlgaeRemoverRollers The algae remover rollers subsystem
-   * @param coral The coral subsystem
    * @param elevator The elevator subsystem
    * @param ledSubsystem The LED subsystem
    * @param ledPatterns The LED patterns subsystem
@@ -106,7 +108,8 @@ public class RobotContainer {
     GroundIntakeRollers groundIntakeRollers,
     AlgaeRemoverPivot AlgaeRemoverPivot,
     AlgaeRemoverRollers AlgaeRemoverRollers,
-    Coral coral,
+    FrontCoralRoller frontCoralRoller,
+    BackCoralRoller backCoralRoller,
     Elevator elevator,
     LEDSubsystem ledSubsystem,
     LEDPatterns ledPatterns,
@@ -117,9 +120,10 @@ public class RobotContainer {
     m_PoseEstimator = null;
     this.groundIntakePivot = groundIntakePivot;
     this.groundIntakeRollers = groundIntakeRollers;
+    this.frontCoralRoller = frontCoralRoller;
+    this.backCoralRoller = backCoralRoller;
     m_AlgaeRemoverPivot = AlgaeRemoverPivot;
     m_AlgaeRemoverRollers = AlgaeRemoverRollers;
-    m_coral = coral;
     m_elevator = elevator;
     m_ledSubsystem = ledSubsystem;
     m_ledPatterns = ledPatterns;
@@ -140,7 +144,8 @@ public class RobotContainer {
         m_PoseEstimator,
         groundIntakePivot,
         groundIntakeRollers,
-        m_coral,
+        frontCoralRoller,
+        backCoralRoller,
         m_elevator,
         m_ledSubsystem,
         m_ledPatterns,

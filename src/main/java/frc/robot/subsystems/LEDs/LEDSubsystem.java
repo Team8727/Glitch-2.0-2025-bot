@@ -50,9 +50,6 @@ public class LEDSubsystem extends SubsystemBase {
       this.pattern = pattern;
       this.durationSeconds = durationSeconds;
       this.elapsedSeconds = 0.0;
-      if (pattern == LEDPattern.kOff) {
-        this.durationSeconds = 0.0;
-      }
     }
 
     /**
