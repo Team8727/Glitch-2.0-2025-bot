@@ -50,6 +50,9 @@ public class LEDSubsystem extends SubsystemBase {
       this.pattern = pattern;
       this.durationSeconds = durationSeconds;
       this.elapsedSeconds = 0.0;
+      if (pattern == LEDPattern.kOff) {
+        this.durationSeconds = 0.0;
+      }
     }
 
     /**
@@ -68,7 +71,7 @@ public class LEDSubsystem extends SubsystemBase {
      * @param deltaTimeSeconds The time since the last update in seconds.
      * @param closingAnimation The method to call when the current pattern ends.
      * @param animPattern The pattern that the animation will overlay.
-     * @param animBool A boolean that is passed to the method, its value isn't important. (yet)
+     * @param animBool A boolean that decides if the animation plays on the section.
      */
 
     public void update(double deltaTimeSeconds, Method closingAnimation, LEDPattern animPattern, boolean animBool) {
@@ -77,8 +80,11 @@ public class LEDSubsystem extends SubsystemBase {
       }
       if (elapsedSeconds >= durationSeconds && pattern == LEDPattern.kOff) {
         try {
-            secretBuffer.setPattern(LEDPattern.kOff);
-            closingAnimation.invoke(LEDSubsystem.this, animPattern, animBool);
+          if (animBool == false) {
+            Section.this.setPattern(LEDPattern.solid(Color.kBlack), 0);
+          } else {
+            closingAnimation.invoke(LEDSubsystem.this, animPattern, Section.this);
+          }
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
@@ -87,7 +93,7 @@ public class LEDSubsystem extends SubsystemBase {
       } else if (elapsedSeconds >= durationSeconds && durationSeconds != infiniteDurationSeconds) {
         pattern = LEDPattern.kOff;
       } else {
-        pattern.applyTo(bufferView);
+        pattern.applyTo(this.bufferView);
       }
     }
 
@@ -116,7 +122,7 @@ public class LEDSubsystem extends SubsystemBase {
     // if you want to use a different animation (like the random noise)
     // just change the string inside the getDeclaredMethod function
     try {
-        closingAnimation = LEDSubsystem.class.getDeclaredMethod("fireAnimation", LEDPattern.class, boolean.class);
+        closingAnimation = LEDSubsystem.class.getDeclaredMethod("fireAnimation", LEDPattern.class, Section.class);
     } catch (NoSuchMethodException e) {
         throw new RuntimeException("Method not found", e);
     }
@@ -174,7 +180,7 @@ public class LEDSubsystem extends SubsystemBase {
   public void fireAnimation (LEDPattern pattern) {
     pattern.applyTo(stripBuffer);
     for (int i = 0; i < stripBuffer.getLength(); i ++) {
-      if ((1.5 * (Math.sin(Math.random())) + (i/36.0)) > 1.3) {
+      if ((1.5 * (Math.sin(Math.random())) + (i / (double) stripBuffer.getLength())) > 1.3) {
         stripBuffer.setRGB(i, 0, 0, 0);
       }
     }
@@ -189,7 +195,7 @@ public class LEDSubsystem extends SubsystemBase {
   public void fireAnimation (LEDPattern pattern, AddressableLEDBufferView bufferView) {
     pattern.applyTo(bufferView);
     for (int i = 0; i < bufferView.getLength(); i ++) {
-      if ((1.5 * (Math.sin(Math.random())) + (i/36.0)) > 1.3) {
+      if ((1.5 * (Math.sin(Math.random())) + (i/ (double) stripBuffer.getLength())) > 1.3) {
         bufferView.setRGB(i, 0, 0, 0);
       }
     }
@@ -201,21 +207,7 @@ public class LEDSubsystem extends SubsystemBase {
    * @param section The Section that the animation will play on.
    */
   public void fireAnimation (LEDPattern pattern, Section section) {
-    pattern.applyTo(section.getBufferView());
-    
-    for (int i = 0; i < section.getLength(); i++) {
-      if ((1.5 * (Math.sin(Math.random())) + (i / 14.0)) > 1.3) {
-        section.getBufferView().setRGB(i, 0, 0, 0);
-      }
-    }
-  }
-
-  /**
-   * This just recycles some old code to make the fire play on two Sections at once.
-   */
-  public void fireAnimation (LEDPattern pattern, boolean bufferViews) {
-    fireAnimation(pattern, leftSide);
-    fireAnimation(pattern, rightSide);
+    fireAnimation(pattern, section.getBufferView());
   }
 
   /**
@@ -231,10 +223,8 @@ public class LEDSubsystem extends SubsystemBase {
     randomNoiseAnimation(pattern);
   }
 
-  public void activateRandomNoise(LEDPattern pattern, boolean bufferViews) {
-    randomNoiseAnimation(pattern, leftSide.getBufferView());
-    randomNoiseAnimation(pattern, rightSide.getBufferView());
-    randomNoiseAnimation(pattern, secretBuffer.getBufferView());
+  public void activateRandomNoise(LEDPattern pattern, Section section) {
+    randomNoiseAnimation(pattern, section.getBufferView());
   }
 
   /**
@@ -318,11 +308,13 @@ public class LEDSubsystem extends SubsystemBase {
       rightSide.update(
         deltaTimeSeconds, 
         closingAnimation, 
-        defaultPattern, true);
+        defaultPattern, 
+        true);
       secretBuffer.update(
         deltaTimeSeconds, 
         closingAnimation, 
-        defaultPattern, true);
+        defaultPattern, 
+        false);
     
     lightStrip.setData(stripBuffer);
   }

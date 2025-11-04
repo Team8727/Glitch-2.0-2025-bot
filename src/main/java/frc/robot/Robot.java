@@ -178,7 +178,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     CommandScheduler.getInstance().cancelAll();
 
-    m_ledSubsystem.fireAnimation(LEDPatterns.theCoolerGreen, true);
+    m_ledSubsystem.setPatternForDuration(LEDPatterns.theCoolerGreen, 0);
 
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
