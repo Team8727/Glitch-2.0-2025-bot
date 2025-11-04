@@ -166,7 +166,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.autonomousInit();
     m_ledSubsystem.setPattern(LEDPatterns.rainbow);
 
-    m_Autos.selectAuto(); // TODO: Only enable this if you want the robot to do stuff during autonomous
+    m_Autos.selectAuto(); //Only enable this if you want the robot to do stuff during autonomous
 
   }
 

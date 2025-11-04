@@ -29,7 +29,7 @@ public class AlgaeRemoverPivot extends SubsystemBase {
   private final SparkClosedLoopController removerPivotPID;
 
   private final TrapezoidProfile m_profile = new TrapezoidProfile(
-    new TrapezoidProfile.Constraints(50, 50)); // TODO: May need to adjust these values later
+    new TrapezoidProfile.Constraints(50, 50));
   private TrapezoidProfile.State m_goal = new TrapezoidProfile.State(0,0);
   private TrapezoidProfile.State m_setpoint = new TrapezoidProfile.State(0,0);
   private final NetworkTableLogger logger = new NetworkTableLogger(this.getSubsystem());
@@ -41,8 +41,8 @@ public class AlgaeRemoverPivot extends SubsystemBase {
   public enum RemoverPositions {
     Fling(110),
     Grab(70),
-    RaisedL2(80), // TODO: SET WITH ACTUAL VALUES
-    Stowed(18); // TODO: SET WITH ACTUAL VALUES
+    RaisedL2(80),
+    Stowed(18);
 
     private final double degrees;
 
