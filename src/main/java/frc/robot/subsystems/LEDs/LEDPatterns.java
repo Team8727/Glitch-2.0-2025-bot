@@ -19,7 +19,6 @@ import static edu.wpi.first.units.Units.Second;
  * Feel free to add more!
  */
 public class LEDPatterns {
-    Elevator m_elevator;
       // Define LED Patterns
   public static final LEDPattern purple = LEDPattern.solid(Color.kPurple);
   
@@ -160,18 +159,8 @@ public class LEDPatterns {
     }
   }
 
-  /**
+  /** 
   * Creates a new LEDPatterns.
-  * This version of LEDPatterns just won't have the elevator progress bar.
   */
   public LEDPatterns() {}
-
-  /** 
-  * Creates a new LEDPatterns. 
-  * @param elevator This parameter is used for a specific LED pattern that displays the elevator's progress. It is not used for any other patterns.
-  * This class does use other values from the elevator, including some in Constants.kElevator, but they aren't necessary for anything other than the elevator pattern.
-  */
-  public LEDPatterns(Elevator elevator) {
-    m_elevator = elevator;
-  }
 }
