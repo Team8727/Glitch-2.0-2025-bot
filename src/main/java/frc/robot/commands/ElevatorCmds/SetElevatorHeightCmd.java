@@ -16,16 +16,14 @@ public class SetElevatorHeightCmd extends Command {
   private final Elevator m_elevator;
   private final Elevator.ElevatorPosition m_scoreLevel;
   private final LEDSubsystem m_ledSubsystem;
-  private final LEDPatterns m_ledPatterns;
   private final FrontCoralRoller coral;
 
   /** Creates a new SetEvevatorHeightCmd. */
-  public SetElevatorHeightCmd(Elevator.ElevatorPosition scoreLevel, Elevator elevator, FrontCoralRoller coral, LEDSubsystem ledSubsystem, LEDPatterns ledPatterns) {
+  public SetElevatorHeightCmd(Elevator.ElevatorPosition scoreLevel, Elevator elevator, FrontCoralRoller coral, LEDSubsystem ledSubsystem) {
 
     m_scoreLevel = scoreLevel;
     m_elevator = elevator;
     m_ledSubsystem = ledSubsystem;
-    m_ledPatterns = ledPatterns;
     this.coral = coral;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(elevator, coral, ledSubsystem);
@@ -42,7 +40,9 @@ public class SetElevatorHeightCmd extends Command {
     }
 
     if (m_scoreLevel != Elevator.ElevatorPosition.L1) {
-      m_ledSubsystem.setPatternForDuration(m_ledPatterns.elevatorProgress, 0.5);
+      m_ledSubsystem.setPatternForDuration(
+        LEDPatterns.linearProgress(LEDPatterns.elevatorProgress, m_elevator.getElevatorHeight(), 
+        Elevator.ElevatorPosition.L4.getOutputRotations()), 0.5);
     }
   }
 
