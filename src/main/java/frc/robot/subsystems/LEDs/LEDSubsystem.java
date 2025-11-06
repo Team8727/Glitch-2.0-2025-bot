@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.AddressableLEDBufferView;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.LEDs.LEDPatterns.enzoMap;
 
 public class LEDSubsystem extends SubsystemBase {
@@ -107,7 +106,7 @@ public class LEDSubsystem extends SubsystemBase {
   private final Section secretBuffer;
   
   /** Creates a new LEDSubsystem. */
-  public LEDSubsystem(Elevator elevator) {
+  public LEDSubsystem() {
     // LED setup and port configuration
     lightStrip = new AddressableLED(5); // Correct PWM port
     stripBuffer = new AddressableLEDBuffer(36); // Correct LED count

@@ -49,8 +49,8 @@ public class Robot extends TimedRobot {
   private final Vision m_Vision = new Vision();
   private final PoseEstimator m_PoseEstimator = new PoseEstimator(m_SwerveSubsystem, m_Vision);
   private final Elevator m_elevator = new Elevator();
-  private final LEDSubsystem m_ledSubsystem = new LEDSubsystem(m_elevator);
-  private final LEDPatterns m_ledPatterns = new LEDPatterns(m_elevator);
+  private final LEDSubsystem m_ledSubsystem = new LEDSubsystem();
+  private final LEDPatterns m_ledPatterns = new LEDPatterns();
   private final NetworkTableLogger logger = new NetworkTableLogger("SHOW UPPPP");
   private final AlgaeRemoverRollers m_AlgeaRemoverRollers = new AlgaeRemoverRollers();
   private final AlgaeRemoverPivot m_AlgaeRemoverPivot = new AlgaeRemoverPivot();

@@ -38,7 +38,6 @@ public class Driver1DefaultBindings implements ControllerBindings {
   private final FrontCoralRoller frontCoralRoller;
   private final Elevator m_elevator;
   private final LEDSubsystem m_ledSubsytem;
-  private final LEDPatterns m_ledPatterns;
   private final AlgaeRemoverPivot m_AlgaeRemoverPivot;
   private final AlgaeRemoverRollers m_AlgaeRemoverRollers;
   private final Autos m_autos;
@@ -64,7 +63,6 @@ public class Driver1DefaultBindings implements ControllerBindings {
     this.backCoralRoller = backCoralRoller;
     m_elevator = elevator;
     m_ledSubsytem = ledSubsystem;
-    m_ledPatterns = ledPatterns;
     m_AlgaeRemoverPivot = algaeRemoverPivot;
     m_AlgaeRemoverRollers = algaeRemoverRollers;
     m_autos = autos;
@@ -95,7 +93,6 @@ public class Driver1DefaultBindings implements ControllerBindings {
     this.backCoralRoller = backCoralRoller;
     m_elevator = elevator;
     m_ledSubsytem = ledSubsystem;
-    m_ledPatterns = ledPatterns;
     m_AlgaeRemoverPivot = algaeRemoverPivot;
     m_AlgaeRemoverRollers = algaeRemoverRollers;
     m_autos = autos;
@@ -139,13 +136,13 @@ public class Driver1DefaultBindings implements ControllerBindings {
       controller.povRight().onTrue(new ScoreCoralGroundCmd(groundIntakePivot, groundIntakeRollers, m_ledSubsytem));
     // -=-=-=-=-=-=- Elevator Commands -=-=-=-=-=-=-
       // Elevator L1
-      controller.x().onTrue(new SetElevatorHeightCmd(Elevator.ElevatorPosition.L1, m_elevator, frontCoralRoller, m_ledSubsytem, m_ledPatterns).andThen(new PrintCommand("hihih")));
+      controller.x().onTrue(new SetElevatorHeightCmd(Elevator.ElevatorPosition.L1, m_elevator, frontCoralRoller, m_ledSubsytem).andThen(new PrintCommand("hihih")));
       // Elevator L2
-      controller.a().onTrue(new SetElevatorHeightCmd(Elevator.ElevatorPosition.L2, m_elevator, frontCoralRoller, m_ledSubsytem, m_ledPatterns));
+      controller.a().onTrue(new SetElevatorHeightCmd(Elevator.ElevatorPosition.L2, m_elevator, frontCoralRoller, m_ledSubsytem));
       // Elevator L3
-      controller.b().onTrue(new SetElevatorHeightCmd(Elevator.ElevatorPosition.L3, m_elevator, frontCoralRoller, m_ledSubsytem, m_ledPatterns));
+      controller.b().onTrue(new SetElevatorHeightCmd(Elevator.ElevatorPosition.L3, m_elevator, frontCoralRoller, m_ledSubsytem));
       // Elevator L4
-      controller.y().onTrue(new SetElevatorHeightCmd(Elevator.ElevatorPosition.L4, m_elevator, frontCoralRoller, m_ledSubsytem, m_ledPatterns));
+      controller.y().onTrue(new SetElevatorHeightCmd(Elevator.ElevatorPosition.L4, m_elevator, frontCoralRoller, m_ledSubsytem));
 
       // Zero elevator (back button is the left small button on the controller near the top)
       controller.back().onTrue(new ZeroElevator(m_elevator));

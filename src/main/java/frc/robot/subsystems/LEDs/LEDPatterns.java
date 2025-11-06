@@ -19,7 +19,6 @@ import static edu.wpi.first.units.Units.Second;
  * Feel free to add more!
  */
 public class LEDPatterns {
-    Elevator m_elevator;
       // Define LED Patterns
   public static final LEDPattern purple = LEDPattern.solid(Color.kPurple);
   
@@ -39,7 +38,7 @@ public class LEDPatterns {
       .scrollAtRelativeSpeed(
         Percent.per(Second).of(20)));
 
-  // Blue gradient pattern with a scrolling mask
+  /** Blue gradient pattern with a scrolling mask (its not actually blue i lied) */
   public static final LEDPattern blue =
       LEDPattern.gradient(LEDPattern.GradientType.kContinuous, Color.kBlue, Color.kGreen)
           .scrollAtRelativeSpeed(
@@ -66,21 +65,25 @@ public class LEDPatterns {
     GradientType.kDiscontinuous,
     Color.kGreen,
     Color.kDarkGreen);
-  
-  /** 
-  * Elevator progress bar pattern
-  * IMPORTANT: This will only work if you provided an Elevator object to the constructor of this class.
-  * ALSO IMPORTANT: This pattern was based off of the elevator for the 2025 bot so it will take tinkering to get to work for your bot.
-  */ 
-  public final LEDPattern elevatorProgress = LEDPattern.gradient(
+
+  /**
+   * Creates a linear progress bar overlay on top of the given pattern.
+   * @param pattern The pattern the progress bar will overlay
+   * @param currentProgress The current progress value (e.g., current height of the elevator)
+   * @param maxProgress The maximum progress value (e.g., maximum height of the elevator)
+   */
+  public static LEDPattern linearProgress(LEDPattern pattern, double currentProgress, double maxProgress) {
+    return pattern.mask(LEDPattern.progressMaskLayer(() -> currentProgress / maxProgress));
+  }
+
+  // Elevator progress pattern (2025)
+  public static final LEDPattern elevatorProgress = LEDPattern.gradient(
     GradientType.kDiscontinuous, 
     Color.kGreen, 
     Color.kYellow, 
     Color.kOrange, 
-    Color.kRed)
-  .mask(LEDPattern.progressMaskLayer(
-    () -> m_elevator.getElevatorHeight() / Elevator.ElevatorPosition.L4.getOutputRotations()));
-  // Coral pickup pattern
+    Color.kRed);
+  // Coral pickup pattern (2025)
   public static final LEDPattern coralPickup = LEDPattern.gradient(
     GradientType.kDiscontinuous, 
     Color.kGreen, 
@@ -156,18 +159,8 @@ public class LEDPatterns {
     }
   }
 
-  /**
+  /** 
   * Creates a new LEDPatterns.
-  * This version of LEDPatterns just won't have the elevator progress bar.
   */
   public LEDPatterns() {}
-
-  /** 
-  * Creates a new LEDPatterns. 
-  * @param elevator This parameter is used for a specific LED pattern that displays the elevator's progress. It is not used for any other patterns.
-  * This class does use other values from the elevator, including some in Constants.kElevator, but they aren't necessary for anything other than the elevator pattern.
-  */
-  public LEDPatterns(Elevator elevator) {
-    m_elevator = elevator;
-  }
 }
