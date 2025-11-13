@@ -14,7 +14,7 @@ import frc.robot.commands.ElevatorCmds.ZeroElevator;
 import frc.robot.commands.GroundCoralCmds.IntakeCoralGroundCmd;
 import frc.robot.commands.GroundCoralCmds.ScoreCoralGroundCmd;
 import frc.robot.subsystems.Autos;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.CTRESwerveDrivetrain;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
 import frc.robot.subsystems.Elevator.Coral.BackCoralRoller;
@@ -43,7 +43,7 @@ public class Driver1DefaultBindings implements ControllerBindings {
   private final Autos m_autos;
 
   public Driver1DefaultBindings(
-      CommandSwerveDrivetrain drivetrain,
+      CTRESwerveDrivetrain drivetrain,
       PoseEstimator poseEstimator,
       GroundIntakePivot groundIntakePivot,
       GroundIntakeRollers groundIntakeRollers,

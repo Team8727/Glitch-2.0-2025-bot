@@ -45,13 +45,13 @@ public class Elevator extends SubsystemBase {
   public enum ElevatorPosition {
     // elevator calculations https://www.desmos.com/calculator/suqtj7vxc7
 
-    HOME(0), // TODO: SET WITH ACTUAL VALUES
-    L1(1.1), // TODO: SET WITH ACTUAL VALUES
-    L2(8.23663),// TODO: SET WITH ACTUAL VALUES
-    L3(20.43877), // TODO: SET WITH ACTUAL VALUES
-    L4(39.53888), // TODO: SET WITH ACTUAL VALUES
-    A2(13.5), // TODO: SET WITH ACTUAL VALUES
-    A3(25.5); // TODO: SET WITH ACTUAL VALUES
+    HOME(0),
+    L1(1.1),
+    L2(8.23663),
+    L3(20.43877),
+    L4(39.53888),
+    A2(13.5),
+    A3(25.5);
 
     private final double rotations;
 
@@ -71,7 +71,7 @@ public class Elevator extends SubsystemBase {
   // Create a motion profile with the given maximum velocity and maximum
   // acceleration constraints for the next setpoint.
   public final TrapezoidProfile m_profile =               //in/s
-      new TrapezoidProfile(new TrapezoidProfile.Constraints(103.33, 307.85)); //TODO: SET THESE
+      new TrapezoidProfile(new TrapezoidProfile.Constraints(103.33, 307.85));
   private TrapezoidProfile.State m_goal = new TrapezoidProfile.State();
   public TrapezoidProfile.State m_setpoint = new TrapezoidProfile.State();
 

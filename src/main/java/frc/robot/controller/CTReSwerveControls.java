@@ -8,13 +8,13 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.generated.Telemetry;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.CTRESwerveDrivetrain;
 
 import static edu.wpi.first.units.Units.*;
 
 public class CTReSwerveControls {
 
-  public CTReSwerveControls(CommandSwerveDrivetrain drivetrain, CommandXboxController controller) {
+  public CTReSwerveControls(CTRESwerveDrivetrain drivetrain, CommandXboxController controller) {
     double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 

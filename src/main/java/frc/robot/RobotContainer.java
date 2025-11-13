@@ -19,7 +19,7 @@ import frc.robot.subsystems.LEDs.LEDSubsystem;
 import frc.robot.pose.PoseEstimator; // updated import
 import Glitch.Lib.Swerve.RevSwerve;
 
-import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.CTRESwerveDrivetrain;
 
 /**
  * The RobotContainer class is responsible for defining the structure of the robot.
@@ -27,7 +27,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final CommandSwerveDrivetrain drivetrain; // Command-based swerve drivetrain subsystem
+  private final CTRESwerveDrivetrain drivetrain; // Command-based CTRE swerve drivetrain subsystem
   private final RevSwerve m_SwerveSubsystem; // Swerve subsystem
   private final PoseEstimator m_PoseEstimator; // Pose estimation subsystem
   private final GroundIntakePivot groundIntakePivot; // Ground intake pivot subsystem
@@ -103,7 +103,7 @@ public class RobotContainer {
    * @param autos The autonomous routines subsystem
    */
   public RobotContainer(
-    CommandSwerveDrivetrain drivetrain,
+    CTRESwerveDrivetrain drivetrain,
     GroundIntakePivot groundIntakePivot,
     GroundIntakeRollers groundIntakeRollers,
     AlgaeRemoverPivot AlgaeRemoverPivot,

@@ -139,6 +139,7 @@ public class SparkConfigurator {
     return spark;
   }
 
+  // TODO: Can we remove any cases
   private static void configLogging(SparkBase spark, SparkBaseConfig config, int[] status, int i) {
     switch (i) {
       case 0:
@@ -148,10 +149,8 @@ public class SparkConfigurator {
         config.signals.outputCurrentPeriodMs(status[i]);
         config.signals.motorTemperaturePeriodMs(status[i]);
       case 1:
-        // TODO: Add motor velocity, voltage and current periods (research if still exists)
         config.signals.primaryEncoderVelocityPeriodMs(status[i]);
       case 2:
-        // TODO: Add motor position period (research if still exists)
         config.signals.primaryEncoderPositionPeriodMs(status[i]);
       case 3:
         config.signals.analogVoltagePeriodMs(status[i]);
@@ -193,8 +192,6 @@ public class SparkConfigurator {
     SparkMax spark = new SparkMax(id, motorType);
     SparkMaxConfig config = new SparkMaxConfig();
     // spark.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    // TODO: this line might need to be removed. It wasn't there
-    // TODO: i think it needs to be removed too
 
     return (SparkMax) setupLogging(spark, hasFollower, config, sensors, logData);
   }
@@ -214,7 +211,7 @@ public class SparkConfigurator {
         config,
         ResetMode.kResetSafeParameters,
         PersistMode
-            .kPersistParameters); // TODO: this line might need to be removed. It wasn't there
+            .kPersistParameters);
 
     return (SparkFlex) setupLogging(spark, hasFollower, config, sensors, logData);
   }
