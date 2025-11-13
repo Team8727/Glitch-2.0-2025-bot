@@ -191,7 +191,7 @@ public class LEDSubsystem extends SubsystemBase {
   public void fireAnimation (LEDPattern pattern, AddressableLEDBufferView bufferView) {
     pattern.applyTo(bufferView);
     for (int i = 0; i < bufferView.getLength(); i ++) {
-      if ((1.5 * (Math.sin(Math.random())) + (i/ (double) stripBuffer.getLength())) > 1.3) {
+      if ((1.5 * (Math.sin(Math.random())) + (i / (double) stripBuffer.getLength())) > 1.3) {
         bufferView.setRGB(i, 0, 0, 0);
       }
     }
