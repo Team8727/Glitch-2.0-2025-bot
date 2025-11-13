@@ -242,7 +242,6 @@ public class LEDSubsystem extends SubsystemBase {
   *
   * This wasn't originally intended to work with multiple buffer views at once, so be warned.
   * @param pattern The pattern that the random noise overlays.
-  * @param bufferView The buffer view that the animation will play on.
   */
   private void randomNoiseAnimation(LEDPattern pattern) {
     int ledsOn = 0;
