@@ -76,7 +76,7 @@ public class LEDSubsystem extends SubsystemBase {
       }
       if (elapsedSeconds >= durationSeconds && pattern == LEDPattern.kOff) {
         try {
-          if (animBool == false) {
+          if (!animBool) {
             Section.this.setPattern(LEDPattern.solid(Color.kBlack), 0);
           } else {
             closingAnimation.invoke(LEDSubsystem.this, animPattern, Section.this);
