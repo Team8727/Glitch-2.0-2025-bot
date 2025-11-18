@@ -18,10 +18,8 @@ import frc.robot.subsystems.LEDs.LEDPatterns.enzoMap;
 public class LEDSubsystem extends SubsystemBase {
   private final AddressableLED lightStrip;
   private final AddressableLEDBuffer stripBuffer;
-  private AddressableLEDBuffer fakeBuffer;
+  private AddressableLEDBuffer dataBuffer;
   private Method closingAnimation;
-  // private boolean fireViews;
-  // private boolean skipUpdate = false;
 
   public static final LEDPattern defaultPattern = LEDPattern.solid(Color.kGreen);
 
@@ -110,7 +108,7 @@ public class LEDSubsystem extends SubsystemBase {
     // LED setup and port configuration
     lightStrip = new AddressableLED(5); // Correct PWM port
     stripBuffer = new AddressableLEDBuffer(36); // Correct LED count
-    fakeBuffer = new AddressableLEDBuffer(stripBuffer.getLength());
+    dataBuffer = new AddressableLEDBuffer(stripBuffer.getLength());
     leftSide = new Section(stripBuffer, 0, 13);
     rightSide = new Section(stripBuffer, 35, 20);
     secretBuffer = new Section(stripBuffer, 14, 19);
@@ -213,13 +211,17 @@ public class LEDSubsystem extends SubsystemBase {
   */ 
   public void activateRandomNoise(LEDPattern pattern) {
     pattern.applyTo(stripBuffer);
-    if (fakeBuffer.getLength() != stripBuffer.getLength()) {
-      fakeBuffer = new AddressableLEDBuffer(stripBuffer.getLength());
+    if (dataBuffer.getLength() != stripBuffer.getLength()) {
+      dataBuffer = new AddressableLEDBuffer(stripBuffer.getLength());
     }
     randomNoiseAnimation(pattern);
   }
 
   public void activateRandomNoise(LEDPattern pattern, Section section) {
+    section.setPattern(pattern);
+    if (dataBuffer.getLength() != section.getLength()) {
+      dataBuffer = new AddressableLEDBuffer(section.getLength());
+    }
     randomNoiseAnimation(pattern, section.getBufferView());
   }
 
@@ -230,8 +232,8 @@ public class LEDSubsystem extends SubsystemBase {
   */ 
   public void activateRandomNoise(LEDPattern pattern, AddressableLEDBufferView bufferView) {
     pattern.applyTo(bufferView);
-    if (fakeBuffer.getLength() != bufferView.getLength()) {
-      fakeBuffer = new AddressableLEDBuffer(bufferView.getLength());
+    if (dataBuffer.getLength() != bufferView.getLength()) {
+      dataBuffer = new AddressableLEDBuffer(bufferView.getLength());
     }
     randomNoiseAnimation(pattern, bufferView);
   }
@@ -245,7 +247,7 @@ public class LEDSubsystem extends SubsystemBase {
   */
   private void randomNoiseAnimation(LEDPattern pattern) {
     int ledsOn = 0;
-    pattern.applyTo(fakeBuffer);
+    pattern.applyTo(dataBuffer);
     for (int i = 0; i < stripBuffer.getLength(); i ++) {
       if(!(stripBuffer.getRed(i) == 0 && stripBuffer.getGreen(i) == 0 && stripBuffer.getBlue(i) == 0)) {
         ledsOn += 1;
@@ -253,7 +255,7 @@ public class LEDSubsystem extends SubsystemBase {
     }
     for (int i = 0; i < stripBuffer.getLength(); i ++) {
       if ((ledsOn == 0) || Math.random() > 0.5) {
-        stripBuffer.setRGB(i, fakeBuffer.getRed(i), fakeBuffer.getGreen(i), fakeBuffer.getBlue(i));
+        stripBuffer.setRGB(i, dataBuffer.getRed(i), dataBuffer.getGreen(i), dataBuffer.getBlue(i));
         ledsOn += 1;
       }
       if ((Math.random() * stripBuffer.getLength()) < (ledsOn) * 0.5) {
@@ -273,7 +275,7 @@ public class LEDSubsystem extends SubsystemBase {
   */
   private void randomNoiseAnimation(LEDPattern pattern, AddressableLEDBufferView bufferView) {
     int ledsOn = 0;
-    pattern.applyTo(fakeBuffer);
+    pattern.applyTo(dataBuffer);
     for (int i = 0; i < bufferView.getLength(); i ++) {
       if(!(bufferView.getRed(i) == 0 && bufferView.getGreen(i) == 0 && bufferView.getBlue(i) == 0)) {
         ledsOn += 1;
@@ -281,7 +283,7 @@ public class LEDSubsystem extends SubsystemBase {
     }
     for (int i = 0; i < bufferView.getLength(); i ++) {
       if ((ledsOn == 0) || Math.random() > 0.5) {
-        bufferView.setRGB(i, fakeBuffer.getRed(i), fakeBuffer.getGreen(i), fakeBuffer.getBlue(i));
+        bufferView.setRGB(i, dataBuffer.getRed(i), dataBuffer.getGreen(i), dataBuffer.getBlue(i));
         ledsOn += 1;
       }
       if ((Math.random() * bufferView.getLength()) < (ledsOn) * 0.5) {
