@@ -7,7 +7,6 @@ package frc.robot.subsystems.LEDs;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.LEDPattern.GradientType;
 import edu.wpi.first.wpilibj.util.Color;
-import frc.robot.subsystems.Elevator.Elevator;
 
 import java.util.Map;
 
@@ -18,7 +17,7 @@ import static edu.wpi.first.units.Units.Second;
  * This class contains all the premade LED patterns used in the robot.
  * Feel free to add more!
  */
-public class LEDPatterns {
+public class GlitchLEDPatterns {
       // Define LED Patterns
   public static final LEDPattern purple = LEDPattern.solid(Color.kPurple);
   
@@ -159,8 +158,53 @@ public class LEDPatterns {
     }
   }
 
+  // LEDPattern modifying methods is a mouthful!
+
+  /**
+   * This pattern creates a fire overlay that makes the given pattern look like it's made of fire.
+   * @param pattern The pattern that the fire overlay applies to.
+   */
+  public static LEDPattern fire(LEDPattern pattern) {
+    return (reader, writer) -> {
+      pattern.applyTo(reader, writer);
+      for (int i = 0; i < reader.getLength(); i++) {
+        if ((1.5 * (Math.sin(Math.random())) + (i / (double) reader.getLength())) > 1.3) {
+          writer.setRGB(i, 0, 0, 0);
+        } else {
+          writer.setRGB(i, reader.getRed(i), reader.getGreen(i), reader.getBlue(i));
+        }
+      }
+    };
+  }
+
+  /** 
+  * This pattern creates a fun random noise overlay that took way too long to make.
+  * @param pattern The pattern that the random noise overlays.
+  */
+  public static LEDPattern randomNoise(LEDPattern pattern) {
+    return (reader, writer) -> {
+      int ledsOn = 0;
+      pattern.applyTo(reader, writer);
+      for (int i = 0; i < reader.getLength(); i ++) {
+        if(!(reader.getRed(i) == 0 && reader.getGreen(i) == 0 && reader.getBlue(i) == 0)) {
+          ledsOn += 1;
+        }
+      }
+      for (int i = 0; i < reader.getLength(); i ++) {
+        if ((ledsOn == 0) || Math.random() > 0.5) {
+          writer.setRGB(i, reader.getRed(i), reader.getGreen(i), reader.getBlue(i));
+          ledsOn += 1;
+        }
+        if ((Math.random() * reader.getLength()) < (ledsOn) * 0.5) {
+          writer.setRGB(i, 0, 0, 0);
+          ledsOn -= 1;
+        }
+      }
+    };
+  }
+
   /** 
   * Creates a new LEDPatterns.
   */
-  public LEDPatterns() {}
+  public GlitchLEDPatterns() {}
 }

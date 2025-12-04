@@ -4,24 +4,22 @@
 
 package frc.robot.subsystems.LEDs;
 
-import java.lang.reflect.Method;
-
 import edu.wpi.first.wpilibj.AddressableLED;
-import java.lang.reflect.InvocationTargetException;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.AddressableLEDBufferView;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.LEDs.LEDPatterns.enzoMap;
+import frc.robot.subsystems.LEDs.GlitchLEDPatterns.enzoMap;
 
 public class LEDSubsystem extends SubsystemBase {
   private final AddressableLED lightStrip;
-  private final AddressableLEDBuffer stripBuffer;
-  private AddressableLEDBuffer dataBuffer;
-  private Method closingAnimation;
+  public final AddressableLEDBuffer stripBuffer;
 
-  public static final LEDPattern defaultPattern = LEDPattern.solid(Color.kGreen);
+  /**
+   * The pattern that will play once any other pattern stops running on the strip.
+   */
+  public static final LEDPattern defaultPattern = GlitchLEDPatterns.fire(GlitchLEDPatterns.theCoolerGreen);
 
   /**
    * Represents a section of the LED strip with a specific pattern and duration.
@@ -63,30 +61,26 @@ public class LEDSubsystem extends SubsystemBase {
      * Please put this in periodic.
      * 
      * @param deltaTimeSeconds The time since the last update in seconds.
-     * @param closingAnimation The method to call when the current pattern ends.
      * @param animPattern The pattern that the animation will overlay.
      * @param animBool A boolean that decides if the animation plays on the section.
      */
 
-    public void update(double deltaTimeSeconds, Method closingAnimation, LEDPattern animPattern, boolean animBool) {
+    public void update(double deltaTimeSeconds, LEDPattern animPattern, boolean animBool) {
       if (durationSeconds != infiniteDurationSeconds) {
         elapsedSeconds += deltaTimeSeconds;
       }
       if (elapsedSeconds >= durationSeconds && pattern == LEDPattern.kOff) {
-        try {
-          if (!animBool) {
-            Section.this.setPattern(LEDPattern.solid(Color.kBlack), 0);
-          } else {
-            closingAnimation.invoke(LEDSubsystem.this, animPattern, Section.this);
-          }
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
+        if (!animBool) {
+          Section.this.setPattern(LEDPattern.solid(Color.kBlack), 0);
+        } else {
+          Section.this.setPattern(defaultPattern, infiniteDurationSeconds);
         }
         durationSeconds = infiniteDurationSeconds;
         elapsedSeconds = 0.0;
       } else if (elapsedSeconds >= durationSeconds && durationSeconds != infiniteDurationSeconds) {
         pattern = LEDPattern.kOff;
       } else {
+        System.out.println("Applying pattern to section");
         pattern.applyTo(this.bufferView);
       }
     }
@@ -104,22 +98,13 @@ public class LEDSubsystem extends SubsystemBase {
   private final Section secretBuffer;
   
   /** Creates a new LEDSubsystem. */
-  public LEDSubsystem() {
+  private LEDSubsystem() {
     // LED setup and port configuration
     lightStrip = new AddressableLED(5); // Correct PWM port
     stripBuffer = new AddressableLEDBuffer(36); // Correct LED count
-    dataBuffer = new AddressableLEDBuffer(stripBuffer.getLength());
     leftSide = new Section(stripBuffer, 0, 13);
     rightSide = new Section(stripBuffer, 35, 20);
     secretBuffer = new Section(stripBuffer, 14, 19);
-
-    // if you want to use a different animation (like the random noise)
-    // just change the string inside the getDeclaredMethod function
-    try {
-        closingAnimation = LEDSubsystem.class.getDeclaredMethod("fireAnimation", LEDPattern.class, Section.class);
-    } catch (NoSuchMethodException e) {
-        throw new RuntimeException("Method not found", e);
-    }
 
     lightStrip.setLength(stripBuffer.getLength());
 
@@ -127,7 +112,18 @@ public class LEDSubsystem extends SubsystemBase {
     lightStrip.start();
   }
 
-  /**
+  static LEDSubsystem instance = null;
+
+  public static LEDSubsystem getInstance() {
+    if (instance == null) {
+      instance = new LEDSubsystem();
+      return instance;
+    } else {
+      return instance;
+    }
+  }
+
+  /** TODO: Change or delete this when using a robot other than the 2025 robot
    * Sets a pattern to each section of the strip for an infinite duration.
    * @param pattern The LEDPattern to apply.
    */
@@ -135,7 +131,7 @@ public class LEDSubsystem extends SubsystemBase {
     setPatternForDuration(pattern, Section.infiniteDurationSeconds);
   }
 
-  /**
+  /** TODO: Change or delete this when using a robot other than the 2025 robot
    * Sets a pattern to each section of the strip for a duration in seconds
    * @param pattern the LEDPattern to apply
    * @param seconds the duration in seconds to set the pattern to before turning the strip off
@@ -146,14 +142,14 @@ public class LEDSubsystem extends SubsystemBase {
     secretBuffer.setPattern(pattern, seconds);
   }
 
-  /*
+  /* TODO: Change or delete this when using a robot other than the 2025 robot
    * Sets different patterns to each Section of the strip for an infinite duration.
    */
   public void combinePatterns(LEDPattern leftPattern, LEDPattern rightPattern, LEDPattern secretPattern) {
     combinePatternsForDuration(leftPattern, rightPattern, secretPattern, Section.infiniteDurationSeconds);
   }
 
-  /*
+  /* TODO: Change or delete this when using a robot other than the 2025 robot
    * Sets different patterns to each Section of the strip for a duration in seconds.
    */
   public void combinePatternsForDuration(LEDPattern leftPattern, LEDPattern rightPattern, LEDPattern secretPattern, double seconds) {
@@ -166,150 +162,20 @@ public class LEDSubsystem extends SubsystemBase {
     combinePatternsForDuration(enzoMap.getEnzoMap(), enzoMap.getEnzoMap(), defaultPattern, seconds);
   }
 
-  /**
-   * This uses sine waves and random number generation to create a flickering fire animation,
-   * which is then overlaid on top of another preexisting pattern.
-   * @param pattern The pattern that the fire overlays.
-   */
-  public void fireAnimation (LEDPattern pattern) {
-    pattern.applyTo(stripBuffer);
-    for (int i = 0; i < stripBuffer.getLength(); i ++) {
-      if ((1.5 * (Math.sin(Math.random())) + (i / (double) stripBuffer.getLength())) > 1.3) {
-        stripBuffer.setRGB(i, 0, 0, 0);
-      }
-    }
-  }
-
-  /**
-   * Uses some complicated logic to create a fire animation.
-   * This version is special and only exists to prevent weird update issues. Please don't use it outside of this class.
-   * @param pattern The pattern that the fire overlays.
-   * @param bufferView The buffer view that the animation will play on.
-   */
-  public void fireAnimation (LEDPattern pattern, AddressableLEDBufferView bufferView) {
-    pattern.applyTo(bufferView);
-    for (int i = 0; i < bufferView.getLength(); i ++) {
-      if ((1.5 * (Math.sin(Math.random())) + (i / (double) stripBuffer.getLength())) > 1.3) {
-        bufferView.setRGB(i, 0, 0, 0);
-      }
-    }
-  }
-
-  /**
-   * Uses some complicated logic to create a fire animation.
-   * @param pattern The pattern that the fire overlays.
-   * @param section The Section that the animation will play on.
-   */
-  public void fireAnimation (LEDPattern pattern, Section section) {
-    fireAnimation(pattern, section.getBufferView());
-  }
-
-  /**
-  * This activates a random noise function separately so that we can run the animation without having to deal with all the logic.
-  * May be obsolete.
-  * @param pattern The pattern that the random noise overlays.
-  */ 
-  public void activateRandomNoise(LEDPattern pattern) {
-    pattern.applyTo(stripBuffer);
-    if (dataBuffer.getLength() != stripBuffer.getLength()) {
-      dataBuffer = new AddressableLEDBuffer(stripBuffer.getLength());
-    }
-    randomNoiseAnimation(pattern);
-  }
-
-  public void activateRandomNoise(LEDPattern pattern, Section section) {
-    section.setPattern(pattern);
-    if (dataBuffer.getLength() != section.getLength()) {
-      dataBuffer = new AddressableLEDBuffer(section.getLength());
-    }
-    randomNoiseAnimation(pattern, section.getBufferView());
-  }
-
-  /**
-  * This activates a random noise function separately so that we can run the animation without having to deal with all the logic.
-  * May be obsolete.
-  * @param pattern The pattern that the random noise overlays.
-  */ 
-  public void activateRandomNoise(LEDPattern pattern, AddressableLEDBufferView bufferView) {
-    pattern.applyTo(bufferView);
-    if (dataBuffer.getLength() != bufferView.getLength()) {
-      dataBuffer = new AddressableLEDBuffer(bufferView.getLength());
-    }
-    randomNoiseAnimation(pattern, bufferView);
-  }
-
-  /** 
-  * This function creates a fun random noise overlay that took way too long to make.
-  * It, like the fire animation, uses LEDPatterns so you could do some cool stuff with it.
-  *
-  * This wasn't originally intended to work with multiple buffer views at once, so be warned.
-  * @param pattern The pattern that the random noise overlays.
-  */
-  private void randomNoiseAnimation(LEDPattern pattern) {
-    int ledsOn = 0;
-    pattern.applyTo(dataBuffer);
-    for (int i = 0; i < stripBuffer.getLength(); i ++) {
-      if(!(stripBuffer.getRed(i) == 0 && stripBuffer.getGreen(i) == 0 && stripBuffer.getBlue(i) == 0)) {
-        ledsOn += 1;
-      }
-    }
-    for (int i = 0; i < stripBuffer.getLength(); i ++) {
-      if ((ledsOn == 0) || Math.random() > 0.5) {
-        stripBuffer.setRGB(i, dataBuffer.getRed(i), dataBuffer.getGreen(i), dataBuffer.getBlue(i));
-        ledsOn += 1;
-      }
-      if ((Math.random() * stripBuffer.getLength()) < (ledsOn) * 0.5) {
-        stripBuffer.setRGB(i, 0, 0, 0);
-        ledsOn -= 1;
-      }
-    }
-  }
-
-  /** 
-  * This function creates a fun random noise overlay that took way too long to make.
-  * It, like the fire animation, uses LEDPatterns so you could do some cool stuff with it.
-  *
-  * This wasn't originally intended to work with multiple buffer views at once, so be warned.
-  * @param pattern The pattern that the random noise overlays.
-  * @param bufferView The buffer view that the animation will play on.
-  */
-  private void randomNoiseAnimation(LEDPattern pattern, AddressableLEDBufferView bufferView) {
-    int ledsOn = 0;
-    pattern.applyTo(dataBuffer);
-    for (int i = 0; i < bufferView.getLength(); i ++) {
-      if(!(bufferView.getRed(i) == 0 && bufferView.getGreen(i) == 0 && bufferView.getBlue(i) == 0)) {
-        ledsOn += 1;
-      }
-    }
-    for (int i = 0; i < bufferView.getLength(); i ++) {
-      if ((ledsOn == 0) || Math.random() > 0.5) {
-        bufferView.setRGB(i, dataBuffer.getRed(i), dataBuffer.getGreen(i), dataBuffer.getBlue(i));
-        ledsOn += 1;
-      }
-      if ((Math.random() * bufferView.getLength()) < (ledsOn) * 0.5) {
-        bufferView.setRGB(i, 0, 0, 0);
-        ledsOn -= 1;
-      }
-    }
-  }
-
   @Override
   public void periodic() {
     final double deltaTimeSeconds = 0.02; // TODO: Is there a way to ensure this is accurate even with overruns?
 
       leftSide.update(
         deltaTimeSeconds, 
-        closingAnimation, 
         defaultPattern, 
         true);
       rightSide.update(
         deltaTimeSeconds, 
-        closingAnimation, 
         defaultPattern, 
         true);
       secretBuffer.update(
         deltaTimeSeconds, 
-        closingAnimation, 
         defaultPattern, 
         false);
     

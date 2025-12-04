@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.GroundIntake.GroundIntakePivot;
 import frc.robot.subsystems.GroundIntake.GroundIntakeRollers;
-import frc.robot.subsystems.LEDs.LEDPatterns;
+import frc.robot.subsystems.LEDs.GlitchLEDPatterns;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -32,7 +32,7 @@ public class ScoreCoralGroundCmd extends Command {
   @Override
   public void initialize() {
     // Set the intake to score position, score the algae by running rollers, and then set the intake to home position.
-    m_ledSubsystem.activateRandomNoise(LEDPatterns.coralPickup);
+    m_ledSubsystem.setPatternForDuration(GlitchLEDPatterns.randomNoise(GlitchLEDPatterns.coralPickup), 0.4);
       intakePivot.setPositionCommand(12)
         .andThen(() -> intakeRollers.setSpeedDutyCycle(.7))
         .andThen(new WaitCommand(0.2))
@@ -55,7 +55,7 @@ public class ScoreCoralGroundCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    m_ledSubsystem.setPatternForDuration(LEDPatterns.coralPickup.reversed(), 0.5);
+    m_ledSubsystem.setPatternForDuration(GlitchLEDPatterns.coralPickup.reversed(), 0.5);
     return false;
   }
 }
