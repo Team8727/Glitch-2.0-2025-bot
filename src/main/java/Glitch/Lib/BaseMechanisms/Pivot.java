@@ -119,10 +119,10 @@ public abstract class Pivot extends SubsystemBase {
   /**
    * Checks if the pivot is at the setpoint.
    *
-   * @return True if the pivot is within 0.01 units of the goal position, false otherwise.
+   * @return True if the pivot is within the allowed error of the goal position, false otherwise.
    */
   public boolean isAtSetpoint() {
-    return setpoint.position - motor.getPosition()*360 < allowedError;
+    return Math.abs(setpoint.position - motor.getPosition() * 360) <= allowedError;
   }
 
   /**

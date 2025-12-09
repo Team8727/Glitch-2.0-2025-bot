@@ -80,7 +80,6 @@ public class LEDSubsystem extends SubsystemBase {
       } else if (elapsedSeconds >= durationSeconds && durationSeconds != infiniteDurationSeconds) {
         pattern = LEDPattern.kOff;
       } else {
-        System.out.println("Applying pattern to section");
         pattern.applyTo(this.bufferView);
       }
     }

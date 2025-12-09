@@ -273,7 +273,7 @@ public class Vision {
         this.config = config;
         this.camera = new PhotonCamera(config.name);
         this.cameraSim = new PhotonCameraSim(camera, props);
-        this.cameraSim.enableDrawWireframe(true);
+//        this.cameraSim.enableDrawWireframe(true);
         this.poseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, config.robotToCamera);
       }
     }

@@ -7,7 +7,7 @@ package frc.robot.commands.GroundCoralCmds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.GroundIntake.GroundIntakePivot;
 import frc.robot.subsystems.GroundIntake.GroundIntakeRollers;
-import frc.robot.subsystems.LEDs.LEDPatterns;
+import frc.robot.subsystems.LEDs.GlitchLEDPatterns;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -48,7 +48,7 @@ public class IntakeCoralGroundCmd extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    ledSubsystem.setPatternForDuration(LEDPatterns.coralPickup, 0.5);;
+    ledSubsystem.setPatternForDuration(GlitchLEDPatterns.coralPickup, 0.5);;
     return false;
     // Finish when algae is detected
 //    return intakeRollers.getCurrent() > 30;

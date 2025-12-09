@@ -7,7 +7,7 @@ package frc.robot.commands.ElevatorCmds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Elevator.Coral.FrontCoralRoller;
 import frc.robot.subsystems.Elevator.Elevator;
-import frc.robot.subsystems.LEDs.LEDPatterns;
+import frc.robot.subsystems.LEDs.GlitchLEDPatterns;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
 
 
@@ -41,7 +41,7 @@ public class SetElevatorHeightCmd extends Command {
 
     if (m_scoreLevel != Elevator.ElevatorPosition.L1) {
       m_ledSubsystem.setPatternForDuration(
-        LEDPatterns.linearProgress(LEDPatterns.elevatorProgress, m_elevator.getElevatorHeight(), 
+        GlitchLEDPatterns.linearProgress(GlitchLEDPatterns.elevatorProgress, m_elevator.getElevatorHeight(),
         Elevator.ElevatorPosition.L4.getOutputRotations()), 0.5);
     }
   }

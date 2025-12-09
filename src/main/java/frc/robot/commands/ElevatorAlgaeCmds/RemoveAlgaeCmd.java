@@ -16,15 +16,13 @@ public class RemoveAlgaeCmd extends Command {
   private final AlgaeRemoverRollers m_rollers;
   private final Elevator.ElevatorPosition m_setPos;
   private final Elevator m_elevator;
-  private final LEDSubsystem m_ledSubsystem;
 
   /** Creates a new removeAlgae. */
-  public RemoveAlgaeCmd(AlgaeRemoverPivot algaeRemoverPivot, AlgaeRemoverRollers algaeRemoverRollers, Elevator.ElevatorPosition setPos, Elevator elevator, LEDSubsystem ledSubsystem) {
+  public RemoveAlgaeCmd(AlgaeRemoverPivot algaeRemoverPivot, AlgaeRemoverRollers algaeRemoverRollers, Elevator.ElevatorPosition setPos, Elevator elevator) {
     m_pivot = algaeRemoverPivot;
     m_rollers = algaeRemoverRollers;
     m_setPos = setPos;
     m_elevator = elevator;
-    m_ledSubsystem = ledSubsystem;
 
     addRequirements(algaeRemoverPivot, algaeRemoverRollers, elevator); // Add the required subsystems here
   }

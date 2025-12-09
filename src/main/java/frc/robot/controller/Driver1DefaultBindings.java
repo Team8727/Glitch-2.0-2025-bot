@@ -22,7 +22,6 @@ import frc.robot.subsystems.Elevator.Coral.FrontCoralRoller;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.GroundIntake.GroundIntakePivot;
 import frc.robot.subsystems.GroundIntake.GroundIntakeRollers;
-import frc.robot.subsystems.LEDs.LEDPatterns;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
 import frc.robot.pose.PoseEstimator; // updated package
 import Glitch.Lib.Swerve.RevSwerve;
@@ -31,16 +30,16 @@ import Glitch.Lib.Swerve.RevSwerve;
  * Default teleop controller bindings for the robot.
  */
 public class Driver1DefaultBindings implements ControllerBindings {
-  private final PoseEstimator m_poseEstimator;
+  private final PoseEstimator poseEstimator;
   private final GroundIntakePivot groundIntakePivot;
   private final GroundIntakeRollers groundIntakeRollers;
   private final BackCoralRoller backCoralRoller;
   private final FrontCoralRoller frontCoralRoller;
-  private final Elevator m_elevator;
-  private final LEDSubsystem m_ledSubsytem;
-  private final AlgaeRemoverPivot m_AlgaeRemoverPivot;
-  private final AlgaeRemoverRollers m_AlgaeRemoverRollers;
-  private final Autos m_autos;
+  private final Elevator elevator;
+  private final LEDSubsystem ledSubsystem;
+  private final AlgaeRemoverPivot algaeRemoverPivot;
+  private final AlgaeRemoverRollers algaeRemoverRollers;
+  private final Autos autos;
 
   public Driver1DefaultBindings(
       CTRESwerveDrivetrain drivetrain,
@@ -51,21 +50,20 @@ public class Driver1DefaultBindings implements ControllerBindings {
       FrontCoralRoller frontCoralRoller,
       Elevator elevator,
       LEDSubsystem ledSubsystem,
-      LEDPatterns ledPatterns,
       AlgaeRemoverPivot algaeRemoverPivot,
       AlgaeRemoverRollers algaeRemoverRollers,
       Autos autos,
       CommandXboxController controller) {
-    m_poseEstimator = poseEstimator;
+    this.poseEstimator = poseEstimator;
     this.groundIntakePivot = groundIntakePivot;
     this.groundIntakeRollers = groundIntakeRollers;
     this.frontCoralRoller = frontCoralRoller;
     this.backCoralRoller = backCoralRoller;
-    m_elevator = elevator;
-    m_ledSubsytem = ledSubsystem;
-    m_AlgaeRemoverPivot = algaeRemoverPivot;
-    m_AlgaeRemoverRollers = algaeRemoverRollers;
-    m_autos = autos;
+    this.elevator = elevator;
+    this.ledSubsystem = ledSubsystem;
+    this.algaeRemoverPivot = algaeRemoverPivot;
+    this.algaeRemoverRollers = algaeRemoverRollers;
+    this.autos = autos;
 
     new CTReSwerveControls(drivetrain, controller);
 
@@ -81,26 +79,25 @@ public class Driver1DefaultBindings implements ControllerBindings {
       BackCoralRoller backCoralRoller,
       Elevator elevator,
       LEDSubsystem ledSubsystem,
-      LEDPatterns ledPatterns,
       AlgaeRemoverPivot algaeRemoverPivot,
       AlgaeRemoverRollers algaeRemoverRollers,
       Autos autos,
       CommandXboxController controller) {
-    m_poseEstimator = poseEstimator;
+    this.poseEstimator = poseEstimator;
     this.groundIntakePivot = groundIntakePivot;
     this.groundIntakeRollers = groundIntakeRollers;
     this.frontCoralRoller = frontCoralRoller;
     this.backCoralRoller = backCoralRoller;
-    m_elevator = elevator;
-    m_ledSubsytem = ledSubsystem;
-    m_AlgaeRemoverPivot = algaeRemoverPivot;
-    m_AlgaeRemoverRollers = algaeRemoverRollers;
-    m_autos = autos;
+    this.elevator = elevator;
+    this.ledSubsystem = ledSubsystem;
+    this.algaeRemoverPivot = algaeRemoverPivot;
+    this.algaeRemoverRollers = algaeRemoverRollers;
+    this.autos = autos;
 
     swerveSubsystem.setDefaultCommand(
       new SwerveJoystickCmd(
         swerveSubsystem,
-        m_elevator,
+        this.elevator,
         controller::getLeftY,
         controller::getLeftX,
         controller::getRightX));
@@ -113,45 +110,45 @@ public class Driver1DefaultBindings implements ControllerBindings {
   public void bind(CommandXboxController controller) {
     // -=-=-=-=-=-=- Drive Commands -=-=-=-=-=-=-
       // Zero heading
-      controller.start().onTrue(new InstantCommand(m_poseEstimator::zeroHeading));
+      controller.start().onTrue(new InstantCommand(poseEstimator::zeroHeading));
       // Auto align right
-      controller.rightBumper().and(controller.rightTrigger().negate()).onTrue(new InstantCommand(() -> m_autos.alignToClosestSide(true))); // Align to closest side when POV right is pressed
+      controller.rightBumper().and(controller.rightTrigger().negate()).onTrue(new InstantCommand(() -> autos.alignToClosestSide(true))); // Align to closest side when POV right is pressed
       // Auto align left
-      controller.leftBumper().and(controller.leftTrigger().negate()).onTrue(new InstantCommand(() -> m_autos.alignToClosestSide(false))); // Align to closest side when POV left is pressed
+      controller.leftBumper().and(controller.leftTrigger().negate()).onTrue(new InstantCommand(() -> autos.alignToClosestSide(false))); // Align to closest side when POV left is pressed
 
     // -=-=-=-=-=-=- Coral Commands -=-=-=-=-=-=-
       // intake coral
-      controller.leftTrigger().toggleOnTrue(new IntakeCoralCmd(backCoralRoller, frontCoralRoller, m_elevator, m_ledSubsytem));
+      controller.leftTrigger().toggleOnTrue(new IntakeCoralCmd(backCoralRoller, frontCoralRoller, elevator, ledSubsystem));
       // deploy coral
-      controller.rightTrigger().onTrue(new DeployCoralCmd(frontCoralRoller, backCoralRoller, m_ledSubsytem, m_elevator));
+      controller.rightTrigger().onTrue(new DeployCoralCmd(frontCoralRoller, backCoralRoller, ledSubsystem, elevator));
 
 //      // reindex coral
-//      controller.povRight().onTrue(new ReindexCoralCmd(m_coral, m_elevator, m_ledSubsytem));
+//      controller.povRight().onTrue(new ReindexCoralCmd(m_coral, elevator, ledSubsystem));
       // reject coral
       controller.povRight().onTrue(new RejectCoralCmd(backCoralRoller, frontCoralRoller));
 
       // Ground intake coral
-      controller.povLeft().whileTrue(new IntakeCoralGroundCmd(groundIntakeRollers, groundIntakePivot, m_ledSubsytem));
+      controller.povLeft().whileTrue(new IntakeCoralGroundCmd(groundIntakeRollers, groundIntakePivot, ledSubsystem));
       // Ground deploy coral
-      controller.povRight().onTrue(new ScoreCoralGroundCmd(groundIntakePivot, groundIntakeRollers, m_ledSubsytem));
+      controller.povRight().onTrue(new ScoreCoralGroundCmd(groundIntakePivot, groundIntakeRollers, ledSubsystem));
     // -=-=-=-=-=-=- Elevator Commands -=-=-=-=-=-=-
       // Elevator L1
-      controller.x().onTrue(new SetElevatorHeightCmd(Elevator.ElevatorPosition.L1, m_elevator, frontCoralRoller, m_ledSubsytem).andThen(new PrintCommand("hihih")));
+      controller.x().onTrue(new SetElevatorHeightCmd(Elevator.ElevatorPosition.L1, elevator, frontCoralRoller, ledSubsystem).andThen(new PrintCommand("hihih")));
       // Elevator L2
-      controller.a().onTrue(new SetElevatorHeightCmd(Elevator.ElevatorPosition.L2, m_elevator, frontCoralRoller, m_ledSubsytem));
+      controller.a().onTrue(new SetElevatorHeightCmd(Elevator.ElevatorPosition.L2, elevator, frontCoralRoller, ledSubsystem));
       // Elevator L3
-      controller.b().onTrue(new SetElevatorHeightCmd(Elevator.ElevatorPosition.L3, m_elevator, frontCoralRoller, m_ledSubsytem));
+      controller.b().onTrue(new SetElevatorHeightCmd(Elevator.ElevatorPosition.L3, elevator, frontCoralRoller, ledSubsystem));
       // Elevator L4
-      controller.y().onTrue(new SetElevatorHeightCmd(Elevator.ElevatorPosition.L4, m_elevator, frontCoralRoller, m_ledSubsytem));
+      controller.y().onTrue(new SetElevatorHeightCmd(Elevator.ElevatorPosition.L4, elevator, frontCoralRoller, ledSubsystem));
 
       // Zero elevator (back button is the left small button on the controller near the top)
-      controller.back().onTrue(new ZeroElevator(m_elevator));
+      controller.back().onTrue(new ZeroElevator(elevator));
 
     // -=-=-=-=-=-=- Algae Commands -=-=-=-=-=-=-
       // Remove Algae A2
-      controller.povDown().whileTrue(new RemoveAlgaeCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers, Elevator.ElevatorPosition.A2, m_elevator, m_ledSubsytem));
+      controller.povDown().whileTrue(new RemoveAlgaeCmd(algaeRemoverPivot, algaeRemoverRollers, Elevator.ElevatorPosition.A2, elevator));
       // shoot algae
-      controller.povUp().whileTrue(new RemoveAlgaeCmd(m_AlgaeRemoverPivot, m_AlgaeRemoverRollers, Elevator.ElevatorPosition.A3, m_elevator, m_ledSubsytem));
+      controller.povUp().whileTrue(new RemoveAlgaeCmd(algaeRemoverPivot, algaeRemoverRollers, Elevator.ElevatorPosition.A3, elevator));
     // -=-=-=-=-=-=-+-=-=-=-=-=-=-+-=-=-=-=-=-=-
   }
 }

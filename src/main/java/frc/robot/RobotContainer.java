@@ -14,7 +14,6 @@ import frc.robot.subsystems.Elevator.Coral.FrontCoralRoller;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.GroundIntake.GroundIntakePivot;
 import frc.robot.subsystems.GroundIntake.GroundIntakeRollers;
-import frc.robot.subsystems.LEDs.LEDPatterns;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
 import frc.robot.pose.PoseEstimator; // updated import
 import Glitch.Lib.Swerve.RevSwerve;
@@ -38,7 +37,6 @@ public class RobotContainer {
   private final BackCoralRoller backCoralRoller; // back coral roller subsystem
   private final Elevator m_elevator; // Elevator subsystem
   private final LEDSubsystem m_ledSubsystem; // LED subsystem
-  private final LEDPatterns m_ledPatterns; // LED patterns subsystem
   private final Autos m_Autos; // Autonomous routines subsystem
   private final Controller m_mainController = new Controller(Controller.Operator.MAIN); // Main controller
   private final Controller m_assistController = new Controller(Controller.Operator.ASSIST); // Assist controller
@@ -54,7 +52,6 @@ public class RobotContainer {
    * @param AlgaeRemoverRollers The algae remover rollers subsystem
    * @param elevator The elevator subsystem
    * @param ledSubsystem The LED subsystem
-   * @param ledPatterns The LED patterns subsystem
    * @param autos The autonomous routines subsystem
    */
   public RobotContainer(
@@ -68,7 +65,6 @@ public class RobotContainer {
     BackCoralRoller backCoralRoller,
     Elevator elevator,
     LEDSubsystem ledSubsystem,
-    LEDPatterns ledPatterns,
     Autos autos
   ) {
     this.drivetrain = null;
@@ -82,7 +78,6 @@ public class RobotContainer {
     m_AlgaeRemoverRollers = AlgaeRemoverRollers;
     m_elevator = elevator;
     m_ledSubsystem = ledSubsystem;
-    m_ledPatterns = ledPatterns;
     m_Autos = autos;
 
     // Setup the autonomous chooser
@@ -99,7 +94,6 @@ public class RobotContainer {
    * @param AlgaeRemoverRollers The algae remover rollers subsystem
    * @param elevator The elevator subsystem
    * @param ledSubsystem The LED subsystem
-   * @param ledPatterns The LED patterns subsystem
    * @param autos The autonomous routines subsystem
    */
   public RobotContainer(
@@ -112,7 +106,6 @@ public class RobotContainer {
     BackCoralRoller backCoralRoller,
     Elevator elevator,
     LEDSubsystem ledSubsystem,
-    LEDPatterns ledPatterns,
     Autos autos
   ) {
     this.drivetrain = drivetrain;
@@ -126,7 +119,6 @@ public class RobotContainer {
     m_AlgaeRemoverRollers = AlgaeRemoverRollers;
     m_elevator = elevator;
     m_ledSubsystem = ledSubsystem;
-    m_ledPatterns = ledPatterns;
     m_Autos = autos;
 
     // Setup the autonomous chooser
@@ -148,7 +140,6 @@ public class RobotContainer {
         backCoralRoller,
         m_elevator,
         m_ledSubsystem,
-        m_ledPatterns,
         m_AlgaeRemoverPivot,
         m_AlgaeRemoverRollers,
         m_Autos,

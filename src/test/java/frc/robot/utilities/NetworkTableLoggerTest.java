@@ -1,15 +1,14 @@
 package frc.robot.utilities;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import Glitch.Lib.NetworkTableLogger;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import edu.wpi.first.networktables.NetworkTableEntry;
-
-import Glitch.Lib.NetworkTableLogger;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class NetworkTableLoggerTest {
+
     private NetworkTableLogger logger;
 
     private NetworkTableEntry getTableEntry(String key) {

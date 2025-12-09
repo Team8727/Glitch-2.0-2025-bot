@@ -57,7 +57,7 @@ public class Robot extends TimedRobot {
   private final BackCoralRoller backCoralRoller = new BackCoralRoller();
   private final GroundIntakePivot groundIntakePivot = new GroundIntakePivot();
   private final GroundIntakeRollers groundIntakeRollers = new GroundIntakeRollers();
-  private final Autos m_Autos = new Autos(m_ledSubsystem, m_ledPatterns, frontCoralRoller, backCoralRoller, m_elevator, m_PoseEstimator);
+  private final Autos m_Autos = new Autos(m_ledSubsystem, frontCoralRoller, backCoralRoller, m_elevator, m_PoseEstimator);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -110,7 +110,6 @@ public class Robot extends TimedRobot {
           backCoralRoller,
           m_elevator,
           m_ledSubsystem,
-          m_ledPatterns,
           m_Autos
             );
     

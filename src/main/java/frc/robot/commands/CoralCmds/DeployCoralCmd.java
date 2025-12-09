@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Elevator.Coral.BackCoralRoller;
 import frc.robot.subsystems.Elevator.Coral.FrontCoralRoller;
 import frc.robot.subsystems.Elevator.Elevator;
-import frc.robot.subsystems.LEDs.LEDPatterns;
+import frc.robot.subsystems.LEDs.GlitchLEDPatterns;
 import frc.robot.subsystems.LEDs.LEDSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -33,7 +33,7 @@ public class DeployCoralCmd extends Command {
   @Override
   public void initialize() {
     frontCoralRoller.setSpeedDutyCycle(.2);
-    m_ledSubsystem.setPatternForDuration(LEDPatterns.coralPickup.reversed(), 2);
+    m_ledSubsystem.setPatternForDuration(GlitchLEDPatterns.coralPickup.reversed(), 2);
     new Thread(() -> {
       try {
         Thread.sleep(400);
