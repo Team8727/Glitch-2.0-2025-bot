@@ -8,22 +8,22 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Elevator.Coral.BackCoralRoller;
 import frc.robot.subsystems.Elevator.Coral.FrontCoralRoller;
 import frc.robot.subsystems.Elevator.Elevator;
-import frc.robot.subsystems.LEDs.LEDPatterns;
-import frc.robot.subsystems.LEDs.LEDSubsystem;
+import Glitch.LEDs.GlitchLEDPatterns;
+import frc.robot.subsystems.LEDs.LEDSubsystem2025;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class IntakeCoralCmd extends Command {
   private final BackCoralRoller backCoralRoller;
   private final FrontCoralRoller frontCoralRoller;
   private final Elevator m_elevator;
-  private final LEDSubsystem m_ledSubsystem;
+  private final LEDSubsystem2025 m_ledSubsystem;
   boolean sensedCoral = false;
   boolean end = false;
 
   /**
    * Creates a new IntakeCoral.
    */
-  public IntakeCoralCmd(BackCoralRoller backCoralRoller, FrontCoralRoller frontCoralRoller, Elevator elevator, LEDSubsystem ledSubsystem) {
+  public IntakeCoralCmd(BackCoralRoller backCoralRoller, FrontCoralRoller frontCoralRoller, Elevator elevator, LEDSubsystem2025 ledSubsystem) {
     this.frontCoralRoller = frontCoralRoller;
     this.backCoralRoller = backCoralRoller;
     m_elevator = elevator;
@@ -40,7 +40,7 @@ public class IntakeCoralCmd extends Command {
       this.end = true;
     } else {
       backCoralRoller.setSpeedDutyCycle(.4);
-      m_ledSubsystem.setPattern(LEDPatterns.blinkyGreen);
+      m_ledSubsystem.setPattern(GlitchLEDPatterns.blinkyGreen);
     }
   }
 

@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverPivot;
 import frc.robot.subsystems.Elevator.AlgaeRemover.AlgaeRemoverRollers;
 import frc.robot.subsystems.Elevator.Elevator;
-import frc.robot.subsystems.LEDs.LEDSubsystem;
+import frc.robot.subsystems.LEDs.LEDSubsystem2025;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class RemoveAlgaeCmd extends Command {
@@ -16,10 +16,10 @@ public class RemoveAlgaeCmd extends Command {
   private final AlgaeRemoverRollers m_rollers;
   private final Elevator.ElevatorPosition m_setPos;
   private final Elevator m_elevator;
-  private final LEDSubsystem m_ledSubsystem;
+  private final LEDSubsystem2025 m_ledSubsystem;
 
   /** Creates a new removeAlgae. */
-  public RemoveAlgaeCmd(AlgaeRemoverPivot algaeRemoverPivot, AlgaeRemoverRollers algaeRemoverRollers, Elevator.ElevatorPosition setPos, Elevator elevator, LEDSubsystem ledSubsystem) {
+  public RemoveAlgaeCmd(AlgaeRemoverPivot algaeRemoverPivot, AlgaeRemoverRollers algaeRemoverRollers, Elevator.ElevatorPosition setPos, Elevator elevator, LEDSubsystem2025 ledSubsystem) {
     m_pivot = algaeRemoverPivot;
     m_rollers = algaeRemoverRollers;
     m_setPos = setPos;

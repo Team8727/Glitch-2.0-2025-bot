@@ -2,16 +2,19 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.LEDs;
+package Glitch.LEDs;
 
 import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.LEDPattern.GradientType;
 import edu.wpi.first.wpilibj.util.Color;
 
 import java.util.Map;
 
+import static edu.wpi.first.units.Units.Microseconds;
 import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Seconds;
 
 /** 
  * This class contains all the premade LED patterns used in the robot.
@@ -164,43 +167,73 @@ public class GlitchLEDPatterns {
    * This pattern creates a fire overlay that makes the given pattern look like it's made of fire.
    * @param pattern The pattern that the fire overlay applies to.
    */
-  public static LEDPattern fire(LEDPattern pattern) {
+  public static LEDPattern fire(LEDPattern pattern, double updateTime) {
     return (reader, writer) -> {
-      pattern.applyTo(reader, writer);
-      for (int i = 0; i < reader.getLength(); i++) {
-        if ((1.5 * (Math.sin(Math.random())) + (i / (double) reader.getLength())) > 1.3) {
-          writer.setRGB(i, 0, 0, 0);
-        } else {
-          writer.setRGB(i, reader.getRed(i), reader.getGreen(i), reader.getBlue(i));
-        }
+
+      double randomOffset = Math.random() * 1.33;
+      long actualUpdateTime = (long) Seconds.of(updateTime).in(Microseconds);
+      long updateLimit = (long) Seconds.of(0.039).in(Microseconds);
+
+      if (RobotController.getTime() % actualUpdateTime < updateLimit 
+          && RobotController.getTime() % actualUpdateTime > 0) {
+
+        pattern.applyTo(reader, writer);
+
+        reader.forEach( (index, red, green, blue) -> {
+          if ((1.5 * (Math.sin(randomOffset - Math.random())) + (index / (double) reader.getLength())) > 1.275) {
+            writer.setRGB(index, 0, 0, 0);
+          } else {
+            writer.setRGB(index, red, green, blue);
+          }
+        });
       }
     };
+  }
+
+  /**
+   * This pattern creates a fire overlay that makes the given pattern look like it's made of fire.
+   * @param pattern The pattern that the fire overlay applies to.
+   */
+  public static LEDPattern fire(LEDPattern pattern) {
+    return fire(pattern, 0.07);
   }
 
   /** 
   * This pattern creates a fun random noise overlay that took way too long to make.
   * @param pattern The pattern that the random noise overlays.
   */
-  public static LEDPattern randomNoise(LEDPattern pattern) {
+  public static LEDPattern randomNoise(LEDPattern pattern, double updateTime) {
     return (reader, writer) -> {
+
       int ledsOn = 0;
-      pattern.applyTo(reader, writer);
-      for (int i = 0; i < reader.getLength(); i ++) {
-        if(!(reader.getRed(i) == 0 && reader.getGreen(i) == 0 && reader.getBlue(i) == 0)) {
-          ledsOn += 1;
-        }
-      }
-      for (int i = 0; i < reader.getLength(); i ++) {
-        if ((ledsOn == 0) || Math.random() > 0.5) {
-          writer.setRGB(i, reader.getRed(i), reader.getGreen(i), reader.getBlue(i));
-          ledsOn += 1;
-        }
-        if ((Math.random() * reader.getLength()) < (ledsOn) * 0.5) {
-          writer.setRGB(i, 0, 0, 0);
-          ledsOn -= 1;
-        }
-      }
+      long actualUpdateTime = (long) Seconds.of(updateTime).in(Microseconds);
+      long updateLimit = (long) Seconds.of(0.039).in(Microseconds);
+
+      if (RobotController.getTime() % actualUpdateTime < updateLimit 
+          && RobotController.getTime() % actualUpdateTime > 0) {
+            pattern.applyTo(reader, writer);
+            for (int i = 0; i < reader.getLength(); i ++) {
+              if(!(reader.getRed(i) == 0 && reader.getGreen(i) == 0 && reader.getBlue(i) == 0)) {
+                ledsOn += 1;
+              }
+            } // TODO: Make sure that this works the way you want it and change the default pattern back to normal once you're done
+            for (int i = 0; i < reader.getLength(); i ++) {
+              double cycleRandom = Math.sin(Math.random());
+              if ((ledsOn < reader.getLength()/2) || cycleRandom >= 0.4) {
+                writer.setRGB(i, reader.getRed(i), reader.getGreen(i), reader.getBlue(i));
+                ledsOn += 1;
+              }
+              if (reader.getLength() - ledsOn < reader.getLength()/8 || cycleRandom < 0.4) {
+                writer.setRGB(i, 0, 0, 0);
+                ledsOn -= 1;
+              }
+            }
+          }
     };
+  }
+
+  public static LEDPattern randomNoise(LEDPattern pattern) {
+    return randomNoise(pattern, 0.05);
   }
 
   /** 

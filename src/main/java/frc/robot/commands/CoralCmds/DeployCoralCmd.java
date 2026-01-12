@@ -9,18 +9,18 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Elevator.Coral.BackCoralRoller;
 import frc.robot.subsystems.Elevator.Coral.FrontCoralRoller;
 import frc.robot.subsystems.Elevator.Elevator;
-import frc.robot.subsystems.LEDs.LEDPatterns;
-import frc.robot.subsystems.LEDs.LEDSubsystem;
+import Glitch.LEDs.GlitchLEDPatterns;
+import frc.robot.subsystems.LEDs.LEDSubsystem2025;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class DeployCoralCmd extends Command {
   private final FrontCoralRoller frontCoralRoller;
   private final BackCoralRoller backCoralRoller;
-  private final LEDSubsystem m_ledSubsystem;
+  private final LEDSubsystem2025 m_ledSubsystem;
   private boolean isFinished = false;
 
   /** Creates a new coralDeployer. */
-  public DeployCoralCmd(FrontCoralRoller frontCoralRoller, BackCoralRoller backCoralRoller, LEDSubsystem ledSubsystem, Elevator elevator) {
+  public DeployCoralCmd(FrontCoralRoller frontCoralRoller, BackCoralRoller backCoralRoller, LEDSubsystem2025 ledSubsystem, Elevator elevator) {
     // Use addRequirements() here to declare subsystem dependencies
     this.frontCoralRoller = frontCoralRoller;
     this.backCoralRoller = backCoralRoller;
@@ -33,7 +33,7 @@ public class DeployCoralCmd extends Command {
   @Override
   public void initialize() {
     frontCoralRoller.setSpeedDutyCycle(.2);
-    m_ledSubsystem.setPatternForDuration(LEDPatterns.coralPickup.reversed(), 2);
+    m_ledSubsystem.setPatternForDuration(GlitchLEDPatterns.coralPickup.reversed(), 2);
     new Thread(() -> {
       try {
         Thread.sleep(400);

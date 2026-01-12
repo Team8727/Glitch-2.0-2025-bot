@@ -8,19 +8,19 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.GroundIntake.GroundIntakePivot;
 import frc.robot.subsystems.GroundIntake.GroundIntakeRollers;
-import frc.robot.subsystems.LEDs.GlitchLEDPatterns;
-import frc.robot.subsystems.LEDs.LEDSubsystem;
+import Glitch.LEDs.GlitchLEDPatterns;
+import frc.robot.subsystems.LEDs.LEDSubsystem2025;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class ScoreCoralGroundCmd extends Command {
   /** Creates a new ScoreAlgaeProcessorCmd. */
-  private final LEDSubsystem m_ledSubsystem;
+  private final LEDSubsystem2025 m_ledSubsystem;
 
   GroundIntakePivot intakePivot;
   GroundIntakeRollers intakeRollers;
 
   public ScoreCoralGroundCmd(
-      GroundIntakePivot intakePivot, GroundIntakeRollers intakeRollers, LEDSubsystem ledSubsystem) {
+      GroundIntakePivot intakePivot, GroundIntakeRollers intakeRollers, LEDSubsystem2025 ledSubsystem) {
     this.intakeRollers = intakeRollers;
     this.intakePivot = intakePivot;
     m_ledSubsystem = ledSubsystem;

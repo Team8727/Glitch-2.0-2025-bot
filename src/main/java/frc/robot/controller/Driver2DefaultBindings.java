@@ -12,7 +12,7 @@ import frc.robot.subsystems.Elevator.Coral.FrontCoralRoller;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.GroundIntake.GroundIntakePivot;
 import frc.robot.subsystems.GroundIntake.GroundIntakeRollers;
-import frc.robot.subsystems.LEDs.LEDSubsystem;
+import frc.robot.subsystems.LEDs.LEDSubsystem2025;
 import frc.robot.pose.PoseEstimator; // updated package
 import Glitch.Lib.Swerve.RevSwerve;
 
@@ -27,7 +27,7 @@ public class Driver2DefaultBindings implements ControllerBindings {
   private final FrontCoralRoller frontCoralRoller;
   private final BackCoralRoller backCoralRoller;
   private final Elevator m_elevator;
-  private final LEDSubsystem m_ledSubsytem;
+  private final LEDSubsystem2025 m_ledSubsytem;
   private final AlgaeRemoverPivot m_AlgaeRemoverPivot;
   private final AlgaeRemoverRollers m_AlgaeRemoverRollers;
 
@@ -39,7 +39,7 @@ public class Driver2DefaultBindings implements ControllerBindings {
     FrontCoralRoller frontCoralRoller,
     BackCoralRoller backCoralRoller,
     Elevator elevator,
-    LEDSubsystem ledSubsystem,
+    LEDSubsystem2025 ledSubsystem,
     AlgaeRemoverPivot algaeRemoverPivot,
     AlgaeRemoverRollers algaeRemoverRollers) {
     m_SwerveSubsystem = swerveSubsystem;

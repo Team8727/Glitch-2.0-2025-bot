@@ -7,19 +7,19 @@ package frc.robot.commands.ElevatorCmds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Elevator.Coral.FrontCoralRoller;
 import frc.robot.subsystems.Elevator.Elevator;
-import frc.robot.subsystems.LEDs.LEDPatterns;
-import frc.robot.subsystems.LEDs.LEDSubsystem;
+import Glitch.LEDs.GlitchLEDPatterns;
+import frc.robot.subsystems.LEDs.LEDSubsystem2025;
 
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class SetElevatorHeightCmd extends Command {
   private final Elevator m_elevator;
   private final Elevator.ElevatorPosition m_scoreLevel;
-  private final LEDSubsystem m_ledSubsystem;
+  private final LEDSubsystem2025 m_ledSubsystem;
   private final FrontCoralRoller coral;
 
   /** Creates a new SetEvevatorHeightCmd. */
-  public SetElevatorHeightCmd(Elevator.ElevatorPosition scoreLevel, Elevator elevator, FrontCoralRoller coral, LEDSubsystem ledSubsystem) {
+  public SetElevatorHeightCmd(Elevator.ElevatorPosition scoreLevel, Elevator elevator, FrontCoralRoller coral, LEDSubsystem2025 ledSubsystem) {
 
     m_scoreLevel = scoreLevel;
     m_elevator = elevator;
@@ -41,7 +41,7 @@ public class SetElevatorHeightCmd extends Command {
 
     if (m_scoreLevel != Elevator.ElevatorPosition.L1) {
       m_ledSubsystem.setPatternForDuration(
-        LEDPatterns.linearProgress(LEDPatterns.elevatorProgress, m_elevator.getElevatorHeight(), 
+        GlitchLEDPatterns.linearProgress(GlitchLEDPatterns.elevatorProgress, m_elevator.getElevatorHeight(), 
         Elevator.ElevatorPosition.L4.getOutputRotations()), 0.5);
     }
   }

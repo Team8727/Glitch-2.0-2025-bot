@@ -8,17 +8,17 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Elevator.Coral.BackCoralRoller;
 import frc.robot.subsystems.Elevator.Coral.FrontCoralRoller;
 import frc.robot.subsystems.Elevator.Elevator;
-import frc.robot.subsystems.LEDs.LEDSubsystem;
+import frc.robot.subsystems.LEDs.LEDSubsystem2025;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class ReindexCoralCmd extends Command {
   private final BackCoralRoller backCoralRoller;
   private final FrontCoralRoller frontCoralRoller;
   private final Elevator m_Elevator;
-  private final LEDSubsystem m_LedSubsystem;
+  private final LEDSubsystem2025 m_LedSubsystem;
 
   /** Creates a new ReindexCoralCmd. */
-  public ReindexCoralCmd(BackCoralRoller backCoralRoller, FrontCoralRoller frontCoralRoller, Elevator elevator, LEDSubsystem ledSubsystem) {
+  public ReindexCoralCmd(BackCoralRoller backCoralRoller, FrontCoralRoller frontCoralRoller, Elevator elevator, LEDSubsystem2025 ledSubsystem) {
     this.backCoralRoller = backCoralRoller;
     this.frontCoralRoller = frontCoralRoller;
     m_Elevator = elevator;

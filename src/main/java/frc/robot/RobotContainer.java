@@ -14,8 +14,8 @@ import frc.robot.subsystems.Elevator.Coral.FrontCoralRoller;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.GroundIntake.GroundIntakePivot;
 import frc.robot.subsystems.GroundIntake.GroundIntakeRollers;
-import frc.robot.subsystems.LEDs.LEDPatterns;
-import frc.robot.subsystems.LEDs.LEDSubsystem;
+import Glitch.LEDs.GlitchLEDPatterns;
+import frc.robot.subsystems.LEDs.LEDSubsystem2025;
 import frc.robot.pose.PoseEstimator; // updated import
 import Glitch.Lib.Swerve.RevSwerve;
 
@@ -37,8 +37,8 @@ public class RobotContainer {
   private final FrontCoralRoller frontCoralRoller; // front coral roller subsystem
   private final BackCoralRoller backCoralRoller; // back coral roller subsystem
   private final Elevator m_elevator; // Elevator subsystem
-  private final LEDSubsystem m_ledSubsystem; // LED subsystem
-  private final LEDPatterns m_ledPatterns; // LED patterns subsystem
+  private final LEDSubsystem2025 m_ledSubsystem; // LED subsystem
+  private final GlitchLEDPatterns m_ledPatterns; // LED patterns subsystem
   private final Autos m_Autos; // Autonomous routines subsystem
   private final Controller m_mainController = new Controller(Controller.Operator.MAIN); // Main controller
   private final Controller m_assistController = new Controller(Controller.Operator.ASSIST); // Assist controller
@@ -67,8 +67,8 @@ public class RobotContainer {
     FrontCoralRoller frontCoralRoller,
     BackCoralRoller backCoralRoller,
     Elevator elevator,
-    LEDSubsystem ledSubsystem,
-    LEDPatterns ledPatterns,
+    LEDSubsystem2025 ledSubsystem,
+    GlitchLEDPatterns ledPatterns,
     Autos autos
   ) {
     this.drivetrain = null;
@@ -111,8 +111,8 @@ public class RobotContainer {
     FrontCoralRoller frontCoralRoller,
     BackCoralRoller backCoralRoller,
     Elevator elevator,
-    LEDSubsystem ledSubsystem,
-    LEDPatterns ledPatterns,
+    LEDSubsystem2025 ledSubsystem,
+    GlitchLEDPatterns ledPatterns,
     Autos autos
   ) {
     this.drivetrain = drivetrain;

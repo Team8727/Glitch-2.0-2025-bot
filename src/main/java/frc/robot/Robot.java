@@ -13,6 +13,7 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -26,8 +27,8 @@ import frc.robot.subsystems.Elevator.Coral.FrontCoralRoller;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.GroundIntake.GroundIntakePivot;
 import frc.robot.subsystems.GroundIntake.GroundIntakeRollers;
-import frc.robot.subsystems.LEDs.GlitchLEDPatterns;
-import frc.robot.subsystems.LEDs.LEDSubsystem;
+import Glitch.LEDs.GlitchLEDPatterns;
+import frc.robot.subsystems.LEDs.LEDSubsystem2025;
 import frc.robot.pose.PoseEstimator;
 import frc.robot.vision.Vision;
 import org.json.simple.parser.ParseException;
@@ -48,7 +49,7 @@ public class Robot extends TimedRobot {
   private final Vision m_Vision = new Vision();
   private final PoseEstimator m_PoseEstimator = new PoseEstimator(m_SwerveSubsystem, m_Vision);
   private final Elevator m_elevator = new Elevator();
-  private final LEDSubsystem m_ledSubsystem = LEDSubsystem.getInstance();
+  private final LEDSubsystem2025 m_ledSubsystem = LEDSubsystem2025.getInstance();
   private final GlitchLEDPatterns m_ledPatterns = new GlitchLEDPatterns();
   private final NetworkTableLogger logger = new NetworkTableLogger("SHOW UPPPP");
   private final AlgaeRemoverRollers m_AlgeaRemoverRollers = new AlgaeRemoverRollers();
@@ -57,7 +58,7 @@ public class Robot extends TimedRobot {
   private final BackCoralRoller backCoralRoller = new BackCoralRoller();
   private final GroundIntakePivot groundIntakePivot = new GroundIntakePivot();
   private final GroundIntakeRollers groundIntakeRollers = new GroundIntakeRollers();
-  private final Autos m_Autos = new Autos(m_ledSubsystem, m_ledPatterns, frontCoralRoller, backCoralRoller, m_elevator, m_PoseEstimator);
+  private final Autos m_Autos = new Autos(m_ledSubsystem, frontCoralRoller, backCoralRoller, m_elevator, m_PoseEstimator);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -179,7 +180,10 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     CommandScheduler.getInstance().cancelAll();
 
-    m_ledSubsystem.setPattern(GlitchLEDPatterns.fire(LEDSubsystem.defaultPattern));
+    m_ledSubsystem.combinePatterns(
+      GlitchLEDPatterns.fire(LEDSubsystem2025.defaultPattern), 
+      GlitchLEDPatterns.fire(LEDSubsystem2025.defaultPattern), 
+      LEDPattern.kOff);
     
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to

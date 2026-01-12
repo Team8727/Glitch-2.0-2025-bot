@@ -23,8 +23,7 @@ import frc.robot.commands.ElevatorCmds.SetElevatorHeightCmd;
 import frc.robot.subsystems.Elevator.Coral.BackCoralRoller;
 import frc.robot.subsystems.Elevator.Coral.FrontCoralRoller;
 import frc.robot.subsystems.Elevator.Elevator;
-import frc.robot.subsystems.LEDs.LEDPatterns;
-import frc.robot.subsystems.LEDs.LEDSubsystem;
+import frc.robot.subsystems.LEDs.LEDSubsystem2025;
 import org.json.simple.parser.ParseException;
 import frc.robot.pose.PoseEstimator; // updated import
 
@@ -34,8 +33,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class Autos extends SubsystemBase {
-  private final LEDSubsystem m_ledSubsystem;
-  private final LEDPatterns m_ledPatterns;
+  private final LEDSubsystem2025 m_ledSubsystem;
   private final FrontCoralRoller frontCoralRoller;
   private final BackCoralRoller backCoralRoller;
   private final Elevator m_elevator;
@@ -175,9 +173,8 @@ public class Autos extends SubsystemBase {
   }
 
   /** Creates a new Autos. */
-  public Autos(LEDSubsystem ledSubsystem, LEDPatterns ledPatterns, FrontCoralRoller frontCoralRoller, BackCoralRoller backCoralRoller, Elevator elevatorSubsystem, PoseEstimator poseEstimator) {
+  public Autos(LEDSubsystem2025 ledSubsystem, FrontCoralRoller frontCoralRoller, BackCoralRoller backCoralRoller, Elevator elevatorSubsystem, PoseEstimator poseEstimator) {
     m_ledSubsystem = ledSubsystem;
-    m_ledPatterns = ledPatterns;
     this.frontCoralRoller = frontCoralRoller;
     this.backCoralRoller = backCoralRoller;
     m_elevator = elevatorSubsystem;

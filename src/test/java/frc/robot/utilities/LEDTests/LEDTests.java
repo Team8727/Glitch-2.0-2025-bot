@@ -6,12 +6,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.LEDPattern;
-import frc.robot.subsystems.LEDs.LEDSubsystem;
+import frc.robot.subsystems.LEDs.LEDSubsystem2025;
 
 
 public class LEDTests {
 
-    private LEDSubsystem ledSubsystem = LEDSubsystem.getInstance();
+    private LEDSubsystem2025 ledSubsystem = LEDSubsystem2025.getInstance();
 
     @BeforeEach
     public void setup() {
